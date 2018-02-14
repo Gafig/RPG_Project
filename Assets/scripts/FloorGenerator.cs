@@ -32,7 +32,9 @@ public class FloorGenerator : MonoBehaviour {
     private int[,] floor;
     private coordinates[] rooms, paths;
     private List<coordinates> queue = new List<coordinates>();
-    private const int X = 1, Y = 2, RIGHT = 1, LEFT = 2, UP = 3, DOWN = 4, NULL = -1, WALL = 0;
+    private enum DIR : int { RIGHT = 1, LEFT, UP, DOWN };
+    private enum AXIS : int { X = 1, Y };
+    private enum BLOCK : int { NULL = -1, WALL};
 
     void generate(int sizeX, int sizeY, int roomAmount) {
         //sizeX = 51;
@@ -43,7 +45,7 @@ public class FloorGenerator : MonoBehaviour {
 
         for (int i = 0; i < floor.GetLength(0); i++)
             for (int j = 0; j < floor.GetLength(1); j++)
-                floor[i, j] = NULL;
+                floor[i, j] = (int)BLOCK.NULL;
 
         for (int i = 0; i< roomAmount; i++)
         {
@@ -78,9 +80,9 @@ public class FloorGenerator : MonoBehaviour {
                     if (xFactor != 0 && yFactor != 0)
                     {
                         int dir = Random.Range(1, 3);
-                        if (dir == X)
+                        if (dir == (int)AXIS.X)
                             paths[i] = new coordinates(currentLocation.x - xFactor, currentLocation.y);
-                        else if (dir == Y)
+                        else if (dir == (int)AXIS.Y)
                             paths[i] = new coordinates(currentLocation.x, currentLocation.y - yFactor);
                     }
                     else if (xFactor != 0)
@@ -128,11 +130,11 @@ public class FloorGenerator : MonoBehaviour {
             {
                 GameObject floorBlock = null;
                 Vector3 spawnPosition = new Vector3( i - floor.GetLength(0)/2 , j - floor.GetLength(0) / 2, 0);
-                if(floor[i, j] == WALL)
+                if(floor[i, j] == (int)BLOCK.WALL)
                 {
                     floorBlock = Instantiate(wallSprite, spawnPosition, Quaternion.identity) as GameObject;
                 }
-                else if (floor[i, j] != NULL)
+                else if (floor[i, j] != (int)BLOCK.NULL)
                 {
                      floorBlock = Instantiate(floorSprite, spawnPosition, Quaternion.identity) as GameObject;
                 }
@@ -144,7 +146,7 @@ public class FloorGenerator : MonoBehaviour {
 
     void placeFloorAt(coordinates c, int roomNum)
     {
-        int[] searchFor = { NULL, WALL };
+        int[] searchFor = { (int)BLOCK.NULL, (int)BLOCK.WALL };
         if (System.Array.IndexOf( searchFor, floor[c.x, c.y] ) > -1 )
         {
             floor[c.x, c.y] = roomNum;
@@ -154,19 +156,19 @@ public class FloorGenerator : MonoBehaviour {
 
     void placeWallAround(coordinates c)
     {
-        if (checkExist(c, LEFT))
+        if (checkExist(c, (int)DIR.LEFT))
         {
             placeWallAt(new coordinates(c.x - 1, c.y));
         }
-        if (checkExist(c, RIGHT))
+        if (checkExist(c, (int)DIR.RIGHT))
         {
             placeWallAt(new coordinates(c.x + 1, c.y));
         }
-        if (checkExist(c, DOWN))
+        if (checkExist(c, (int)DIR.DOWN))
         {
             placeWallAt(new coordinates(c.x, c.y + 1));
         }
-        if (checkExist(c, UP))
+        if (checkExist(c, (int)DIR.UP))
         {
             placeWallAt(new coordinates(c.x, c.y - 1));
         }
@@ -174,22 +176,22 @@ public class FloorGenerator : MonoBehaviour {
 
     void placeWallAt(coordinates c)
     {
-        int[] searchFor = { NULL };
+        int[] searchFor = { (int)BLOCK.NULL };
         if (System.Array.IndexOf(searchFor, floor[c.x, c.y]) > -1)
         {
-            floor[c.x, c.y] = WALL;
+            floor[c.x, c.y] = (int)BLOCK.WALL;
         }
     }
 
     bool checkExist(coordinates c, int direction)
     {
-        if(direction == LEFT)
+        if(direction == (int)DIR.LEFT)
             return (c.x - 1 > 0);
-        if(direction == RIGHT)
+        if(direction == (int)DIR.RIGHT)
             return (c.x + 1 < floor.GetLength(0));
-        if(direction == DOWN)
+        if(direction == (int)DIR.DOWN)
             return (c.y + 1 < floor.GetLength(1));
-        if(direction == UP)
+        if(direction == (int)DIR.UP)
             return (c.y - 1 > 0);
         return false;
     }
@@ -203,7 +205,7 @@ public class FloorGenerator : MonoBehaviour {
 
             for (int j = 0; j < floor.GetLength(1); j++)
             {
-                str += " " + ((floor[j, i] == NULL) ? "_" : "" + floor[j, i]);
+                str += " " + ((floor[j, i] == (int)BLOCK.NULL) ? "_" : "" + floor[j, i]);
             }
             str += '\n';
 
