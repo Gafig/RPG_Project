@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class FloorGenerator : MonoBehaviour {
 
-    
+    public GameObject floorSprite;
+    public GameObject wallSprite;
+    public GameObject floorObj;
 
     private struct coordinates
     {
@@ -17,13 +19,7 @@ public class FloorGenerator : MonoBehaviour {
         }
 
         public bool eql(coordinates c2 )
-        {
-            /*
-            Debug.Log("Debug eql");
-            Debug.Log("X:" + x + ":" + c2.x + ":" + (x == c2.x));
-            Debug.Log("Y:" + y + ":" + c2.y + ":" + (y == c2.y));
-            Debug.Log("X-----------X");
-            */            
+        {         
             return x == c2.x && y == c2.y;
         }
 
@@ -36,7 +32,7 @@ public class FloorGenerator : MonoBehaviour {
     private int[,] floor;
     private coordinates[] rooms, paths;
     private List<coordinates> queue = new List<coordinates>();
-    private const int X = 1, Y = 2, RIGHT = 1, LEFT = 2, UP = 3, DOWN = 4;
+    private const int X = 1, Y = 2, RIGHT = 1, LEFT = 2, UP = 3, DOWN = 4, NULL = -1, WALL = 0;
 
     // Use this for initialization
     void Start ()
@@ -51,15 +47,15 @@ public class FloorGenerator : MonoBehaviour {
 	}
 
     void generate(int sizeX, int sizeY, int roomAmount) {
-        sizeX = 101;
-        sizeY = 101;
+        sizeX = 51;
+        sizeY = 51;
         floor = new int[sizeX, sizeY];
         rooms = new coordinates[roomAmount];
         paths = new coordinates[roomAmount - 1];
 
         for (int i = 0; i < floor.GetLength(0); i++)
             for (int j = 0; j < floor.GetLength(1); j++)
-                floor[i, j] = -1;
+                floor[i, j] = NULL;
 
         for (int i = 0; i< roomAmount; i++)
         {
@@ -68,11 +64,12 @@ public class FloorGenerator : MonoBehaviour {
             coordinates roomCenter = new coordinates(Random.Range(0, sizeX), Random.Range(startY, endY));
             rooms[i] = roomCenter;
             queue.Add(roomCenter);
-            floor[roomCenter.x, roomCenter.y] = i+1;
+            placeFloorAt(roomCenter,i+1);
             if (i < roomAmount - 1)
                 paths[i] = roomCenter;
         }
         linkRooms();
+        createFloor();
     }
 
     void linkRooms()
@@ -107,8 +104,7 @@ public class FloorGenerator : MonoBehaviour {
                         paths[i] = new coordinates(currentLocation.x, currentLocation.y - yFactor);
                     }
 
-                    if (floor[paths[i].x, paths[i].y] == -1)
-                        floor[paths[i].x, paths[i].y] = i + 1;
+                    placeFloorAt(paths[i], i);
                 }
             }
         }
@@ -129,14 +125,14 @@ public class FloorGenerator : MonoBehaviour {
 
     public void testGenerate()
     {
-        generate(1, 1, 10);
+        generate(1, 1, 7);
         string str = "";
         for (int i = 0; i < floor.GetLength(0); i++)
         {
             
             for (int j = 0; j < floor.GetLength(1); j++)
             {
-                str += " " + ( (floor[j, i] == -1) ? "_" : "" + floor[j, i]);
+                str += " " + ( (floor[j, i] == NULL) ? "_" : "" + floor[j, i]);
             }
             str += '\n';
             
@@ -145,46 +141,88 @@ public class FloorGenerator : MonoBehaviour {
         Debug.Log(finishLinkRoom());
     }
 
-    /*
-    void generateHelper(int x, int y)
+    void createFloor()
     {
-        if (checkLeft(x, y))
+        if (floorObj == null)
         {
-
+            floorObj = new GameObject();
+            floorObj.name = "Floor Sprite";
         }
-        if (checkRight(x, y))
+        else
         {
-
-        }
-        if (checkUp(x, y))
-        {
-
-        }
-        if (checkDown(x, y))
-        {
-
+            Transform transform = floorObj.transform;
+            foreach (Transform child in transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
         }
 
+        for (int i = 0; i < floor.GetLength(0); i++)
+            for (int j = 0; j < floor.GetLength(1); j++)
+            {
+                GameObject floorBlock;
+                Vector3 spawnPosition = new Vector3( i - floor.GetLength(0)/2 , j - floor.GetLength(0) / 2, 0);
+                if (floor[i, j] != NULL)
+                {
+                     floorBlock = Instantiate(floorSprite, spawnPosition, Quaternion.identity) as GameObject;
+                }
+                else
+                {
+                    floorBlock = Instantiate(wallSprite, spawnPosition, Quaternion.identity) as GameObject;
+                }
+                floorBlock.transform.parent = floorObj.transform;
+            }
     }
 
-    bool checkLeft(int x, int y)
+    void placeFloorAt(coordinates c, int roomNum)
     {
-        return (x - 1 > 0);
+        int[] searchFor = { NULL, WALL };
+        if (System.Array.IndexOf( searchFor, floor[c.x, c.y] ) > -1 )
+        {
+            floor[c.x, c.y] = roomNum;
+        }
     }
 
-    bool checkRight(int x, int y)
+    void placeWallAround(coordinates c)
     {
-        return (x + 1 < floor.GetLength(0));
+        if (checkExist(c, LEFT))
+        {
+            placeWallAt(new coordinates(c.x - 1, c.y));
+        }
+        if (checkExist(c, RIGHT))
+        {
+            placeWallAt(new coordinates(c.x + 1, c.y));
+        }
+        if (checkExist(c, DOWN))
+        {
+            placeWallAt(new coordinates(c.x, c.y + 1));
+        }
+        if (checkExist(c, UP))
+        {
+            placeWallAt(new coordinates(c.x, c.y - 1));
+        }
     }
 
-    bool checkDown(int x, int y)
+    void placeWallAt(coordinates c)
     {
-        return (y + 1 < floor.GetLength(1));
+        int[] searchFor = { NULL };
+        if (System.Array.IndexOf(searchFor, floor[c.x, c.y]) > -1)
+        {
+            floor[c.x, c.y] = WALL;
+        }
     }
 
-    bool checkUp(int x, int y)
+    bool checkExist(coordinates c, int direction)
     {
-        return (y - 1 > 0) ;
-    }*/
+        if(direction == LEFT)
+            return (c.x - 1 > 0);
+        if(direction == RIGHT)
+            return (c.x + 1 < floor.GetLength(0));
+        if(direction == DOWN)
+            return (c.y + 1 < floor.GetLength(1));
+        if(direction == UP)
+            return (c.y - 1 > 0);
+        return false;
+    }
 
 }
