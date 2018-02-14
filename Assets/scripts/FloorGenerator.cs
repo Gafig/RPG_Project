@@ -34,21 +34,9 @@ public class FloorGenerator : MonoBehaviour {
     private List<coordinates> queue = new List<coordinates>();
     private const int X = 1, Y = 2, RIGHT = 1, LEFT = 2, UP = 3, DOWN = 4, NULL = -1, WALL = 0;
 
-    // Use this for initialization
-    void Start ()
-    {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
-	}
-
     void generate(int sizeX, int sizeY, int roomAmount) {
-        sizeX = 51;
-        sizeY = 51;
+        //sizeX = 51;
+        //sizeY = 51;
         floor = new int[sizeX, sizeY];
         rooms = new coordinates[roomAmount];
         paths = new coordinates[roomAmount - 1];
@@ -104,7 +92,7 @@ public class FloorGenerator : MonoBehaviour {
                         paths[i] = new coordinates(currentLocation.x, currentLocation.y - yFactor);
                     }
 
-                    placeFloorAt(paths[i], i);
+                    placeFloorAt(paths[i], i+1);
                 }
             }
         }
@@ -114,31 +102,9 @@ public class FloorGenerator : MonoBehaviour {
     {
         bool done = true;
         for(int i = 0; i < paths.Length; i++)
-        {
-            Debug.Log(paths[i].x + "," + paths[i].y );
-            Debug.Log(rooms[i + 1].x + "," + rooms[i + 1].y);
-            Debug.Log("Room" + (i+1) + " : " + (rooms[i + 1].eql(paths[i])));
             done = done && rooms[i+1].eql(paths[i]);
-        }
+        
         return done;
-    }
-
-    public void testGenerate()
-    {
-        generate(1, 1, 7);
-        string str = "";
-        for (int i = 0; i < floor.GetLength(0); i++)
-        {
-            
-            for (int j = 0; j < floor.GetLength(1); j++)
-            {
-                str += " " + ( (floor[j, i] == NULL) ? "_" : "" + floor[j, i]);
-            }
-            str += '\n';
-            
-        }
-        Debug.Log(str);
-        Debug.Log(finishLinkRoom());
     }
 
     void createFloor()
@@ -160,17 +126,19 @@ public class FloorGenerator : MonoBehaviour {
         for (int i = 0; i < floor.GetLength(0); i++)
             for (int j = 0; j < floor.GetLength(1); j++)
             {
-                GameObject floorBlock;
+                GameObject floorBlock = null;
                 Vector3 spawnPosition = new Vector3( i - floor.GetLength(0)/2 , j - floor.GetLength(0) / 2, 0);
-                if (floor[i, j] != NULL)
-                {
-                     floorBlock = Instantiate(floorSprite, spawnPosition, Quaternion.identity) as GameObject;
-                }
-                else
+                if(floor[i, j] == WALL)
                 {
                     floorBlock = Instantiate(wallSprite, spawnPosition, Quaternion.identity) as GameObject;
                 }
-                floorBlock.transform.parent = floorObj.transform;
+                else if (floor[i, j] != NULL)
+                {
+                     floorBlock = Instantiate(floorSprite, spawnPosition, Quaternion.identity) as GameObject;
+                }
+
+                if(floorBlock != null)
+                    floorBlock.transform.parent = floorObj.transform;
             }
     }
 
@@ -180,6 +148,7 @@ public class FloorGenerator : MonoBehaviour {
         if (System.Array.IndexOf( searchFor, floor[c.x, c.y] ) > -1 )
         {
             floor[c.x, c.y] = roomNum;
+            placeWallAround(c);
         }
     }
 
@@ -223,6 +192,23 @@ public class FloorGenerator : MonoBehaviour {
         if(direction == UP)
             return (c.y - 1 > 0);
         return false;
+    }
+
+    public void testGenerate()
+    {
+        generate(100, 100, 5);
+        string str = "";
+        for (int i = 0; i < floor.GetLength(0); i++)
+        {
+
+            for (int j = 0; j < floor.GetLength(1); j++)
+            {
+                str += " " + ((floor[j, i] == NULL) ? "_" : "" + floor[j, i]);
+            }
+            str += '\n';
+
+        }
+        Debug.Log(str);
     }
 
 }
