@@ -31,14 +31,12 @@ public class FloorGenerator : MonoBehaviour {
     }
     private int[,] floor;
     private coordinates[] rooms, paths;
-    private List<coordinates> queue = new List<coordinates>();
-    private enum DIR : int { RIGHT = 1, LEFT, UP, DOWN };
+    private List<List<coordinates>> queue = new List<List<coordinates>>();
+    private enum DIR : int { WEST = 1, EAST, NORTH, SOUTH, NW, NE, SW, SE };
     private enum AXIS : int { X = 1, Y };
     private enum BLOCK : int { NULL = -1, WALL};
 
     void generate(int sizeX, int sizeY, int roomAmount) {
-        //sizeX = 51;
-        //sizeY = 51;
         floor = new int[sizeX, sizeY];
         rooms = new coordinates[roomAmount];
         paths = new coordinates[roomAmount - 1];
@@ -46,20 +44,32 @@ public class FloorGenerator : MonoBehaviour {
         for (int i = 0; i < floor.GetLength(0); i++)
             for (int j = 0; j < floor.GetLength(1); j++)
                 floor[i, j] = (int)BLOCK.NULL;
-
-        for (int i = 0; i< roomAmount; i++)
-        {
-            int startY = sizeY / roomAmount * i;
-            int endY = startY + sizeY / roomAmount;
-            coordinates roomCenter = new coordinates(Random.Range(0, sizeX), Random.Range(startY, endY));
-            rooms[i] = roomCenter;
-            queue.Add(roomCenter);
-            placeFloorAt(roomCenter,i+1);
-            if (i < roomAmount - 1)
-                paths[i] = roomCenter;
-        }
+        placeRoomCenter(roomAmount);
+        expandRooms();
         linkRooms();
         createFloor();
+    }
+
+    void placeRoomCenter(int roomAmount)
+    {
+        int indent = floor.GetLength(0) / roomAmount / 2;
+        int startY = 0;
+        int endY = startY + floor.GetLength(1) / roomAmount;
+        for (int i = 0; i < roomAmount; i++)
+        {
+
+            coordinates roomCenter = new coordinates(Random.Range(0, floor.GetLength(1)), Random.Range(startY, endY));
+            rooms[i] = roomCenter;
+            List<coordinates> list = new List<coordinates>();
+            list.Add(roomCenter);
+            addCoToQ( list );
+            placeFloorAt(roomCenter, i + 1);
+            if (i < roomAmount - 1)
+                paths[i] = roomCenter;
+
+            startY = endY;
+            endY = startY + floor.GetLength(1) / roomAmount;
+        }
     }
 
     void linkRooms()
@@ -109,6 +119,25 @@ public class FloorGenerator : MonoBehaviour {
         return done;
     }
 
+    void expandRooms()
+    {
+        for(int roomSize = 0; roomSize < 15; roomSize++)
+        {
+            int RoomAmount = queue.Count;
+            for (int room = 0; room < RoomAmount; room++)
+            {
+                List<coordinates> outers = queue[0], newOuter = new List<coordinates>();
+                foreach (coordinates c in outers)
+                {
+                    List<coordinates> list = placeFloorAround(c);
+                    newOuter.AddRange(list);
+                }
+                queue.Remove(outers);
+                queue.Add(newOuter);
+            }
+        }
+    }
+
     void createFloor()
     {
         if (floorObj == null)
@@ -129,7 +158,7 @@ public class FloorGenerator : MonoBehaviour {
             for (int j = 0; j < floor.GetLength(1); j++)
             {
                 GameObject floorBlock = null;
-                Vector3 spawnPosition = new Vector3( i - floor.GetLength(0)/2 , j - floor.GetLength(0) / 2, 0);
+                Vector3 spawnPosition = new Vector3( floor.GetLength(0)/2 - i , floor.GetLength(0) / 2 - j, 0);
                 if(floor[i, j] == (int)BLOCK.WALL)
                 {
                     floorBlock = Instantiate(wallSprite, spawnPosition, Quaternion.identity) as GameObject;
@@ -154,46 +183,153 @@ public class FloorGenerator : MonoBehaviour {
         }
     }
 
+    List<coordinates> placeFloorAround(coordinates c)
+    {
+        int roomNum = floor[c.x, c.y];
+        List<coordinates> list = new List<coordinates>();
+        if (checkExist(c, (int)DIR.WEST))
+        {
+            coordinates co = new coordinates(c.x - 1, c.y);
+            if (getRoomNumAt(co) != getRoomNumAt(c))
+            {
+                placeFloorAt(co, roomNum);
+                list.Add(co);
+            }
+        }
+        if (checkExist(c, (int)DIR.EAST))
+        {
+            coordinates co = new coordinates(c.x + 1, c.y);
+            if (getRoomNumAt(co) != getRoomNumAt(c))
+            {
+                placeFloorAt(new coordinates(c.x + 1, c.y), roomNum);
+                list.Add(co);
+            }
+        }
+        if (checkExist(c, (int)DIR.SOUTH))
+        {
+            coordinates co = new coordinates(c.x, c.y + 1);
+            if (getRoomNumAt(co) != getRoomNumAt(c))
+            {
+                placeFloorAt(new coordinates(c.x, c.y + 1), roomNum);
+                list.Add(co);
+            }
+        }
+        if (checkExist(c, (int)DIR.NORTH))
+        {
+            coordinates co = new coordinates(c.x, c.y - 1);
+            if (getRoomNumAt(co) != getRoomNumAt(c))
+            {
+                placeFloorAt(new coordinates(c.x, c.y - 1), roomNum);
+                list.Add(co);
+            }
+        }/*
+        if (checkExist(c, (int)DIR.NW))
+        {
+            coordinates co = new coordinates(c.x - 1, c.y - 1);
+            if (getRoomNumAt(co) != getRoomNumAt(c))
+            {
+                placeFloorAt(new coordinates(c.x - 1, c.y - 1), roomNum);
+                list.Add(co);
+            }
+        }
+        if (checkExist(c, (int)DIR.NE))
+        {
+            coordinates co = new coordinates(c.x + 1, c.y - 1);
+            if (getRoomNumAt(co) != getRoomNumAt(c))
+            {
+                placeFloorAt(new coordinates(c.x + 1, c.y - 1), roomNum);
+                list.Add(co);
+            }
+        }
+        if (checkExist(c, (int)DIR.SW))
+        {
+            coordinates co = new coordinates(c.x - 1, c.y + 1);
+            if (getRoomNumAt(co) != getRoomNumAt(c))
+            {
+                placeFloorAt(new coordinates(c.x - 1, c.y + 1), roomNum);
+                list.Add(co);
+            }
+        }
+        if (checkExist(c, (int)DIR.SE))
+        {
+            coordinates co = new coordinates(c.x + 1, c.y + 1);
+            if (getRoomNumAt(co) != getRoomNumAt(c))
+            {
+                placeFloorAt(new coordinates(c.x + 1, c.y + 1), roomNum);
+                list.Add(co);
+            }
+        }*/
+        return list;
+    }
+
     void placeWallAround(coordinates c)
     {
-        if (checkExist(c, (int)DIR.LEFT))
+        int roomNum = getRoomNumAt(c);
+        if (checkExist(c, (int)DIR.WEST))
         {
-            placeWallAt(new coordinates(c.x - 1, c.y));
+            placeWallAt(new coordinates(c.x - 1, c.y), roomNum);
         }
-        if (checkExist(c, (int)DIR.RIGHT))
+        if (checkExist(c, (int)DIR.EAST))
         {
-            placeWallAt(new coordinates(c.x + 1, c.y));
+            placeWallAt(new coordinates(c.x + 1, c.y), roomNum);
         }
-        if (checkExist(c, (int)DIR.DOWN))
+        if (checkExist(c, (int)DIR.SOUTH))
         {
-            placeWallAt(new coordinates(c.x, c.y + 1));
+            placeWallAt(new coordinates(c.x, c.y + 1), roomNum);
         }
-        if (checkExist(c, (int)DIR.UP))
+        if (checkExist(c, (int)DIR.NORTH))
         {
-            placeWallAt(new coordinates(c.x, c.y - 1));
+            placeWallAt(new coordinates(c.x, c.y - 1),roomNum);
         }
     }
 
-    void placeWallAt(coordinates c)
+    void placeWallAround(List<coordinates> list)
     {
-        int[] searchFor = { (int)BLOCK.NULL };
+        foreach (coordinates c in list)
+        {
+            placeWallAround(c);
+        }
+    }
+
+    void placeWallAt(coordinates c, int roomNum)
+    {
+        int[] searchFor = { (int)BLOCK.NULL, (int)BLOCK.WALL };
         if (System.Array.IndexOf(searchFor, floor[c.x, c.y]) > -1)
         {
+            if(floor[c.x, c.y] != roomNum)
             floor[c.x, c.y] = (int)BLOCK.WALL;
         }
     }
 
     bool checkExist(coordinates c, int direction)
     {
-        if(direction == (int)DIR.LEFT)
+        if(direction == (int)DIR.WEST)
             return (c.x - 1 > 0);
-        if(direction == (int)DIR.RIGHT)
-            return (c.x + 1 < floor.GetLength(0));
-        if(direction == (int)DIR.DOWN)
-            return (c.y + 1 < floor.GetLength(1));
-        if(direction == (int)DIR.UP)
+        if(direction == (int)DIR.EAST)
+            return (c.x + 1 < floor.GetLength(1));
+        if(direction == (int)DIR.SOUTH)
+            return (c.y + 1 < floor.GetLength(0));
+        if(direction == (int)DIR.NORTH)
             return (c.y - 1 > 0);
+        if (direction == (int)DIR.NW)
+            return (c.x - 1 > 0 && c.y - 1 > 0);
+        if (direction == (int)DIR.NE)
+            return (c.x + 1 < floor.GetLength(0) && c.y - 1 > 0);
+        if (direction == (int)DIR.SW)
+            return (c.x - 1 > 0 && c.y + 1 < floor.GetLength(0));
+        if (direction == (int)DIR.SE)
+            return (c.x + 1 < floor.GetLength(1) && c.y + 1 < floor.GetLength(0));
         return false;
+    }
+
+    void addCoToQ(List<coordinates> list)
+    {
+        queue.Add(list);
+    }
+
+    int getRoomNumAt(coordinates c)
+    {
+        return floor[c.x, c.y];
     }
 
     public void testGenerate()
