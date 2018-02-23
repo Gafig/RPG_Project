@@ -32,6 +32,16 @@ public class Wall : Block
             this.top = top;
             this.bottom = bottom;
         }
+
+        public bool isSameWall(Wall.Inner other)
+        {
+            return this.top == other.top && this.bottom == other.bottom;
+        }
+
+        public string toString()
+        {
+            return top + ":" + bottom;
+        }
     }
 
     public class Outer : Wall
