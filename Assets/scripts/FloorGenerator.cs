@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,324 +31,110 @@ public class FloorGenerator : MonoBehaviour {
         }
 
     }
-    private int[,] floor;
-    private coordinates[] rooms, paths;
+    private Block[,] floor;
     private List<List<coordinates>> queue = new List<List<coordinates>>();
     private enum DIR : int { WEST = 1, EAST, NORTH, SOUTH, NW, NE, SW, SE };
     private enum AXIS : int { X = 1, Y };
-    private enum BLOCK : int { NULL = -1, WALL};
+    private int[,] emptyRoomTemplate =
+        {
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 5, 5, 5, 5, 5, 2, 6, 6, 6, 6, 6, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 2, 5, 5, 5, 5, 5, 2, 6, 6, 6, 6, 6, 2, 7, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 4, 2, 5, 5, 5, 5, 5, 2, 6, 6, 6, 6, 6, 2, 7, 7, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 4, 4, 2, 5, 5, 5, 5, 5, 2, 6, 6, 6, 6, 6, 2, 7, 7, 7, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 1, 4, 4, 4, 4, 2, 5, 5, 5, 5, 5, 2, 6, 6, 6, 6, 6, 2, 7, 7, 7, 7, 1, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 1, 2, 9, 9, 9, 9, 9, 2, 10, 10, 10, 10, 10, 2, 11, 11, 11, 11, 11, 2, 12, 12, 12, 12, 12, 2, 1, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 1, 8, 2, 9, 9, 9, 9, 9, 2, 10, 10, 10, 10, 10, 2, 11, 11, 11, 11, 11, 2, 12, 12, 12, 12, 12, 2, 17, 1, 0, 0, 0, 0},
+            {0, 0, 0, 1, 8, 8, 2, 9, 9, 9, 9, 9, 2, 10, 10, 10, 10, 10, 2, 11, 11, 11, 11, 11, 2, 12, 12, 12, 12, 12, 2, 17, 17, 1, 0, 0, 0},
+            {0, 0, 1, 8, 8, 8, 2, 9, 9, 9, 9, 9, 2, 10, 10, 10, 10, 10, 2, 11, 11, 11, 11, 11, 2, 12, 12, 12, 12, 12, 2, 17, 17, 17, 1, 0, 0},
+            {0, 1, 8, 8, 8, 8, 2, 9, 9, 9, 9, 9, 2, 10, 10, 10, 10, 10, 2, 11, 11, 11, 11, 11, 2, 12, 12, 12, 12, 12, 2, 17, 17, 17, 17, 1, 0},
+            {1, 8, 8, 8, 8, 8, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 17, 17, 17, 17, 17, 1},
+            {0, 1, 8, 8, 8, 8, 2, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 2, 17, 17, 17, 17, 1, 0},
+            {0, 0, 1, 8, 8, 8, 2, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 2, 17, 17, 17, 1, 0, 0},
+            {0, 0, 0, 1, 8, 8, 2, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 2, 17, 17, 1, 0, 0, 0},
+            {0, 0, 0, 0, 1, 8, 2, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 2, 17, 1, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 1, 2, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 2, 1, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 1, 18, 18, 18, 18, 2, 19, 19, 19, 19, 19, 2, 20, 20, 20, 20, 20, 2, 21, 21, 21, 21, 1, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 1, 18, 18, 18, 2, 19, 19, 19, 19, 19, 2, 20, 20, 20, 20, 20, 2, 21, 21, 21, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 18, 18, 2, 19, 19, 19, 19, 19, 2, 20, 20, 20, 20, 20, 2, 21, 21, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 18, 2, 19, 19, 19, 19, 19, 2, 20, 20, 20, 20, 20, 2, 21, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 19, 19, 19, 19, 19, 2, 20, 20, 20, 20, 20, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 22, 22, 22, 22, 22, 22, 22, 22, 22, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 22, 22, 22, 22, 22, 22, 22, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 22, 22, 22, 22, 22, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 22, 22, 22, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 22, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            };
+    private const int ROOM_SIZE = 37;
 
-    void generate(int sizeX, int sizeY, int roomAmount) {
-        floor = new int[sizeX, sizeY];
-        rooms = new coordinates[roomAmount];
-        paths = new coordinates[roomAmount - 1];
-
-        for (int i = 0; i < floor.GetLength(0); i++)
-            for (int j = 0; j < floor.GetLength(1); j++)
-                floor[i, j] = (int)BLOCK.NULL;
-        placeRoomCenter(roomAmount);
-        expandRooms();
-        linkRooms();
-        createFloor();
+    void generate(int roomAmount)
+    {
+        newEmptyFloor(roomAmount);
+        placeBlocks();
     }
 
-    void placeRoomCenter(int roomAmount)
+    void newEmptyFloor(int roomAmount)
     {
-        int indent = floor.GetLength(0) / roomAmount / 2;
-        int startY = 0;
-        int endY = startY + floor.GetLength(1) / roomAmount;
-        for (int i = 0; i < roomAmount; i++)
-        {
-
-            coordinates roomCenter = new coordinates(Random.Range(0, floor.GetLength(1)), Random.Range(startY, endY));
-            rooms[i] = roomCenter;
-            List<coordinates> list = new List<coordinates>();
-            list.Add(roomCenter);
-            addCoToQ( list );
-            placeFloorAt(roomCenter, i + 1);
-            if (i < roomAmount - 1)
-                paths[i] = roomCenter;
-
-            startY = endY;
-            endY = startY + floor.GetLength(1) / roomAmount;
-        }
-    }
-
-    void linkRooms()
-    {
-        while (!finishLinkRoom()) 
-        {
-            for (int i = 0; i < paths.Length; i++)
+        floor = new Block[emptyRoomTemplate.GetLength(0), emptyRoomTemplate.GetLength(1)];
+        for (int y = 0; y < emptyRoomTemplate.GetLength(1); y++)
+            for (int x = 0; x < emptyRoomTemplate.GetLength(0); x++)
             {
-                coordinates currentLocation = paths[i];
-                coordinates goal = rooms[i + 1];
-                int xFactor = 0, yFactor = 0;
-
-                if (!currentLocation.eql(goal))
+                if (emptyRoomTemplate[x, y] == 0)
+                    floor[x, y] = new EmptySpace();
+                else if (emptyRoomTemplate[x, y] == 1)
+                    floor[x, y] = new Wall.Outer();
+                else if (emptyRoomTemplate[x, y] == 2)
                 {
-                    xFactor = System.Math.Sign(currentLocation.x.CompareTo(goal.x));
-                    yFactor = System.Math.Sign(currentLocation.y.CompareTo(goal.y));
-
-                    if (xFactor != 0 && yFactor != 0)
+                    if (emptyRoomTemplate[x, y - 1] == 2)
                     {
-                        int dir = Random.Range(1, 3);
-                        if (dir == (int)AXIS.X)
-                            paths[i] = new coordinates(currentLocation.x - xFactor, currentLocation.y);
-                        else if (dir == (int)AXIS.Y)
-                            paths[i] = new coordinates(currentLocation.x, currentLocation.y - yFactor);
+                        floor[x, y] = new Wall.Inner(emptyRoomTemplate[x - 1, y], emptyRoomTemplate[x + 1, y]);
                     }
-                    else if (xFactor != 0)
+                    else
                     {
-                        paths[i] = new coordinates(currentLocation.x - xFactor, currentLocation.y);
+                        floor[x, y] = new Wall.Inner(emptyRoomTemplate[1, y - 1], emptyRoomTemplate[x + 1, y + 1]);
                     }
-                    else if (yFactor != 0)
-                    {
-                        paths[i] = new coordinates(currentLocation.x, currentLocation.y - yFactor);
-                    }
-
-                    placeFloorAt(paths[i], i+1);
                 }
+                else
+                    floor[x, y] = new Floor.Vanilla();
             }
-        }
     }
 
-    bool finishLinkRoom()
+   void placeBlocks()
     {
-        bool done = true;
-        for(int i = 0; i < paths.Length; i++)
-            done = done && rooms[i+1].eql(paths[i]);
-        
-        return done;
-    }
-
-    void expandRooms()
-    {
-        for(int roomSize = 0; roomSize < 15; roomSize++)
-        {
-            int RoomAmount = queue.Count;
-            for (int room = 0; room < RoomAmount; room++)
+        for (int y = 0; y < floor.GetLength(1); y++)
+            for (int x = 0; x < floor.GetLength(0); x++)
             {
-                List<coordinates> outers = queue[0], newOuter = new List<coordinates>();
-                foreach (coordinates c in outers)
+                if(IsSameOrSubclass(typeof(Wall), floor[x, y].GetType()) )
                 {
-                    List<coordinates> list = placeFloorAround(c);
-                    newOuter.AddRange(list);
+                    Instantiate(wallSprite, new Vector3(x, y, 0), Quaternion.identity);
                 }
-                queue.Remove(outers);
-                queue.Add(newOuter);
-            }
-        }
-    }
 
-    void createFloor()
-    {
-        if (floorObj == null)
-        {
-            floorObj = new GameObject();
-            floorObj.name = "Floor Sprite";
-        }
-        else
-        {
-            Transform transform = floorObj.transform;
-            foreach (Transform child in transform)
-            {
-                GameObject.Destroy(child.gameObject);
-            }
-        }
-
-        for (int i = 0; i < floor.GetLength(0); i++)
-            for (int j = 0; j < floor.GetLength(1); j++)
-            {
-                GameObject floorBlock = null;
-                Vector3 spawnPosition = new Vector3( floor.GetLength(0)/2 - i , floor.GetLength(0) / 2 - j, 0);
-                if(floor[i, j] == (int)BLOCK.WALL)
+                else if (IsSameOrSubclass(typeof(Floor), floor[x, y].GetType()))
                 {
-                    floorBlock = Instantiate(wallSprite, spawnPosition, Quaternion.identity) as GameObject;
+                    Instantiate(floorSprite, new Vector3(x, y, 0), Quaternion.identity);
                 }
-                else if (floor[i, j] != (int)BLOCK.NULL)
-                {
-                     floorBlock = Instantiate(floorSprite, spawnPosition, Quaternion.identity) as GameObject;
-                }
-
-                if(floorBlock != null)
-                    floorBlock.transform.parent = floorObj.transform;
             }
     }
 
-    void placeFloorAt(coordinates c, int roomNum)
+    public bool IsSameOrSubclass(System.Type potentialBase, System.Type potentialDescendant)
     {
-        int[] searchFor = { (int)BLOCK.NULL, (int)BLOCK.WALL };
-        if (System.Array.IndexOf( searchFor, floor[c.x, c.y] ) > -1 )
-        {
-            floor[c.x, c.y] = roomNum;
-            placeWallAround(c);
-        }
-    }
-
-    List<coordinates> placeFloorAround(coordinates c)
-    {
-        int roomNum = floor[c.x, c.y];
-        List<coordinates> list = new List<coordinates>();
-        if (checkExist(c, (int)DIR.WEST))
-        {
-            coordinates co = new coordinates(c.x - 1, c.y);
-            if (getRoomNumAt(co) != getRoomNumAt(c))
-            {
-                placeFloorAt(co, roomNum);
-                list.Add(co);
-            }
-        }
-        if (checkExist(c, (int)DIR.EAST))
-        {
-            coordinates co = new coordinates(c.x + 1, c.y);
-            if (getRoomNumAt(co) != getRoomNumAt(c))
-            {
-                placeFloorAt(new coordinates(c.x + 1, c.y), roomNum);
-                list.Add(co);
-            }
-        }
-        if (checkExist(c, (int)DIR.SOUTH))
-        {
-            coordinates co = new coordinates(c.x, c.y + 1);
-            if (getRoomNumAt(co) != getRoomNumAt(c))
-            {
-                placeFloorAt(new coordinates(c.x, c.y + 1), roomNum);
-                list.Add(co);
-            }
-        }
-        if (checkExist(c, (int)DIR.NORTH))
-        {
-            coordinates co = new coordinates(c.x, c.y - 1);
-            if (getRoomNumAt(co) != getRoomNumAt(c))
-            {
-                placeFloorAt(new coordinates(c.x, c.y - 1), roomNum);
-                list.Add(co);
-            }
-        }/*
-        if (checkExist(c, (int)DIR.NW))
-        {
-            coordinates co = new coordinates(c.x - 1, c.y - 1);
-            if (getRoomNumAt(co) != getRoomNumAt(c))
-            {
-                placeFloorAt(new coordinates(c.x - 1, c.y - 1), roomNum);
-                list.Add(co);
-            }
-        }
-        if (checkExist(c, (int)DIR.NE))
-        {
-            coordinates co = new coordinates(c.x + 1, c.y - 1);
-            if (getRoomNumAt(co) != getRoomNumAt(c))
-            {
-                placeFloorAt(new coordinates(c.x + 1, c.y - 1), roomNum);
-                list.Add(co);
-            }
-        }
-        if (checkExist(c, (int)DIR.SW))
-        {
-            coordinates co = new coordinates(c.x - 1, c.y + 1);
-            if (getRoomNumAt(co) != getRoomNumAt(c))
-            {
-                placeFloorAt(new coordinates(c.x - 1, c.y + 1), roomNum);
-                list.Add(co);
-            }
-        }
-        if (checkExist(c, (int)DIR.SE))
-        {
-            coordinates co = new coordinates(c.x + 1, c.y + 1);
-            if (getRoomNumAt(co) != getRoomNumAt(c))
-            {
-                placeFloorAt(new coordinates(c.x + 1, c.y + 1), roomNum);
-                list.Add(co);
-            }
-        }*/
-        return list;
-    }
-
-    void placeWallAround(coordinates c)
-    {
-        int roomNum = getRoomNumAt(c);
-        if (checkExist(c, (int)DIR.WEST))
-        {
-            placeWallAt(new coordinates(c.x - 1, c.y), roomNum);
-        }
-        if (checkExist(c, (int)DIR.EAST))
-        {
-            placeWallAt(new coordinates(c.x + 1, c.y), roomNum);
-        }
-        if (checkExist(c, (int)DIR.SOUTH))
-        {
-            placeWallAt(new coordinates(c.x, c.y + 1), roomNum);
-        }
-        if (checkExist(c, (int)DIR.NORTH))
-        {
-            placeWallAt(new coordinates(c.x, c.y - 1),roomNum);
-        }
-    }
-
-    void placeWallAround(List<coordinates> list)
-    {
-        foreach (coordinates c in list)
-        {
-            placeWallAround(c);
-        }
-    }
-
-    void placeWallAt(coordinates c, int roomNum)
-    {
-        int[] searchFor = { (int)BLOCK.NULL, (int)BLOCK.WALL };
-        if (System.Array.IndexOf(searchFor, floor[c.x, c.y]) > -1)
-        {
-            if(floor[c.x, c.y] != roomNum)
-            floor[c.x, c.y] = (int)BLOCK.WALL;
-        }
-    }
-
-    bool checkExist(coordinates c, int direction)
-    {
-        if(direction == (int)DIR.WEST)
-            return (c.x - 1 > 0);
-        if(direction == (int)DIR.EAST)
-            return (c.x + 1 < floor.GetLength(1));
-        if(direction == (int)DIR.SOUTH)
-            return (c.y + 1 < floor.GetLength(0));
-        if(direction == (int)DIR.NORTH)
-            return (c.y - 1 > 0);
-        if (direction == (int)DIR.NW)
-            return (c.x - 1 > 0 && c.y - 1 > 0);
-        if (direction == (int)DIR.NE)
-            return (c.x + 1 < floor.GetLength(0) && c.y - 1 > 0);
-        if (direction == (int)DIR.SW)
-            return (c.x - 1 > 0 && c.y + 1 < floor.GetLength(0));
-        if (direction == (int)DIR.SE)
-            return (c.x + 1 < floor.GetLength(1) && c.y + 1 < floor.GetLength(0));
-        return false;
-    }
-
-    void addCoToQ(List<coordinates> list)
-    {
-        queue.Add(list);
-    }
-
-    int getRoomNumAt(coordinates c)
-    {
-        return floor[c.x, c.y];
+        return potentialDescendant.IsSubclassOf(potentialBase)
+               || potentialDescendant == potentialBase;
     }
 
     public void testGenerate()
     {
-        generate(100, 100, 5);
-        string str = "";
-        for (int i = 0; i < floor.GetLength(0); i++)
-        {
-
-            for (int j = 0; j < floor.GetLength(1); j++)
-            {
-                str += " " + ((floor[j, i] == (int)BLOCK.NULL) ? "_" : "" + floor[j, i]);
-            }
-            str += '\n';
-
-        }
-        Debug.Log(str);
+        generate(5);
     }
 
 }
