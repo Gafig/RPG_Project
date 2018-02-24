@@ -32,7 +32,7 @@ public class FloorGenerator : MonoBehaviour {
     void newEmptyFloor(int roomAmount)
     {
         
-        floor = new Block[ROOM_SIZE, (ROOM_SIZE + 5) * roomAmount];
+        floor = new Block[ROOM_SIZE, (ROOM_SIZE + 5) * roomAmount + 5];
         for(int i = 0; i<roomAmount; i++)
             rooms.Add(new Room());
     }
@@ -49,7 +49,8 @@ public class FloorGenerator : MonoBehaviour {
             }
         }
 
-        int yStart = 0;
+        int yStart = 5;
+        placeEntrance(0);
         foreach (Room r in rooms)
         {
             for (int y = 0; y < r.room.GetLength(0); y++)
@@ -57,16 +58,61 @@ public class FloorGenerator : MonoBehaviour {
                 {
                     if (IsSameOrSubclass(typeof(Wall), r.room[y, x].GetType()))
                     {
-                        (Instantiate(wallSprite, new Vector3(x, y + yStart, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+                        (Instantiate(wallSprite, new Vector3(x, -(y + yStart), 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
                     }
 
                     else if (IsSameOrSubclass(typeof(Floor), r.room[y, x].GetType()))
                     {
-                        (Instantiate(floorSprite, new Vector3(x, y + yStart, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+                        (Instantiate(floorSprite, new Vector3(x, -(y + yStart), 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
                     }
                 }
             yStart += r.room.GetLength(0);
+            if (r != rooms[rooms.Count - 1])
+            {
+                placePassage(-yStart);
+                yStart += 4;
+            }
         }
+        placeExit(-yStart);
+    }
+
+    private void placeEntrance(int y)
+    {
+        placeEndPieces(y);
+        for(int i = -1; i > -5; i--)
+            placePassagePieces(i + y);
+    }
+
+    private void placePassage(int y)
+    {
+        for (int i = 0; i > -4; i--)
+            placePassagePieces(i + y);
+    }
+
+    private void placeExit(int y)
+    {
+        for (int i = 0; i > -4; i--)
+            placePassagePieces(i + y);
+        placeEndPieces(y - 4);
+    }
+
+    private void placeEndPieces(int y)
+    {
+        (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(wallSprite, new Vector3(17, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(wallSprite, new Vector3(18, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(wallSprite, new Vector3(19, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+    }
+
+    private void placePassagePieces(int y)
+    {
+        (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(floorSprite, new Vector3(17, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(floorSprite, new Vector3(18, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(floorSprite, new Vector3(19, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+
     }
 
     public bool IsSameOrSubclass(System.Type potentialBase, System.Type potentialDescendant)
@@ -101,7 +147,15 @@ public class Room
 
         public String toString()
         {
-            return wall.toString() + " sas " + walls.Count;
+            return wall.toString() + " has " + walls.Count;
+        }
+
+        public void explode(Block[,] room)
+        {
+            foreach(Wall.Inner wall in walls)
+            {
+                room[wall.y, wall.x] = new Floor.Vanilla();
+            }
         }
     }
 
@@ -109,7 +163,7 @@ public class Room
     List<RoomWall> roomWalls = new List<RoomWall>();
     private int[,] emptyRoomTemplate =
         {
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
             {1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
             {1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
@@ -139,7 +193,7 @@ public class Room
             {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 1},
             {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 1},
             {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 18, 18, 18, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
         };
 
     public Room()
@@ -156,9 +210,9 @@ public class Room
                 {
                     Wall.Inner wall;
                     if (emptyRoomTemplate[y, x - 1] == 2 || emptyRoomTemplate[y, x - 1] == 1)
-                        wall = new Wall.Inner(emptyRoomTemplate[y - 1, x] - 1, emptyRoomTemplate[y + 1, x] - 1);
+                        wall = new Wall.Inner(emptyRoomTemplate[y - 1, x] - 1, emptyRoomTemplate[y + 1, x] - 1, x, y);
                     else
-                        wall = new Wall.Inner(emptyRoomTemplate[y, x - 1] - 1, emptyRoomTemplate[y, x + 1] - 1);
+                        wall = new Wall.Inner(emptyRoomTemplate[y, x - 1] - 1, emptyRoomTemplate[y, x + 1] - 1, x, y);
                         
                     room[y, x] = wall;
                     mergeWall(wall);
@@ -166,9 +220,8 @@ public class Room
                 else
                     room[y, x] = new Floor.Vanilla();
             }
-        Debug.Log(roomWalls.Count);
-        foreach (RoomWall roomWall in roomWalls)
-            Debug.Log(roomWall.toString());
+        roomWalls[0].explode(room);
+        roomWalls[6].explode(room);
     }
 
     void mergeWall(Wall.Inner wall)
@@ -185,17 +238,17 @@ public class Room
     }
 }
 
-public class coordinates
+public class Coordinates
 {
     public int x, y;
 
-    public coordinates(int p1, int p2)
+    public Coordinates(int p1, int p2)
     {
         x = p1;
         y = p2;
     }
 
-    public bool eql(coordinates c2)
+    public bool eql(Coordinates c2)
     {
         return x == c2.x && y == c2.y;
     }
