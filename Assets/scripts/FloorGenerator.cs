@@ -14,13 +14,19 @@ public class FloorGenerator : MonoBehaviour {
     List<Room> rooms = new List<Room>();
     private enum DIR : int { WEST = 1, EAST, NORTH, SOUTH, NW, NE, SW, SE };
     private enum AXIS : int { X = 1, Y };
-    
+    private bool isDone = false;
     private const int ROOM_SIZE = 37;
 
-    void generate(int roomAmount)
+    public bool isFinished(){
+        return isDone;
+    }
+
+    public void generate(int roomAmount)
     {
+        isDone = false;
         newEmptyFloor(roomAmount);
         placeBlocks();
+        isDone = true;
     }
 
     void newEmptyFloor(int roomAmount)
