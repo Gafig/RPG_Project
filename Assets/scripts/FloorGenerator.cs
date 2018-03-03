@@ -181,9 +181,9 @@ public class Room
         public void connect (RoomLeaf other)
         {
             if (other.getRoot().num < this.getRoot().num) 
-                other.addChildren(this.getRoot());
+                other.addChildren(this);
             else if (other.getRoot().num > this.getRoot().num)
-                this.addChildren(other.getRoot());
+                this.addChildren(other);
         }
 
         public RoomLeaf getRoot()
@@ -193,9 +193,23 @@ public class Room
 
         void addChildren(RoomLeaf child)
         {
+            if (!child.root)
+                child.rotateTree();
             children.Add(child);
             child.parent = this;
             child.root = false;
+        }
+
+        void rotateTree()
+        {
+            if (!parent.root)
+                parent.rotateTree();
+            parent.children.Remove(this);
+            parent.root = false;
+            parent.parent = this;
+            this.children.Add(parent);
+            this.parent = null;
+            this.root = true;
         }
 
         public bool isConnectTo(RoomLeaf other)
