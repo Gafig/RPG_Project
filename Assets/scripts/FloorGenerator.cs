@@ -181,9 +181,9 @@ public class Room
         public void connect (RoomLeaf other)
         {
             if (other.getRoot().num < this.getRoot().num) 
-                other.addChildren(this);
+                other.addChildren(this.getRoot());
             else if (other.getRoot().num > this.getRoot().num)
-                this.addChildren(other);
+                this.addChildren(other.getRoot());
         }
 
         public RoomLeaf getRoot()
@@ -295,8 +295,8 @@ public class Room
 
     void createTree()
     {
-        roomLeaves = new RoomLeaf[20];
-        for (int i = 0; i < 20; i++)
+        roomLeaves = new RoomLeaf[17];
+        for (int i = 0; i < 17; i++)
             roomLeaves[i] = new RoomLeaf(i + 1); 
     }
 
@@ -309,18 +309,18 @@ public class Room
     {
         foreach (RoomWall rw in roomWalls)
         {
+            Debug.Log("top: " + rw.wall.top + " bottom:" + rw.wall.bottom);
             if (!isConnect(rw))
             {
                 rw.explode();
                 connect(rw);
             }
         }
-        foreach (RoomLeaf rl in roomLeaves)
-            Debug.Log("Room" + rl.num + " root = " + rl.getRoot().num);
     }
 
     bool isConnect(RoomWall rw)
     {
+        Debug.Log("top: " + roomLeaves[rw.wall.top - 1].num + "bottom: " + roomLeaves[rw.wall.bottom - 1].num + "connect: " + roomLeaves[rw.wall.top - 1].isConnectTo(roomLeaves[rw.wall.bottom - 1]));
         return roomLeaves[rw.wall.top - 1].isConnectTo(roomLeaves[rw.wall.bottom - 1]);
     }
 
