@@ -8,6 +8,7 @@ public class FloorGenerator : MonoBehaviour {
 
     public GameObject floorSprite;
     public GameObject wallSprite;
+    public GameObject nextLevelConnectorSprite;
     public GameObject floorObj;
 
     private Block[,] floor;
@@ -23,6 +24,7 @@ public class FloorGenerator : MonoBehaviour {
 
     public void generate(int roomAmount)
     {
+        rooms.Clear();
         isDone = false;
         newEmptyFloor(roomAmount);
         placeBlocks();
@@ -78,7 +80,7 @@ public class FloorGenerator : MonoBehaviour {
 
     private void placeEntrance(int y)
     {
-        placeEndPieces(y);
+        placeEntrancePieces(y);
         for(int i = -1; i > -5; i--)
             placePassagePieces(i + y);
     }
@@ -97,6 +99,15 @@ public class FloorGenerator : MonoBehaviour {
     }
 
     private void placeEndPieces(int y)
+    {
+        (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(nextLevelConnectorSprite, new Vector3(17, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(nextLevelConnectorSprite, new Vector3(18, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(nextLevelConnectorSprite, new Vector3(19, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+    }
+
+    private void placeEntrancePieces(int y)
     {
         (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
         (Instantiate(wallSprite, new Vector3(17, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
