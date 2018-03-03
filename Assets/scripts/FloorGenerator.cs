@@ -133,9 +133,13 @@ public class Room
     public class RoomWall
     {
         List<Wall.Inner> walls = new List<Wall.Inner>();
+        
+        //belong to
+        Block[,] room;
         public Wall.Inner wall;
-        public RoomWall(Wall.Inner wall)
+        public RoomWall(Wall.Inner wall, Block[,] room)
         {
+            this.room = room;
             this.wall = wall;
             addWall(wall);
         }
@@ -150,7 +154,7 @@ public class Room
             return wall.toString() + " has " + walls.Count;
         }
 
-        public void explode(Block[,] room)
+        public void explode()
         {
             foreach(Wall.Inner wall in walls)
             {
@@ -159,16 +163,60 @@ public class Room
         }
     }
 
+    private class RoomLeaf
+    {
+        List<RoomLeaf> children;
+        public RoomLeaf parent;
+        public bool root;
+        public int num;
+
+        public RoomLeaf(int num)
+        {
+            parent = null;
+            root = true;
+            children = new List<RoomLeaf>();
+            this.num = num;
+        }
+
+        public void connect (RoomLeaf other)
+        {
+            if (other.getRoot().num < this.getRoot().num) 
+                other.addChildren(this);
+            else if (other.getRoot().num > this.getRoot().num)
+                this.addChildren(other);
+        }
+
+        public RoomLeaf getRoot()
+        {
+            return root ? this : this.parent.getRoot();
+        }
+
+        void addChildren(RoomLeaf child)
+        {
+            children.Add(child);
+            child.parent = this;
+            child.root = false;
+        }
+
+        public bool isConnectTo(RoomLeaf other)
+        {
+            return this.getRoot().num == other.getRoot().num;
+        }
+    }
+
     public Block[,] room;
+    private RoomLeaf[] roomLeaves;
+
+    //own
     List<RoomWall> roomWalls = new List<RoomWall>();
     private int[,] emptyRoomTemplate =
         {
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
-            {1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
-            {1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
-            {1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
-            {1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
+            {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
+            {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
+            {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
+            {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
             {1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1},
             {1, 6, 6, 6, 6, 6, 2, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 9, 9, 9, 9, 9, 1},
             {1, 6, 6, 6, 6, 6, 2, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 9, 9, 9, 9, 9, 1},
@@ -188,12 +236,12 @@ public class Room
             {1, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 1},
             {1, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 1},
             {1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1},
-            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 1},
-            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 1},
-            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 1},
-            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 1},
-            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 18, 18, 18, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
+            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
+            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
+            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
+            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 19, 19, 19, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
         };
 
     public Room()
@@ -210,18 +258,26 @@ public class Room
                 {
                     Wall.Inner wall;
                     if (emptyRoomTemplate[y, x - 1] == 2 || emptyRoomTemplate[y, x - 1] == 1)
-                        wall = new Wall.Inner(emptyRoomTemplate[y - 1, x] - 1, emptyRoomTemplate[y + 1, x] - 1, x, y);
+                    {
+                        int min = Math.Min(emptyRoomTemplate[y - 1, x] - 2, emptyRoomTemplate[y + 1, x] - 2);
+                        int max = Math.Max(emptyRoomTemplate[y - 1, x] - 2, emptyRoomTemplate[y + 1, x] - 2);
+                        wall = new Wall.Inner(min, max, x, y);
+                    }
                     else
-                        wall = new Wall.Inner(emptyRoomTemplate[y, x - 1] - 1, emptyRoomTemplate[y, x + 1] - 1, x, y);
-                        
+                    {
+                        int min = Math.Min(emptyRoomTemplate[y, x - 1] - 2, emptyRoomTemplate[y, x + 1] - 2);
+                        int max = Math.Max(emptyRoomTemplate[y, x - 1] - 2, emptyRoomTemplate[y, x + 1] - 2);
+                        wall = new Wall.Inner(min, max, x, y);
+                    }
                     room[y, x] = wall;
                     mergeWall(wall);
                 }
                 else
                     room[y, x] = new Floor.Vanilla();
             }
-        roomWalls[0].explode(room);
-        roomWalls[6].explode(room);
+        createTree();
+        shuffleList();
+        explodeWalls();
     }
 
     void mergeWall(Wall.Inner wall)
@@ -234,7 +290,57 @@ public class Room
                 return;
             }
         }
-        roomWalls.Add(new RoomWall(wall));
+        roomWalls.Add(new RoomWall(wall, room));
+    }
+
+    void createTree()
+    {
+        roomLeaves = new RoomLeaf[20];
+        for (int i = 0; i < 20; i++)
+            roomLeaves[i] = new RoomLeaf(i + 1); 
+    }
+
+    void shuffleList()
+    {
+        Shuffle<RoomWall>(roomWalls);
+    }
+
+    void explodeWalls()
+    {
+        foreach (RoomWall rw in roomWalls)
+        {
+            if (!isConnect(rw))
+            {
+                rw.explode();
+                connect(rw);
+            }
+        }
+        foreach (RoomLeaf rl in roomLeaves)
+            Debug.Log("Room" + rl.num + " root = " + rl.getRoot().num);
+    }
+
+    bool isConnect(RoomWall rw)
+    {
+        return roomLeaves[rw.wall.top - 1].isConnectTo(roomLeaves[rw.wall.bottom - 1]);
+    }
+
+    void connect(RoomWall rw)
+    {
+        roomLeaves[rw.wall.top - 1].connect(roomLeaves[rw.wall.bottom - 1]);
+    }
+
+    void Shuffle<T>(IList<T> list)
+    {
+        int n = list.Count;
+        System.Random rnd = new System.Random();
+        while (n > 1)
+        {
+            int k = (rnd.Next(0, n));
+            n--;
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
     }
 }
 
