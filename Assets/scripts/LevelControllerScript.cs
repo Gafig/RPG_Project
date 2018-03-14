@@ -17,7 +17,7 @@ public class LevelControllerScript : MonoBehaviour {
     
     void Start () {
         currentFloor = 1;
-        floorGenerator = GameObject.Find("FloorGenerator").GetComponent(typeof(FloorGenerator)) as FloorGenerator;
+        /***/floorGenerator = GameObject.Find("FloorGenerator").GetComponent(typeof(FloorGenerator)) as FloorGenerator;
         StartCoroutine(generateFloor());
         anim.SetBool("IsGen", true);
         setPlayerPosition();
@@ -72,6 +72,16 @@ public class LevelControllerScript : MonoBehaviour {
     {
         anim.SetBool("Fade", false);
         yield return new WaitUntil(() => fade.color.a == 0);
+    }
+
+    void randomEncounter()
+    {
+        if(totalStep >= 1000)
+        {
+            //disable key
+            //changeScence
+            //getMon
+        }
     }
 }
 
