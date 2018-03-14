@@ -10,12 +10,18 @@ public class FieldOfView : MonoBehaviour {
 
     public LayerMask targetMask;
     public LayerMask obstacleMask;
-
+    MoveAround parentData;
     public List<Transform> visibleTargets = new List<Transform>();
 
     void Start()
     {
+        parentData = transform.parent.GetComponent(typeof(MoveAround)) as MoveAround ;
         StartCoroutine("FindTargetWithDelay", 0.2f);
+    }
+
+    private void Update()
+    {
+        this.transform.rotation = Quaternion.Euler(0, 0, parentData.dir);
     }
 
     IEnumerator FindTargetWithDelay(float delay)

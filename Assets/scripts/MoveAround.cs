@@ -7,8 +7,7 @@ public class MoveAround : MonoBehaviour
     Rigidbody rb;
     float speed = 3.0f;
     Vector3 velocity;
-    [SerializeField]
-    float dir;
+    public float dir;
     [SerializeField]
     Sprite[] spriteList;
     SpriteRenderer spriteRenderer;
@@ -84,7 +83,7 @@ public class MoveAround : MonoBehaviour
         const float ANGLE = 22.5f;
         if(angle == 0)
             return dir > 315 || dir < 22.5f;
-        return dir > (angle - 22.5) && dir < (angle + 22.5);
+        return dir > (angle - ANGLE) && dir < (angle + ANGLE);
     }
 
     private void setSprite(int index)
