@@ -4,23 +4,20 @@ using System.Linq;
 
 public class MoveAround : MonoBehaviour
 {
-    Rigidbody rigidbody;
+    Rigidbody rb;
     float speed = 5.0f;
     Vector3 velocity;
 
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
         if (GameMasterController.IsInputEnabled)
         {
-            velocity = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0).normalized * speed;
-            transform.LookAt(velocity);
-           
-           
+            velocity = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0).normalized * speed;   
         }
     }
 
@@ -34,8 +31,8 @@ public class MoveAround : MonoBehaviour
         if(velocity.y != 0)
             hitsY = Physics.RaycastAll(transform.position, new Vector3(0, velocity.y, 0), 0.26F);
         if (hitsX == null || hitsX.Length == 0)
-            rigidbody.MovePosition(rigidbody.position + new Vector3(velocity.x, 0, 0) * Time.fixedDeltaTime);
+            rb.MovePosition(rb.position + new Vector3(velocity.x, 0, 0) * Time.fixedDeltaTime);
         if (hitsY == null || hitsY.Length == 0)
-            rigidbody.MovePosition(rigidbody.position + new Vector3(0, velocity.y, 0) * Time.fixedDeltaTime);
+            rb.MovePosition(rb.position + new Vector3(0, velocity.y, 0) * Time.fixedDeltaTime);
     }
 }
