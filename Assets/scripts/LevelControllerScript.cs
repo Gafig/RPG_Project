@@ -15,7 +15,6 @@ public class LevelControllerScript : MonoBehaviour {
     private float totalStep;
     private Vector3 playerLastPos;
     
-    // Use this for initialization
     void Start () {
         currentFloor = 1;
         floorGenerator = GameObject.Find("FloorGenerator").GetComponent(typeof(FloorGenerator)) as FloorGenerator;
@@ -28,7 +27,6 @@ public class LevelControllerScript : MonoBehaviour {
         playerLastPos = player.transform.position;
     }
 	
-	// Update is called once per frame
 	void Update () {
         Vector3 playerCurrPos = player.transform.position;
         if (playerCurrPos != playerLastPos)
@@ -59,7 +57,7 @@ public class LevelControllerScript : MonoBehaviour {
 
     IEnumerator generateFloor()
     {
-        floorGenerator.generate(3);
+        floorGenerator.generate(3, 0);
         yield return new WaitUntil(() => floorGenerator.isFinished());
     }
 
@@ -76,3 +74,4 @@ public class LevelControllerScript : MonoBehaviour {
         yield return new WaitUntil(() => fade.color.a == 0);
     }
 }
+

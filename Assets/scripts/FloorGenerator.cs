@@ -11,32 +11,28 @@ public class FloorGenerator : MonoBehaviour {
     public GameObject nextLevelConnectorSprite;
     public GameObject floorObj;
 
-    private Block[,] floor;
     List<Room> rooms = new List<Room>();
     private enum DIR : int { WEST = 1, EAST, NORTH, SOUTH, NW, NE, SW, SE };
     private enum AXIS : int { X = 1, Y };
     private bool isDone = false;
     private const int ROOM_SIZE = 37;
+    private int currRoom = 0, depth = 0; 
 
     public bool isFinished(){
         return isDone;
     }
 
-    public void generate(int roomAmount)
+    public void generate(int roomAmount, int depth)
     {
+        this.depth = depth;
         rooms.Clear();
         isDone = false;
-        newEmptyFloor(roomAmount);
+        for (int i = 0; i < roomAmount; i++) {
+            Room newRoom = new Room();
+            rooms.Add(newRoom);
+        }
         placeBlocks();
         isDone = true;
-    }
-
-    void newEmptyFloor(int roomAmount)
-    {
-        
-        floor = new Block[ROOM_SIZE, (ROOM_SIZE + 5) * roomAmount + 5];
-        for(int i = 0; i<roomAmount; i++)
-            rooms.Add(new Room());
     }
 
    void placeBlocks()
@@ -130,11 +126,6 @@ public class FloorGenerator : MonoBehaviour {
     {
         return potentialDescendant.IsSubclassOf(potentialBase)
                || potentialDescendant == potentialBase;
-    }
-
-    public void testGenerate()
-    {
-        generate(1);
     }
 
 }
