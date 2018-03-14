@@ -9,6 +9,12 @@ public class LevelControllerScript : MonoBehaviour {
     public int currentFloor = 1;
     FloorGenerator floorGenerator;
     public Image fade;
+    private GameObject player;
+    private Rigidbody playerRB;
+    [SerializeField]
+    private float totalStep;
+    private Vector3 playerLastPos;
+    
     // Use this for initialization
     void Start () {
         currentFloor = 1;
@@ -16,17 +22,24 @@ public class LevelControllerScript : MonoBehaviour {
         StartCoroutine(generateFloor());
         anim.SetBool("IsGen", true);
         setPlayerPosition();
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerRB = player.GetComponent<Rigidbody>();
+        totalStep = 0;
+        playerLastPos = player.transform.position;
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
+        Vector3 playerCurrPos = player.transform.position;
+        if (playerCurrPos != playerLastPos)
+            totalStep++;
+        playerLastPos = playerCurrPos;
 	}
 
     void setPlayerPosition()
     {
         GameObject player = GameObject.Find("Player");
-        player.transform.position = new Vector3(18, -1, 0);
+        player.transform.position = new Vector3(18, -1, -0.1f);
     }
 
     public void toNextLevel()

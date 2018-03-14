@@ -35,9 +35,9 @@ public class MoveAround : MonoBehaviour
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         RaycastHit[] hitsX = null, hitsY = null;
         if (velocity.x != 0)
-            hitsX = Physics.RaycastAll(transform.position, new Vector3(velocity.x, 0, 0), 0.26F);
+            hitsX = Physics.RaycastAll(transform.position, new Vector3(velocity.x, 0, 0), 0.51F);
         if (velocity.y != 0)
-            hitsY = Physics.RaycastAll(transform.position, new Vector3(0, velocity.y, 0), 0.26F);
+            hitsY = Physics.RaycastAll(transform.position, new Vector3(0, velocity.y, 0), 0.51F);
         if (hitsX == null || hitsX.Length == 0)
             rb.MovePosition(rb.position + new Vector3(velocity.x, 0, 0) * Time.fixedDeltaTime);
         if (hitsY == null || hitsY.Length == 0)
@@ -73,7 +73,7 @@ public class MoveAround : MonoBehaviour
             index = 5;
         else if (isValidFacing(270))
             index = 6;
-        else if (isValidFacing(315))
+        else
             index = 7;
         setSprite(index);
     }
@@ -83,7 +83,7 @@ public class MoveAround : MonoBehaviour
         const float ANGLE = 22.5f;
         if(angle == 0)
             return dir > 315 || dir < 22.5f;
-        return dir > (angle - ANGLE) && dir < (angle + ANGLE);
+        return dir >= (angle - ANGLE) && dir < (angle + ANGLE);
     }
 
     private void setSprite(int index)
