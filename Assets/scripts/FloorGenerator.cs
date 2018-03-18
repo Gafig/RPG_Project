@@ -16,7 +16,9 @@ public class FloorGenerator : MonoBehaviour {
     private enum AXIS : int { X = 1, Y };
     private bool isDone = false;
     private const int ROOM_SIZE = 37;
-    private int currRoom = 0, depth = 0; 
+    private int currRoom = 0, depth = 0;
+    [SerializeField]
+    private Sprite[] floorSprites;
 
     public bool isFinished(){
         return isDone;
@@ -61,7 +63,7 @@ public class FloorGenerator : MonoBehaviour {
 
                     else if (IsSameOrSubclass(typeof(Floor), r.room[y, x].GetType()))
                     {
-                        (Instantiate(floorSprite, new Vector3(x, -(y + yStart), 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+                        placeFloorAt(x, -(y + yStart));
                     }
                 }
             yStart += r.room.GetLength(0);
@@ -72,6 +74,14 @@ public class FloorGenerator : MonoBehaviour {
             }
         }
         placeExit(-yStart);
+    }
+
+    private void placeFloorAt(int x, int y)
+    {
+        GameObject floorBlock = (Instantiate(floorSprite, new Vector3(x, y, 0), Quaternion.identity) as GameObject);
+        floorBlock.transform.parent = floorObj.transform;
+        SpriteRenderer spriteRenderer = floorBlock.GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = floorSprites[UnityEngine.Random.Range(0, floorSprites.Length)];
     }
 
     private void placeEntrance(int y)
@@ -115,9 +125,9 @@ public class FloorGenerator : MonoBehaviour {
     private void placePassagePieces(int y)
     {
         (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        (Instantiate(floorSprite, new Vector3(17, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        (Instantiate(floorSprite, new Vector3(18, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        (Instantiate(floorSprite, new Vector3(19, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        placeFloorAt(17, y);
+        placeFloorAt(18, y);
+        placeFloorAt(19, y);
         (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
 
     }
