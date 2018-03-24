@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour {
 
 		dPoke.GetComponent<SpriteRenderer> ().sprite = battlePokemon.image;
 	
+		bm.ChangeMenu (BattleMenu.Selection);
 	}
 
 	public List<BasePokemon> GetPokemonByRarity(Rarity rarity){

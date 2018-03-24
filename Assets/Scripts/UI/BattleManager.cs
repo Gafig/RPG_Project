@@ -65,38 +65,65 @@ public class BattleManager : MonoBehaviour {
 				currentSelection--;
 			}	
 		}
-
-		Text first;
-		string ft;
-		Text second;
-		string st;
-		Text third;
-		string tt;
-		Text fourth;
-		string fft;
+		if (currentSelection == 0)
+			currentSelection = 1;
 
 		switch (currentMenu) {
 		case BattleMenu.Fight:
-			first = moveO;
-			second = moveT;
-			third = moveTH;
-			fourth = moveF;
-
-			ft = moveOT;
-			st = moveTT;
-			tt = moveTHT;
-			ft = moveFT;
+			switch (currentSelection) {
+			case 1:
+				moveO.text = "> " + moveOT;
+				moveT.text = moveTT;
+				moveTH.text = moveTHT;
+				moveF.text = moveFT;
+				break;
+			case 2:
+				moveO.text = moveOT;
+				moveT.text = "> " + moveTT;
+				moveTH.text = moveTHT;
+				moveF.text = moveFT;
+				break;
+			case 3:
+				moveO.text = moveOT;
+				moveT.text = moveTT;
+				moveTH.text = "> " + moveTHT;
+				moveF.text = moveFT;
+				break;
+			case 4:
+				moveO.text = moveOT;
+				moveT.text = moveTT;
+				moveTH.text = moveTHT;
+				moveF.text = "> " + moveFT;
+				break;
+			}
 			break;
 		case BattleMenu.Selection:
-			first = fight;
-			second = bag;
-			third = pokemon;
-			fourth = run;
-
-			ft = fightT;
-			st = bagT;
-			tt = pokemonT;
-			ft = runT;
+			switch (currentSelection) {
+			case 1:
+				fight.text = "> " + fightT;
+				bag.text = bagT;
+				pokemon.text = pokemonT;
+				run.text = runT;
+				break;
+			case 2:
+				fight.text = fightT;
+				bag.text = "> " + bagT;
+				pokemon.text = pokemonT;
+				run.text = runT;
+				break;
+			case 3:
+				fight.text = fightT;
+				bag.text = bagT;
+				pokemon.text = "> " + pokemonT;
+				run.text = runT;
+				break;
+			case 4:
+				fight.text = fightT;
+				bag.text = bagT;
+				pokemon.text = pokemonT;
+				run.text = "> " + runT;
+				break;
+			}
 			break;
 
 		}
