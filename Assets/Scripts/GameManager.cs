@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour {
 	public Transform defencePodium;
 	public Transform attackPodium;
 	public GameObject emptyPoke;
+
+	public BattleManager bm;
 	 
 
 	// Use this for initialization
@@ -38,7 +40,9 @@ public class GameManager : MonoBehaviour {
 		player.GetComponent<PlayerMovement> ().isAllowedToMove = false;
 
 		GameObject dPoke = Instantiate (emptyPoke, defencePodium.transform.position, Quaternion.identity) as GameObject; 
+		Vector3 pokeLocalPos = new Vector3 (0, 1, 0);
 		dPoke.transform.parent = defencePodium;
+		dPoke.transform.localPosition =pokeLocalPos;
 
 		BasePokemon tempPoke = dPoke.AddComponent<BasePokemon> () as BasePokemon;
 		tempPoke.Addmember(battlePokemon);
