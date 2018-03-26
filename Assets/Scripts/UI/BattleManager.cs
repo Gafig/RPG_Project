@@ -15,8 +15,8 @@ public class BattleManager : MonoBehaviour {
 	private string fightT;
 	public Text bag;
 	private string bagT;
-	public Text pokemon;
-	private string pokemonT;
+	public Text monster;
+	private string monsterT;
 	public Text run;
 	private string runT;
 
@@ -45,7 +45,7 @@ public class BattleManager : MonoBehaviour {
 	void Start () {
 		fightT = fight.text;
 		bagT = bag.text;
-		pokemonT = pokemon.text;
+		monsterT = monster.text;
 		runT = run.text;
 		moveOT = moveO.text;
 		moveTT = moveT.text;
@@ -102,25 +102,25 @@ public class BattleManager : MonoBehaviour {
 			case 1:
 				fight.text = "> " + fightT;
 				bag.text = bagT;
-				pokemon.text = pokemonT;
+				monster.text = monsterT;
 				run.text = runT;
 				break;
 			case 2:
 				fight.text = fightT;
 				bag.text = "> " + bagT;
-				pokemon.text = pokemonT;
+				monster.text = monsterT;
 				run.text = runT;
 				break;
 			case 3:
 				fight.text = fightT;
 				bag.text = bagT;
-				pokemon.text = "> " + pokemonT;
+				monster.text = "> " + monsterT;
 				run.text = runT;
 				break;
 			case 4:
 				fight.text = fightT;
 				bag.text = bagT;
-				pokemon.text = pokemonT;
+				monster.text = monsterT;
 				run.text = "> " + runT;
 				break;
 			}
@@ -165,7 +165,7 @@ public class BattleManager : MonoBehaviour {
 
 public enum BattleMenu{
 	Selection,
-	Pokemon,
+	Monster,
 	Bag,
 	Fight,
 	Info

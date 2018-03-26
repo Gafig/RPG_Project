@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BasePokemon : MonoBehaviour {
+public class BaseMonster : MonoBehaviour {
 
 	public string PName;
 	public Sprite image;
 	public BiomeList biomeFound;
-	public PokemonType type;
+	public MonsterType type;
 	public Rarity rarity;
 	public int HP;
 	private int maxHP;
 	public Stat AttackStat;
 	public Stat DefenceStat;
 
-	public PokemonStats pokemonStats;
+	public MonsterStats monsterStats;
 
 	public bool canEvolve;
-	public PokemonEvolution evolveTo;
+	public MonsterEvolution evolveTo;
 
 	private int level;
 
@@ -31,7 +31,7 @@ public class BasePokemon : MonoBehaviour {
 	void Update () {
 		
 	}
-	public void Addmember(BasePokemon bp){
+	public void Addmember(BaseMonster bp){
 		this.PName = bp.PName;
 		this.image = bp.image;
 		this.biomeFound = bp.biomeFound;
@@ -41,7 +41,7 @@ public class BasePokemon : MonoBehaviour {
 		this.maxHP = bp.maxHP;
 		this.AttackStat = bp.AttackStat;
 		this.DefenceStat = bp.DefenceStat;
-		this.pokemonStats = bp.pokemonStats;
+		this.monsterStats = bp.monsterStats;
 		this.canEvolve = bp.canEvolve;
 		this.evolveTo = bp.evolveTo;
 		this.level = bp.level;
@@ -57,7 +57,7 @@ public enum Rarity{
 }
 
 
-public enum PokemonType{
+public enum MonsterType{
 	Flying,
 	Ground,
 	Rock,
@@ -77,15 +77,15 @@ public enum PokemonType{
 
 [System.Serializable]
 
-public class PokemonEvolution{
-	public BasePokemon newEvolution;
+public class MonsterEvolution{
+	public BaseMonster newEvolution;
 	public int levelUpLevel;
 
 }
 
 [System.Serializable]
 
-public class PokemonStats{
+public class MonsterStats{
 	public int AttackStat;
 	public int DefenceStat;
 	public int SpeedStat;

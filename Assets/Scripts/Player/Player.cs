@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-	public List<OwnedPokemon> ownedPokemon = new List<OwnedPokemon> ();
+	public List<OwnedMonster> ownedMonster = new List<OwnedMonster> ();
 
 
 	// Use this for initialization
@@ -19,9 +19,9 @@ public class Player : MonoBehaviour {
 }
 
 [System.Serializable]
-public class OwnedPokemon{
+public class OwnedMonster{
 	public string NickName;
-	public BasePokemon pokemon;
+	public BaseMonster monster;
 	public int level;
-	public List<PokemonMoves> moves = new List<PokemonMoves>(); 
+	public List<MonsterMoves> moves = new List<MonsterMoves>(); 
 }

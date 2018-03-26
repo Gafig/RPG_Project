@@ -8,12 +8,12 @@ public class GameManager : MonoBehaviour {
 	public GameObject battleCamera;
 
 	public GameObject player;
-	public List<BasePokemon> allPokemon = new List<BasePokemon>();
-	public List<PokemonMoves> allMoves = new List<PokemonMoves> ();
+	public List<BaseMonster> allMonster = new List<BaseMonster>();
+	public List<MonsterMoves> allMoves = new List<MonsterMoves> ();
 
 	public Transform defencePodium;
 	public Transform attackPodium;
-	public GameObject emptyPoke;
+	public GameObject emptyMons;
 
 	public BattleManager bm;
 	 
@@ -33,51 +33,52 @@ public class GameManager : MonoBehaviour {
 		playerCamera.SetActive (false);
 		battleCamera.SetActive (true);
 
-		BasePokemon battlePokemon = GetRandomPokemonFromList (GetPokemonByRarity (rarity));
-		Debug.Log (battlePokemon.name);
+		BaseMonster battleMonster = GetRandomMonsterFromList (GetMonsterByRarity (rarity));
+		Debug.Log (battleMonster.name);
 
 		//not stop
 		player.GetComponent<PlayerMovement> ().isAllowedToMove = false;
 
-		GameObject dPoke = Instantiate (emptyPoke, defencePodium.transform.position, Quaternion.identity) as GameObject; 
-		Vector3 pokeLocalPos = new Vector3 (0, 1, 0);
-		dPoke.transform.parent = defencePodium;
-		dPoke.transform.localPosition =pokeLocalPos;
 
-		BasePokemon tempPoke = dPoke.AddComponent<BasePokemon> () as BasePokemon;
-		tempPoke.Addmember(battlePokemon);
+		GameObject dMons = Instantiate (emptyMons, defencePodium.transform.position, Quaternion.identity) as GameObject; 
+		Vector3 monsLocalPos = new Vector3 (0, 1, 0);
+		dMons.transform.parent = defencePodium;
+		dMons.transform.localPosition = monsLocalPos;
 
-		dPoke.GetComponent<SpriteRenderer> ().sprite = battlePokemon.image;
+		BaseMonster tempMons = dMons.AddComponent<BaseMonster> () as BaseMonster;
+		tempMons.Addmember(battleMonster);
+
+		dMons.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
 	
 		bm.ChangeMenu (BattleMenu.Selection);
 	}
 
-	public List<BasePokemon> GetPokemonByRarity(Rarity rarity){
-		List<BasePokemon> returnPokemon = new List<BasePokemon> ();
-		foreach (BasePokemon Pokemon in allPokemon) {
-			if (Pokemon.rarity == rarity)
-				returnPokemon.Add (Pokemon);
+	public List<BaseMonster> GetMonsterByRarity(Rarity rarity){
+		List<BaseMonster> returnMonster = new List<BaseMonster> ();
+		foreach (BaseMonster Monster in allMonster) {
+			if (Monster.rarity == rarity)
+				returnMonster.Add (Monster);
 		}
 
-		return returnPokemon;
+		return returnMonster;
 	} 
 
-	public BasePokemon GetRandomPokemonFromList(List<BasePokemon> pokeList){
-		BasePokemon poke = new BasePokemon ();
-		int pokeIndex = Random.Range (0, pokeList.Count - 1);
-			poke = pokeList[pokeIndex];
-		return poke;
+	public BaseMonster GetRandomMonsterFromList(List<BaseMonster> monsList){
+		BaseMonster mons = new BaseMonster ();
+		int monsIndex = Random.Range (0, monsList.Count - 1);
+		mons = monsList[monsIndex];
+		return mons;
 	}
 }
 
 
 [System.Serializable]
 
-public class PokemonMoves{
+public class MonsterMoves{
 	string Name;
 	public MoveType category;
 	public Stat moveStat;
-	public PokemonType moveType;
+	public MonsterType moveType;
 	public int PP;
 	public float Power;
 	public float accuracy;
