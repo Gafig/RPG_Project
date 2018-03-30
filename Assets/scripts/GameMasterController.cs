@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameMasterController : MonoBehaviour {
 
     public static bool IsInputEnabled = true;
+    public static bool betweenDialog = false;
     // Use this for initialization
     void Start () {
         DontDestroyOnLoad(this);
