@@ -6,4 +6,9 @@ using UnityEngine;
 public class DialogConversation{
 
     public Dialog[] dialogs;
+
+    public DialogConversation(Dialog[] dialogs) {
+        this.dialogs = dialogs;
+    }
 }
+
