@@ -67,7 +67,7 @@ public class BattleManager : MonoBehaviour {
 		}
 		if (currentSelection == 0)
 			currentSelection = 1;
-
+		
 		switch (currentMenu) {
 		case BattleMenu.Fight:
 			switch (currentSelection) {
@@ -112,6 +112,7 @@ public class BattleManager : MonoBehaviour {
 				run.text = runT;
 				break;
 			case 3:
+				
 				fight.text = fightT;
 				bag.text = bagT;
 				monster.text = "> " + monsterT;
@@ -132,6 +133,7 @@ public class BattleManager : MonoBehaviour {
 
 	public void ChangeMenu(BattleMenu m){
 		currentMenu = m;
+		Debug.Log (m);
 		currentSelection = 1;
 		switch (m) {
 
