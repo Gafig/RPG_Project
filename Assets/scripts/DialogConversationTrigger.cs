@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogConversationTrigger : MonoBehaviour {
+public class DialogConversationTrigger : MonoBehaviour, Event {
 
     public DialogConversation conversation;
 
