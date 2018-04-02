@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class DialogConversation{
+public interface Interactable {
 
-    public Dialog[] dialogs;
+    void react();
 }
