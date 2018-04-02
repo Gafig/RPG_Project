@@ -6,7 +6,7 @@ public class DialogTrigger : MonoBehaviour {
 
     public Dialog dialog;
 
-    public void Trigger()
+    public void trigger()
     {
         FindObjectOfType<DialogManager>().startDialog(dialog);
     }

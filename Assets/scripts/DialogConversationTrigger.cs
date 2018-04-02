@@ -6,7 +6,7 @@ public class DialogConversationTrigger : MonoBehaviour {
 
     public DialogConversation conversation;
 
-    public void Trigger()
+    public void trigger()
     {
         FindObjectOfType<DialogManager>().startConversation(conversation);
     }
