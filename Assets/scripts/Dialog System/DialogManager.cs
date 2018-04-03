@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DialogManager : MonoBehaviour {
 
-    public Text nameText;
-    public Text dialogText;
+    //public Text nameText;
+    //public Text dialogText;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI dialogText;
     public Animator animator;
     private string sentence;
     private bool isTyping;
@@ -54,11 +57,11 @@ public class DialogManager : MonoBehaviour {
 
     IEnumerator typeSentence(string sentence)
     {
-        dialogText.text = "";
+        dialogText.SetText("");
         isTyping = true;
         foreach (char letter in sentence.ToCharArray())
         {
-            dialogText.text += letter;
+            dialogText.SetText( dialogText.text + letter );
             yield return new WaitForSeconds(0.05f);
         }
         isTyping = false;
