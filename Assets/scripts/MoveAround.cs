@@ -5,6 +5,7 @@ using System.Linq;
 public class MoveAround : MonoBehaviour
 {
     Rigidbody rb;
+    [SerializeField]
     float speed = 3.0f;
     Vector3 velocity;
     public Vector3 lastVelocity;
