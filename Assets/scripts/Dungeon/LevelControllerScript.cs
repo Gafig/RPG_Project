@@ -42,7 +42,7 @@ public class LevelControllerScript : MonoBehaviour {
 
     public void toNextLevel()
     {
-        GameMasterController.IsInputEnabled = false;
+        GameMasterController.instance.IsInputEnabled = false;
         StartCoroutine(FadeOut());
     }
 
@@ -52,7 +52,7 @@ public class LevelControllerScript : MonoBehaviour {
         StartCoroutine(generateFloor());
         setPlayerPosition();
         StartCoroutine(FadeIn());
-        GameMasterController.IsInputEnabled = true;
+        GameMasterController.instance.IsInputEnabled = true;
     } 
 
     IEnumerator generateFloor()

@@ -7,6 +7,7 @@ public class MoveAround : MonoBehaviour
     Rigidbody rb;
     float speed = 3.0f;
     Vector3 velocity;
+    public Vector3 lastVelocity;
     public float dir;
     [SerializeField]
     Sprite[] spriteList;
@@ -17,11 +18,12 @@ public class MoveAround : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         dir = 180;
         rb = GetComponent<Rigidbody>();
+        lastVelocity = Vector3.down;
     }
 
     void Update()
     {
-        if (GameMasterController.IsInputEnabled)
+        if (GameMasterController.instance.IsInputEnabled)
         {
             velocity = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0).normalized * speed;
             move();
@@ -53,6 +55,7 @@ public class MoveAround : MonoBehaviour
             {
                 dir = 360 - dir;
             }
+            lastVelocity = velocity.normalized;
         }
     }
 
