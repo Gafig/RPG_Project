@@ -37,7 +37,7 @@ public class FieldOfView : MonoBehaviour {
     {
         visibleTargets.Clear();
         Collider[] targetInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
-        Debug.Log("Find:" + targetInViewRadius.Length);
+        //Debug.Log("Find:" + targetInViewRadius.Length);
         foreach( Collider targetCol in targetInViewRadius)
         {
             Transform target = targetCol.transform;

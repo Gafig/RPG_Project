@@ -36,6 +36,7 @@ public class GameMasterController : MonoBehaviour {
         {
             Debug.Log(currentEvents.Count);
             Event e = currentEvents.Dequeue();
+            Debug.Log(currentEvents.Count);
             e.trigger();
         }
     }
@@ -43,9 +44,9 @@ public class GameMasterController : MonoBehaviour {
     public void startEvents(Event[] events)
     {
         
-        if (currentEvents.Count != 0)
+        if (betweenEvent)
             return;
-        
+        Debug.Log("Start");
         foreach (Event e in events)
         {
             currentEvents.Enqueue(e);
@@ -63,6 +64,14 @@ public class GameMasterController : MonoBehaviour {
 
     public void endEvent()
     {
+        betweenEvent = false;
+        IsInputEnabled = true;
+        //StartCoroutine(sleep());
+    }
+
+    IEnumerator sleep()
+    {
+        yield return new WaitForSeconds(0.1f);
         betweenEvent = false;
         IsInputEnabled = true;
     }

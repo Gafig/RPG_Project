@@ -29,8 +29,6 @@ public class DialogManager : MonoBehaviour {
             if (Input.GetKeyDown("z"))
                 displayNextDialog();
         }
-        else if (Input.GetKeyDown("z"))
-            displayNextSentence();
     }
 
     public void startConversation(DialogConversation conversation)
@@ -93,9 +91,10 @@ public class DialogManager : MonoBehaviour {
         {
             isBetweenConversation = false;
             endDialog();
+            return;
         }
 
-        else if(sentences.Count == 0 && !isTyping)
+        if(sentences.Count == 0 && !isTyping &&  dialogs.Count > 0)
             startDialog(dialogs.Dequeue());
 
         else
@@ -106,9 +105,13 @@ public class DialogManager : MonoBehaviour {
 
     public void endDialog()
     {
-        if(!isBetweenConversation)
-            animator.SetBool("isOpen", false);
         NotifyGameControllerFinish();
+        if (!isBetweenConversation)
+        {
+            Debug.Log("Stop");
+            animator.SetBool("isOpen", false);
+        }
+        
     }
 
     public bool NotifyGameControllerStart()

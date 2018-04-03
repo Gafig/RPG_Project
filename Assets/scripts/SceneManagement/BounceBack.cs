@@ -14,6 +14,7 @@ public class BounceBack : Event {
 
     public override void trigger()
     {
+        GameMasterController.instance.startEvent();
         if (direction == Direction.down)
             MoveAround.instance.faceDown();
         else if (direction == Direction.up)
@@ -22,6 +23,14 @@ public class BounceBack : Event {
             MoveAround.instance.faceLeft();
         else if (direction == Direction.right)
             MoveAround.instance.faceRight();
+        StartCoroutine(wait());
+        
+    }
+
+    IEnumerator wait()
+    {
+        yield return new WaitForSeconds(0.1f);
+        GameMasterController.instance.endEvent();
     }
 
 }
