@@ -8,6 +8,7 @@ public class FloorGenerator : MonoBehaviour {
 
     public GameObject floorSprite;
     public GameObject wallSprite;
+    public GameObject playerSpawner;
     public GameObject nextLevelConnectorSprite;
     public GameObject floorObj;
 
@@ -86,9 +87,12 @@ public class FloorGenerator : MonoBehaviour {
 
     private void placeEntrance(int y)
     {
+
         placeEntrancePieces(y);
-        for(int i = -1; i > -5; i--)
-            placePassagePieces(i + y);
+        placePassagePieces(y - 1);
+        placeTopSpawnerPieces(y - 2);
+        placePassagePieces(y - 3);
+        placePassagePieces(y - 4);
     }
 
     private void placePassage(int y)
@@ -99,27 +103,78 @@ public class FloorGenerator : MonoBehaviour {
 
     private void placeExit(int y)
     {
-        for (int i = 0; i > -4; i--)
-            placePassagePieces(i + y);
+        placePassagePieces(y);
+        placePassagePieces(y - 1);
+        placeBottomSpawnerPieces(y - 2);
+        placePassagePieces(y - 3);
         placeEndPieces(y - 4);
     }
 
     private void placeEndPieces(int y)
     {
         (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        (Instantiate(nextLevelConnectorSprite, new Vector3(17, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        (Instantiate(nextLevelConnectorSprite, new Vector3(18, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        (Instantiate(nextLevelConnectorSprite, new Vector3(19, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        setConnecterDown(Instantiate(nextLevelConnectorSprite, new Vector3(17, y, 0), Quaternion.identity) as GameObject);
+        setConnecterDown(Instantiate(nextLevelConnectorSprite, new Vector3(18, y, 0), Quaternion.identity) as GameObject);
+        setConnecterDown(Instantiate(nextLevelConnectorSprite, new Vector3(19, y, 0), Quaternion.identity) as GameObject);
         (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+    }
+
+    private void setConnecterDown(GameObject connecter)
+    {
+        connecter.transform.parent = floorObj.transform;
+        DangeonLevelConnector dlc = connecter.GetComponent<DangeonLevelConnector>();
+        dlc.id = "DunEnt" + (depth+1);
+        dlc.dir = Direction.down;
     }
 
     private void placeEntrancePieces(int y)
     {
         (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        (Instantiate(wallSprite, new Vector3(17, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        (Instantiate(wallSprite, new Vector3(18, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        (Instantiate(wallSprite, new Vector3(19, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        setConnecterUp(Instantiate(nextLevelConnectorSprite, new Vector3(17, y, 0), Quaternion.identity) as GameObject);
+        setConnecterUp(Instantiate(nextLevelConnectorSprite, new Vector3(18, y, 0), Quaternion.identity) as GameObject);
+        setConnecterUp(Instantiate(nextLevelConnectorSprite, new Vector3(19, y, 0), Quaternion.identity) as GameObject);
         (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+    }
+
+    private void setConnecterUp(GameObject connecter)
+    {
+        connecter.transform.parent = floorObj.transform;
+        DangeonLevelConnector dlc = connecter.GetComponent<DangeonLevelConnector>();
+        dlc.id = "DunEnt" + (depth);
+        dlc.dir = Direction.up;
+    }
+
+    private void placeTopSpawnerPieces(int y)
+    {
+        (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        placeFloorAt(17, y);
+
+        GameObject spawner = (Instantiate(playerSpawner, new Vector3(18, y, 0), Quaternion.identity) as GameObject);
+        setSpawner(spawner, depth, Direction.down);
+
+        placeFloorAt(19, y);
+        (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+    }
+
+    private void placeBottomSpawnerPieces(int y)
+    {
+        (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        placeFloorAt(17, y);
+
+        GameObject spawner = (Instantiate(playerSpawner, new Vector3(18, y, 0), Quaternion.identity) as GameObject);
+        setSpawner(spawner, depth+1, Direction.up);
+
+        placeFloorAt(19, y);
+        (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+    }
+
+
+    private void setSpawner(GameObject spawner ,int depth, Direction face)
+    {
+        spawner.transform.parent = floorObj.transform;
+        PlayerSpawner ps = spawner.GetComponent<PlayerSpawner>();
+        ps.id = "DunEnt" + (depth);
+        ps.facing = face;
     }
 
     private void placePassagePieces(int y)
@@ -335,7 +390,7 @@ public class Room
     {
         foreach (RoomWall rw in roomWalls)
         {
-            Debug.Log("top: " + rw.wall.top + " bottom:" + rw.wall.bottom);
+            //Debug.Log("top: " + rw.wall.top + " bottom:" + rw.wall.bottom);
             if (!isConnect(rw))
             {
                 rw.explode();
@@ -346,7 +401,7 @@ public class Room
 
     bool isConnect(RoomWall rw)
     {
-        Debug.Log("top: " + roomLeaves[rw.wall.top - 1].num + "bottom: " + roomLeaves[rw.wall.bottom - 1].num + "connect: " + roomLeaves[rw.wall.top - 1].isConnectTo(roomLeaves[rw.wall.bottom - 1]));
+        //Debug.Log("top: " + roomLeaves[rw.wall.top - 1].num + "bottom: " + roomLeaves[rw.wall.bottom - 1].num + "connect: " + roomLeaves[rw.wall.top - 1].isConnectTo(roomLeaves[rw.wall.bottom - 1]));
         return roomLeaves[rw.wall.top - 1].isConnectTo(roomLeaves[rw.wall.bottom - 1]);
     }
 

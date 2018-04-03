@@ -9,10 +9,14 @@ public class GameMasterController : MonoBehaviour {
     public bool betweenEvent = false;
     public Queue<Event> currentEvents;
 
+    public GameObject player;
+    public string lastDoorID;
+
     public static GameMasterController instance;
 
     private void Awake()
     {
+        player = GameObject.Find("player");
         if (instance == null)
             instance = this;
         else if (instance != this)
@@ -22,6 +26,7 @@ public class GameMasterController : MonoBehaviour {
 
     void Start () {
         currentEvents = new Queue<Event>();
+        player = GameObject.Find("Player");
     }
 	
 	void Update () {
@@ -74,5 +79,26 @@ public class GameMasterController : MonoBehaviour {
         yield return new WaitForSeconds(0.1f);
         betweenEvent = false;
         IsInputEnabled = true;
+    }
+
+    public void setLastDoorID(string doorId)
+    {
+        lastDoorID = doorId;
+    }
+
+    public void setPlayerToTheLastDoor()
+    {
+        PlayerSpawner[] spawners = GameObject.FindObjectsOfType<PlayerSpawner>();
+        //Debug.Log(spawners.Length);
+        foreach (PlayerSpawner sp in spawners)
+        {
+            //Debug.Log("Compare:" + sp.id + " to:" + lastDoorID + " Resuls:" + sp.id.Equals(lastDoorID));
+            if (sp.id.Equals(lastDoorID))
+            {
+                Vector3 pos = sp.transform.position;
+                player.transform.position = new Vector3(pos.x, pos.y, player.transform.position.z);
+                player.GetComponent<MoveAround>().face(sp.facing);
+            }
+        }
     }
 }

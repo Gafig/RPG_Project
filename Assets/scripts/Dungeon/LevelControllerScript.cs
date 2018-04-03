@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class LevelControllerScript : MonoBehaviour {
 
     public Animator anim;
-    public int currentFloor = 1;
+    public int currentFloor;
     FloorGenerator floorGenerator;
     public Image fade;
     private GameObject player;
@@ -14,14 +14,15 @@ public class LevelControllerScript : MonoBehaviour {
     [SerializeField]
     private float totalStep;
     private Vector3 playerLastPos;
+    private bool isDone = false;
     
     void Start () {
-        currentFloor = 1;
+        currentFloor = 0;
         /***/floorGenerator = GameObject.Find("FloorGenerator").GetComponent(typeof(FloorGenerator)) as FloorGenerator;
         StartCoroutine(generateFloor());
         anim.SetBool("IsGen", true);
-        setPlayerPosition();
         player = GameObject.FindGameObjectWithTag("Player");
+        setPlayerPosition();
         playerRB = player.GetComponent<Rigidbody>();
         totalStep = 0;
         playerLastPos = player.transform.position;
@@ -36,29 +37,32 @@ public class LevelControllerScript : MonoBehaviour {
 
     void setPlayerPosition()
     {
-        GameObject player = GameObject.Find("Player");
-        player.transform.position = new Vector3(18, -1, -0.1f);
+        player.transform.position = new Vector3(17, -2, -0.1f);
+        //player.transform.position = new Vector3(0, 0, -0.1f);
+        //GameMasterController.instance.setPlayerToTheLastDoor();
     }
 
     public void toNextLevel()
     {
+        Debug.Log("Prepare to move to " + currentFloor);
         GameMasterController.instance.IsInputEnabled = false;
         StartCoroutine(FadeOut());
     }
 
     void prepareNextFloor()
     {
-        currentFloor++;
-        StartCoroutine(generateFloor());
         setPlayerPosition();
+        StartCoroutine(generateFloor());
         StartCoroutine(FadeIn());
         GameMasterController.instance.IsInputEnabled = true;
     } 
 
     IEnumerator generateFloor()
     {
-        floorGenerator.generate(5, 0);
+        floorGenerator.generate(1, currentFloor);
         yield return new WaitUntil(() => floorGenerator.isFinished());
+        GameMasterController.instance.setPlayerToTheLastDoor();
+        isDone = false;
     }
 
     IEnumerator FadeOut()
@@ -81,6 +85,25 @@ public class LevelControllerScript : MonoBehaviour {
             //disable key
             //changeScence
             //getMon
+        }
+    }
+
+    public void toLowerLevel()
+    {
+        if (!isDone)
+        {
+            currentFloor++;
+            isDone = true;
+        }
+    }
+
+    public void toHigherLevel()
+    {
+        if (!isDone)
+        {
+            Debug.Log("Up we go!");
+            currentFloor--;
+            isDone = true;
         }
     }
 }

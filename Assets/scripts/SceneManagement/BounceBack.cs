@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BounceBack : Event {
-
+    /*
     public enum Direction
     {
         down, up, left, right
-    }
+    }*/
 
     [SerializeField]
     Direction direction;
@@ -33,4 +33,9 @@ public class BounceBack : Event {
         GameMasterController.instance.endEvent();
     }
 
+}
+
+public enum Direction
+{
+    down, up, left, right
 }

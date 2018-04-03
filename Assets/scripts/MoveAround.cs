@@ -43,6 +43,18 @@ public class MoveAround : MonoBehaviour
         }
     }
 
+    public void face(Direction dir)
+    {
+        if (dir == Direction.down)
+            faceDown();
+        if (dir == Direction.up)
+            faceUp();
+        if (dir == Direction.left)
+            faceLeft();
+        if (dir == Direction.right)
+            faceRight();
+    }
+
     public void faceDown()
     {
         dir = 180;
@@ -71,10 +83,11 @@ public class MoveAround : MonoBehaviour
     {
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         RaycastHit[] hitsX = null, hitsY = null;
+        Transform pos = gameObject.GetComponent<SphereCollider>().transform;
         if (velocity.x != 0)
-            hitsX = Physics.RaycastAll(transform.position, new Vector3(velocity.x, 0, 0), 0.51F);
+            hitsX = Physics.RaycastAll(pos.position, new Vector3(velocity.x, 0, 0), 0.51F);
         if (velocity.y != 0)
-            hitsY = Physics.RaycastAll(transform.position, new Vector3(0, velocity.y, 0), 0.51F);
+            hitsY = Physics.RaycastAll(pos.position, new Vector3(0, velocity.y, 0), 0.51F);
         if (hitsX == null || hitsX.Length == 0)
             rb.MovePosition(rb.position + new Vector3(velocity.x, 0, 0) * Time.fixedDeltaTime);
         if (hitsY == null || hitsY.Length == 0)

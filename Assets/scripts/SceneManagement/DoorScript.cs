@@ -9,7 +9,10 @@ public class DoorScript : Event {
     [SerializeField]
     string destination;
 
-    public void trigger()
+    [SerializeField]
+    string doorId;
+
+    public override void trigger()
     {
         GameMasterController.instance.startEvent();
         if (destination != null)
