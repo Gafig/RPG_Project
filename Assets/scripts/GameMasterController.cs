@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ public class GameMasterController : MonoBehaviour {
 
     public bool IsInputEnabled = true;
     public bool betweenEvent = false;
-    public Event currentEvent;
+    public Queue<Event> currentEvents;
 
     public static GameMasterController instance;
 
@@ -18,14 +19,38 @@ public class GameMasterController : MonoBehaviour {
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
     }
-    // Use this for initialization
+
     void Start () {
+        currentEvents = new Queue<Event>();
     }
 	
-	// Update is called once per frame
 	void Update () {
-		
+        triggerEvents();
 	}
+
+    private void triggerEvents()
+    {
+        if(currentEvents.Count == 0)
+            return;
+        if (!betweenEvent)
+        {
+            Debug.Log(currentEvents.Count);
+            Event e = currentEvents.Dequeue();
+            e.trigger();
+        }
+    }
+
+    public void startEvents(Event[] events)
+    {
+        
+        if (currentEvents.Count != 0)
+            return;
+        
+        foreach (Event e in events)
+        {
+            currentEvents.Enqueue(e);
+        }
+    }
 
     public bool startEvent()
     {

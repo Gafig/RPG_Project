@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogConversationTrigger : MonoBehaviour, Event {
+public class DialogConversationTrigger : Event {
 
     public DialogConversation conversation;
     public DialogConversationBluePrint blueprint;
 
-    public void trigger()
+    public override void trigger()
     {
         FindObjectOfType<DialogManager>().startConversation(conversation);
     }

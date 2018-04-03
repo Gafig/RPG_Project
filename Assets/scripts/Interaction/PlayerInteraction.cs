@@ -7,7 +7,19 @@ public class PlayerInteraction : MonoBehaviour {
 	// Use this for initialization
     private MoveAround moveAround;
     public GameObject focusObject;
-	void Start () {
+
+    public static PlayerInteraction instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
+    }
+
+    void Start () {
         moveAround = gameObject.GetComponent<MoveAround>();
 	}
 	
@@ -19,7 +31,7 @@ public class PlayerInteraction : MonoBehaviour {
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, moveAround.lastVelocity, out hit, 1.0f))
+        if (Physics.Raycast(transform.position, moveAround.lastVelocity, out hit, 0.6f))
         {
             if (hit.collider.tag.Equals("interactable"))
             {

@@ -6,12 +6,16 @@ using UnityEngine;
 public class InteractableObject : MonoBehaviour, Interactable {
 
     public new string name;
-    public Event interaction;
-    public Transform interactTranform;
+    public EventHandler interaction;
+    //public Transform interactTranform;
     public bool hasInteracted;
     public bool isFocus;
     public GameObject player;
     public PlayerInteraction playerInteraction;
+
+    [SerializeField]
+    bool needPress = true;
+
     [Range(0.5f, 1.5f)]
     public float radius;
 
@@ -23,17 +27,18 @@ public class InteractableObject : MonoBehaviour, Interactable {
 
     public void react()
     {
-        interaction = gameObject.GetComponent<Event>();
+        interaction = gameObject.GetComponent<EventHandler>();
         if(interaction == null)
         {
             Debug.Log("Error");
             return;
         }
-        interaction.trigger();
+        interaction.triggerEvents();
     }
 
     void Start ()
     {
+        interaction = gameObject.GetComponent<EventHandler>();
         hasInteracted = false;
         isFocus = false;
         player = GameObject.Find("Player");
@@ -49,7 +54,7 @@ public class InteractableObject : MonoBehaviour, Interactable {
         {
             if (playerInteraction.focusObject != this)
                 defocus();
-            if (Input.GetKeyDown("z"))
+            if (Input.GetKeyDown("z") || !needPress)
                 if (!hasInteracted)
                 {
                     hasInteracted = true;

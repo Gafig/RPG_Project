@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Event {
+public class Event:MonoBehaviour {
 
-    void trigger();
+    public virtual void trigger() { }
 }

@@ -16,7 +16,19 @@ public class CameraFollow : MonoBehaviour {
     Vector3 minPos, maxPos;
     [SerializeField]
     bool fallowPlayer = true;
-	void Start () {
+
+    public static CameraFollow instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
+    }
+
+    void Start () {
         player = GameObject.Find("Player").transform;
 	}
 

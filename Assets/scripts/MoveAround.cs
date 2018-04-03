@@ -13,6 +13,16 @@ public class MoveAround : MonoBehaviour
     [SerializeField]
     Sprite[] spriteList;
     SpriteRenderer spriteRenderer;
+    public static MoveAround instance; 
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
+    }
 
     void Start()
     {
@@ -31,6 +41,30 @@ public class MoveAround : MonoBehaviour
             setDirection();
             setSprite();
         }
+    }
+
+    public void faceDown()
+    {
+        dir = 180;
+        lastVelocity = new Vector3(0, -1, 0).normalized;
+    }
+
+    public void faceUp()
+    {
+        dir = 0;
+        lastVelocity = new Vector3(0, 1, 0).normalized;
+    }
+
+    public void faceLeft()
+    {
+        dir = 270;
+        lastVelocity = new Vector3(-1, 0, 0).normalized;
+    }
+
+    public void faceRight()
+    {
+        dir = 90;
+        lastVelocity = new Vector3(1, 0, 0).normalized;
     }
 
     private void move()

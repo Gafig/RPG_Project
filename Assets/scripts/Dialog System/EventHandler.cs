@@ -2,8 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface EventHandler {
+public class EventHandler:MonoBehaviour{
 
-    bool NotifyGameControllerStart();
-    void NotifyGameControllerFinish();
+    [SerializeField]
+    public Event[] events;
+
+    [SerializeField]
+    public int[] e;
+
+    public void triggerEvents()
+    {
+        GameMasterController.instance.startEvents(events);
+    }
+
 }
