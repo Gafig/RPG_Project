@@ -21,7 +21,7 @@ public class MoveAround : MonoBehaviour
         lastVelocity = Vector3.down;
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         if (GameMasterController.instance.IsInputEnabled)
         {
@@ -94,8 +94,4 @@ public class MoveAround : MonoBehaviour
         spriteRenderer.sprite = spriteList[index];
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
 }
