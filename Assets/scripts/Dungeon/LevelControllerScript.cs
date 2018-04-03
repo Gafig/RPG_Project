@@ -57,7 +57,7 @@ public class LevelControllerScript : MonoBehaviour {
 
     IEnumerator generateFloor()
     {
-        floorGenerator.generate(3, 0);
+        floorGenerator.generate(5, 0);
         yield return new WaitUntil(() => floorGenerator.isFinished());
     }
 
