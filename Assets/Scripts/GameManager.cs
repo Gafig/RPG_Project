@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
-	public GameObject playerCamera;
+//	public GameObject playerCamera;
 	public GameObject battleCamera;
 
 	public GameObject player;
@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		playerCamera.SetActive (true);
-		battleCamera.SetActive (false);
+		//playerCamera.SetActive (false);
+		battleCamera.SetActive (true);
 	}
 	
 	// Update is called once per frame
@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void EnterBattle(Rarity rarity){
-		playerCamera.SetActive (false);
+		//playerCamera.SetActive (false);
 		battleCamera.SetActive (true);
 
 		BaseMonster battleMonster = GetRandomMonsterFromList (GetMonsterByRarity (rarity));

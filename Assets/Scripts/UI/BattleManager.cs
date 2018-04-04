@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour {
 
@@ -51,6 +52,7 @@ public class BattleManager : MonoBehaviour {
 		moveTT = moveT.text;
 		moveTHT = moveTH.text;
 		moveFT = moveF.text;
+
 	}
 	
 	// Update is called once per frame
@@ -110,6 +112,8 @@ public class BattleManager : MonoBehaviour {
 				bag.text = "> " + bagT;
 				monster.text = monsterT;
 				run.text = runT;
+				LevelControllerScript level = GetComponent<LevelControllerScript> ();
+				Debug.Log (level.playerLastPos);
 				break;
 			case 3:
 				
@@ -123,6 +127,13 @@ public class BattleManager : MonoBehaviour {
 				bag.text = bagT;
 				monster.text = monsterT;
 				run.text = "> " + runT;
+		
+				GameMasterController.IsInputEnabled = true;
+				Time.timeScale = 1;
+				SceneManager.LoadScene ("DangeonLevel");
+
+
+
 				break;
 			}
 			break;

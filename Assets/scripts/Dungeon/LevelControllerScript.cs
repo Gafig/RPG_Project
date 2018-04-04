@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LevelControllerScript : MonoBehaviour {
 
@@ -13,7 +14,7 @@ public class LevelControllerScript : MonoBehaviour {
     private Rigidbody playerRB;
     [SerializeField]
     private float totalStep;
-    private Vector3 playerLastPos;
+	public Vector3 playerLastPos;
     
     void Start () {
         currentFloor = 1;
@@ -32,6 +33,8 @@ public class LevelControllerScript : MonoBehaviour {
         if (playerCurrPos != playerLastPos)
             totalStep++;
         playerLastPos = playerCurrPos;
+		randomEncounter ();
+		Debug.Log (totalStep);
 	}
 
     void setPlayerPosition()
@@ -76,12 +79,21 @@ public class LevelControllerScript : MonoBehaviour {
 
     void randomEncounter()
     {
-        if(totalStep >= 1000)
+        if(totalStep >= 100)
         {
             //disable key
             //changeScence
             //getMon
+			GameMasterController.IsInputEnabled = false;
+			//SceneManager.LoadScene ("combat",LoadSceneMode.Additive);
+			Time.timeScale = 0;
+			totalStep = 0;
+			Application.LoadLevel("combat");
+			Debug.Log (playerLastPos);
+
         }
     }
+
+		
 }
 

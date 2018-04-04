@@ -7,6 +7,8 @@ public class GameMasterController : MonoBehaviour {
     public static bool IsInputEnabled = true;
     public static bool betweenDialog = false;
     // Use this for initialization
+
+	private GameObject levelControler;
     void Start () {
         DontDestroyOnLoad(this);
     }
