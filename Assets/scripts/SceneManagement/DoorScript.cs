@@ -15,11 +15,29 @@ public class DoorScript : Event {
     public override void trigger()
     {
         GameMasterController.instance.startEvent();
+        StartCoroutine(fadeOut());
+        
+    }
+
+    private IEnumerator fadeOut()
+    {
+        Fade.instance.fadeOut();
+        yield return new WaitUntil(() => !Fade.instance.isFading);
+        StartCoroutine(load());
+    }
+
+    private IEnumerator load()
+    {
         if (destination != null)
         {
-            Debug.Log("Load!");
-            SceneManager.LoadScene(destination, LoadSceneMode.Single);
+            GameMasterController.instance.setLastDoorID(doorId);
+            AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(destination, LoadSceneMode.Single);
+            while (!asyncLoadLevel.isDone)
+            {
+                print("Loading the Scene");
+                yield return null;
+                GameMasterController.instance.endEvent();
+            }
         }
-        GameMasterController.instance.endEvent();
     }
 }

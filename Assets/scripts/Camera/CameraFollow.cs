@@ -19,14 +19,14 @@ public class CameraFollow : MonoBehaviour {
 
     public static CameraFollow instance;
 
-    private void Awake()
+    /*private void Awake()
     {
         if (instance == null)
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
-    }
+    }*/
 
     void Start () {
         player = GameObject.Find("Player").transform;

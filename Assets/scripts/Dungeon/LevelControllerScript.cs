@@ -19,10 +19,9 @@ public class LevelControllerScript : MonoBehaviour {
     void Start () {
         currentFloor = 0;
         /***/floorGenerator = GameObject.Find("FloorGenerator").GetComponent(typeof(FloorGenerator)) as FloorGenerator;
-        StartCoroutine(generateFloor());
-        anim.SetBool("IsGen", true);
         player = GameObject.FindGameObjectWithTag("Player");
-        setPlayerPosition();
+        //setPlayerPosition();
+        StartCoroutine(generateFloor());
         playerRB = player.GetComponent<Rigidbody>();
         totalStep = 0;
         playerLastPos = player.transform.position;
@@ -63,19 +62,20 @@ public class LevelControllerScript : MonoBehaviour {
         yield return new WaitUntil(() => floorGenerator.isFinished());
         GameMasterController.instance.setPlayerToTheLastDoor();
         isDone = false;
+        StartCoroutine(FadeIn());
     }
 
     IEnumerator FadeOut()
     {
-        anim.SetBool("Fade", true);
-        yield return new WaitUntil(() => fade.color.a == 1);
+        Fade.instance.fadeOut();
+        yield return new WaitUntil(() => !Fade.instance.isFading);
         prepareNextFloor();
     }
 
     IEnumerator FadeIn()
     {
-        anim.SetBool("Fade", false);
-        yield return new WaitUntil(() => fade.color.a == 0);
+        Fade.instance.fadeIn();
+        yield return new WaitUntil(() => !Fade.instance.isFading);
     }
 
     void randomEncounter()

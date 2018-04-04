@@ -51,7 +51,7 @@ public class GameMasterController : MonoBehaviour {
         
         if (betweenEvent)
             return;
-        Debug.Log("Start");
+        
         foreach (Event e in events)
         {
             currentEvents.Enqueue(e);
@@ -60,6 +60,7 @@ public class GameMasterController : MonoBehaviour {
 
     public bool startEvent()
     {
+        Debug.Log("Start");
         if (betweenEvent)
             return false;
         betweenEvent = true;
