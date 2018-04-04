@@ -36,8 +36,15 @@ public class DoorScript : Event {
             {
                 print("Loading the Scene");
                 yield return null;
-                GameMasterController.instance.endEvent();
+                StartCoroutine(fadeIn());
             }
         }
+    }
+
+    private IEnumerator fadeIn()
+    {
+        GameMasterController.instance.endEvent();
+        Fade.instance.fadeIn();
+        yield return new WaitUntil(() => !Fade.instance.isFading);
     }
 }

@@ -8,4 +8,13 @@ public class PlayerSpawner : MonoBehaviour {
     public string id;
     [SerializeField]
     public Direction facing;
+
+    [Range(0.5f, 1.5f)]
+    public float radius;
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, radius);
+    }
 }

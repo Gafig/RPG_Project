@@ -8,6 +8,7 @@ public class FloorGenerator : MonoBehaviour {
 
     public GameObject floorSprite;
     public GameObject wallSprite;
+    public GameObject exitSprite;
     public GameObject playerSpawner;
     public GameObject nextLevelConnectorSprite;
     public GameObject floorObj;
@@ -87,8 +88,10 @@ public class FloorGenerator : MonoBehaviour {
 
     private void placeEntrance(int y)
     {
-
-        placeEntrancePieces(y);
+        if(depth > 0)
+            placeEntrancePieces(y);
+        else
+            placeDunExit(y);
         placePassagePieces(y - 1);
         placeTopSpawnerPieces(y - 2);
         placePassagePieces(y - 3);
@@ -133,6 +136,15 @@ public class FloorGenerator : MonoBehaviour {
         setConnecterUp(Instantiate(nextLevelConnectorSprite, new Vector3(17, y, 0), Quaternion.identity) as GameObject);
         setConnecterUp(Instantiate(nextLevelConnectorSprite, new Vector3(18, y, 0), Quaternion.identity) as GameObject);
         setConnecterUp(Instantiate(nextLevelConnectorSprite, new Vector3(19, y, 0), Quaternion.identity) as GameObject);
+        (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+    }
+
+    private void placeDunExit(int y)
+    {
+        (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(exitSprite, new Vector3(17, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(exitSprite, new Vector3(18, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
+        (Instantiate(exitSprite, new Vector3(19, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
         (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
     }
 

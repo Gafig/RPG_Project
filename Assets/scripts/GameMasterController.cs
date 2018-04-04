@@ -90,10 +90,10 @@ public class GameMasterController : MonoBehaviour {
     public void setPlayerToTheLastDoor()
     {
         PlayerSpawner[] spawners = GameObject.FindObjectsOfType<PlayerSpawner>();
-        //Debug.Log(spawners.Length);
+        Debug.Log("spanwers = " + spawners.Length);
         foreach (PlayerSpawner sp in spawners)
         {
-            //Debug.Log("Compare:" + sp.id + " to:" + lastDoorID + " Resuls:" + sp.id.Equals(lastDoorID));
+            Debug.Log("Compare:" + sp.id + " to:" + lastDoorID + " Resuls:" + sp.id.Equals(lastDoorID));
             if (sp.id.Equals(lastDoorID))
             {
                 Vector3 pos = sp.transform.position;

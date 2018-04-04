@@ -62,7 +62,7 @@ public class LevelControllerScript : MonoBehaviour {
         yield return new WaitUntil(() => floorGenerator.isFinished());
         GameMasterController.instance.setPlayerToTheLastDoor();
         isDone = false;
-        StartCoroutine(FadeIn());
+        //StartCoroutine(FadeIn());
     }
 
     IEnumerator FadeOut()
