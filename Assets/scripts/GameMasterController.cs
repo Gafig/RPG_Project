@@ -39,9 +39,7 @@ public class GameMasterController : MonoBehaviour {
             return;
         if (!betweenEvent)
         {
-            Debug.Log(currentEvents.Count);
             Event e = currentEvents.Dequeue();
-            Debug.Log(currentEvents.Count);
             e.trigger();
         }
     }
@@ -63,6 +61,7 @@ public class GameMasterController : MonoBehaviour {
         Debug.Log("Start");
         if (betweenEvent)
             return false;
+        DateTimeController.instance.stopTime();
         betweenEvent = true;
         IsInputEnabled = false;
         return true;
@@ -72,14 +71,7 @@ public class GameMasterController : MonoBehaviour {
     {
         betweenEvent = false;
         IsInputEnabled = true;
-        //StartCoroutine(sleep());
-    }
-
-    IEnumerator sleep()
-    {
-        yield return new WaitForSeconds(0.1f);
-        betweenEvent = false;
-        IsInputEnabled = true;
+        DateTimeController.instance.startTime();
     }
 
     public void setLastDoorID(string doorId)
@@ -90,10 +82,10 @@ public class GameMasterController : MonoBehaviour {
     public void setPlayerToTheLastDoor()
     {
         PlayerSpawner[] spawners = GameObject.FindObjectsOfType<PlayerSpawner>();
-        Debug.Log("spanwers = " + spawners.Length);
+        //Debug.Log("spanwers = " + spawners.Length);
         foreach (PlayerSpawner sp in spawners)
         {
-            Debug.Log("Compare:" + sp.id + " to:" + lastDoorID + " Resuls:" + sp.id.Equals(lastDoorID));
+            //Debug.Log("Compare:" + sp.id + " to:" + lastDoorID + " Resuls:" + sp.id.Equals(lastDoorID));
             if (sp.id.Equals(lastDoorID))
             {
                 Vector3 pos = sp.transform.position;

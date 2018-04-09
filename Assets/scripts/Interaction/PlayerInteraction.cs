@@ -35,8 +35,8 @@ public class PlayerInteraction : MonoBehaviour {
         {
             if (hit.collider.tag.Equals("interactable"))
             {
-                if (focusObject != hit.transform.gameObject)
-                    Debug.Log("Found an object - distance: " + hit.distance);
+                /*if (focusObject != hit.transform.gameObject)
+                    Debug.Log("Found an object - distance: " + hit.distance);*/
                 focusObject = hit.transform.gameObject;
                 focusAtObject();
             }

@@ -8,6 +8,8 @@ public class DateTimeController : MonoBehaviour {
 
     private const int MINUTES_IN_A_DAY = 1440;
 
+    private IEnumerator updateTimeCou;
+
     public int timeInMinutes;
 
     private void Awake()
@@ -22,7 +24,7 @@ public class DateTimeController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         timeInMinutes = 0;
-        StartCoroutine(testUpdateTime());
+        startTime();
 	}
 
     IEnumerator testUpdateTime()
@@ -32,6 +34,17 @@ public class DateTimeController : MonoBehaviour {
             timeInMinutes += 60;
             Debug.Log("time: " + timeInMinutes);
         }
+    }
+
+    public void stopTime()
+    {
+        StopCoroutine(updateTimeCou);
+    }
+
+    public void startTime()
+    {
+        updateTimeCou = testUpdateTime();
+        StartCoroutine(updateTimeCou);
     }
 
     public void updateTimeInHour(int hour)
