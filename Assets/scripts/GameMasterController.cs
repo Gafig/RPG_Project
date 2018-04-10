@@ -58,7 +58,7 @@ public class GameMasterController : MonoBehaviour {
 
     public bool startEvent()
     {
-        Debug.Log("Start");
+        Debug.Log("Start Event");
         if (betweenEvent)
             return false;
         DateTimeController.instance.stopTime();
@@ -69,6 +69,7 @@ public class GameMasterController : MonoBehaviour {
 
     public void endEvent()
     {
+        Debug.Log("End Event");
         betweenEvent = false;
         IsInputEnabled = true;
         DateTimeController.instance.startTime();

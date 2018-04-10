@@ -2,19 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LevelControllerScript : MonoBehaviour {
 
+    public GameObject battleCamera;
+	public GameObject followingCamera;
+    public GameBattleManager gameBattleManager; //
     public Animator anim;
     public int currentFloor;
     FloorGenerator floorGenerator;
     public Image fade;
     private GameObject player;
     private Rigidbody playerRB;
+
+    [SerializeField]
+    private int stepNeed;
+
     [SerializeField]
     private float totalStep;
     private Vector3 playerLastPos;
     private bool isDone = false;
+
+    public EventHandler interaction;
+    public bool hasInteracted;
+    [SerializeField]
+    bool needPress = true;
     
     void Start () {
         currentFloor = 0;
@@ -25,6 +38,10 @@ public class LevelControllerScript : MonoBehaviour {
         playerRB = player.GetComponent<Rigidbody>();
         totalStep = 0;
         playerLastPos = player.transform.position;
+
+        interaction = gameObject.GetComponent<EventHandler>();
+        hasInteracted = false;
+
     }
 	
 	void Update () {
@@ -32,6 +49,7 @@ public class LevelControllerScript : MonoBehaviour {
         if (playerCurrPos != playerLastPos)
             totalStep++;
         playerLastPos = playerCurrPos;
+        randomEncounter();
 	}
 
     void setPlayerPosition()
@@ -80,12 +98,50 @@ public class LevelControllerScript : MonoBehaviour {
 
     void randomEncounter()
     {
-        if(totalStep >= 1000)
+
+        if (totalStep >= stepNeed)
         {
-            //disable key
+             //disable key
             //changeScence
             //getMon
+            Debug.Log("Start combat");
+            // followingCamera.SetActive(false);
+            // battleCamera.SetActive(true);
+            react();
+            // if (!hasInteracted)
+            // {
+            //     hasInteracted = true;
+            //     // Debug.Log("Start combat");
+            //     react();
+            // }
+            
+            checkInteract();
         }
+        
+        Debug.Log (totalStep);
+    }
+
+
+    public void react()
+    {
+        interaction = gameObject.GetComponent<EventHandler>();
+        if(interaction == null)
+        {
+            Debug.Log("Error");
+            return;
+        }
+        interaction.triggerEvents();
+    }
+
+    private void checkInteract()
+    {
+        if (!GameMasterController.instance.betweenEvent){
+            hasInteracted = false;
+            Debug.Log("End combat");
+            
+        }
+        totalStep = 0;
+
     }
 
     public void toLowerLevel()
@@ -106,5 +162,7 @@ public class LevelControllerScript : MonoBehaviour {
             isDone = true;
         }
     }
+
+
 }
 
