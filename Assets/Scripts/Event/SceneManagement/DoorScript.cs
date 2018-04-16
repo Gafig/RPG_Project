@@ -34,7 +34,7 @@ public class DoorScript : Event {
             AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(destination, LoadSceneMode.Single);
             while (!asyncLoadLevel.isDone)
             {
-                print("Loading the Scene");
+                print("Loading the Scene:" + destination);
                 yield return null;
                 StartCoroutine(fadeIn());
             }
