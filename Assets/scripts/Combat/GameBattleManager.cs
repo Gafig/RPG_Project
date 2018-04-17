@@ -3,26 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameBattleManager : MonoBehaviour {
-	public GameObject battleCamera;
 
-	public GameObject followingCamera;
 
-	public GameObject player;
+	// public GameObject player;
 	public List<BaseMonster> allMonster = new List<BaseMonster>();
 	public List<MonsterMoves> allMoves = new List<MonsterMoves> ();
-
+	
+	public BaseMonster mons;
 	public Transform defencePodium;
 	public Transform attackPodium;
 	public GameObject emptyMons;
 
-	// public BattleManager bm;
+	public BattleManager bm;
 	 
 
 	// Use this for initialization
 	void Start () {
-		//playerCamera.SetActive (false);
-		followingCamera.SetActive (true);
-		battleCamera.SetActive (false);
+
 	}
 	
 	// Update is called once per frame
@@ -31,10 +28,8 @@ public class GameBattleManager : MonoBehaviour {
 	}
 
 	public void EnterBattle(Rarity rarity){
-		followingCamera.SetActive (false);
-		battleCamera.SetActive (true);
-
 		BaseMonster battleMonster = GetRandomMonsterFromList (GetMonsterByRarity (rarity));
+
 		Debug.Log (battleMonster.name);
 
 
@@ -45,10 +40,12 @@ public class GameBattleManager : MonoBehaviour {
 
 		BaseMonster tempMons = dMons.AddComponent<BaseMonster> () as BaseMonster;
 		tempMons.Addmember(battleMonster);
+		// tempMons = battleMonster;
 
 		dMons.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
 	
 		// bm.ChangeMenu (BattleMenu.Selection);
+		
 	}
 
 	public List<BaseMonster> GetMonsterByRarity(Rarity rarity){
@@ -62,8 +59,13 @@ public class GameBattleManager : MonoBehaviour {
 	} 
 
 	public BaseMonster GetRandomMonsterFromList(List<BaseMonster> monsList){
-		BaseMonster mons = new BaseMonster ();
+		GameObject gameObject = new GameObject("Monster");
+    	mons = gameObject.AddComponent<BaseMonster>();
 		int monsIndex = Random.Range (0, monsList.Count - 1);
+		
+		Debug.Log(mons);
+		Debug.Log(monsList);
+		Debug.Log(monsIndex);
 		mons = monsList[monsIndex];
 		return mons;
 	}
@@ -76,7 +78,6 @@ public class MonsterMoves{
 	string Name;
 	public MoveType category;
 	public Stat moveStat;
-	public MonsterType moveType;
 	public int PP;
 	public float Power;
 	public float accuracy;

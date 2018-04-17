@@ -7,7 +7,6 @@ public class BaseMonster : MonoBehaviour {
 
 	public string PName;
 	public Sprite image;
-	public MonsterType type;
 	public Rarity rarity;
 	public int HP;
 	private int maxHP;
@@ -30,7 +29,7 @@ public class BaseMonster : MonoBehaviour {
 	public void Addmember(BaseMonster bp){
 		this.PName = bp.PName;
 		this.image = bp.image;
-		this.type = bp.type;
+		// this.type = bp.type;
 		this.rarity = bp.rarity;
 		this.HP = bp.HP;
 		this.maxHP = bp.maxHP;
@@ -47,25 +46,6 @@ public enum Rarity{
 	SemiRare,
 	Rare,
 	VeryRare
-}
-
-
-public enum MonsterType{
-	Flying,
-	Ground,
-	Rock,
-	Steel,
-	Fire,
-	Water,
-	Grass,
-	Ice,
-	Electric,
-	Phychic,
-	Dark,
-	Dragon,
-	Fighting,
-	Normal
-
 }
 
 
