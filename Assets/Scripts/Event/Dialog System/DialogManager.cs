@@ -12,11 +12,12 @@ public class DialogManager : MonoBehaviour {
     //public Text dialogText;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI dialogText;
+    public Image image;
     public Animator animator;
     private string sentence;
     private bool isTyping;
     private bool isBetweenConversation;
-
+    Sprite sprite;
     private Queue<Dialog> dialogs;
     private Queue<string> sentences;
 	// Use this for initialization
@@ -48,6 +49,14 @@ public class DialogManager : MonoBehaviour {
 
     public void startDialog(Dialog dialog)
     {
+        image.enabled = true;
+        if (dialog.sprite == null)
+            image.enabled = false;
+        else
+        {
+            image.sprite = dialog.sprite;
+            image.SetNativeSize();
+        }
         animator.SetBool("isOpen", true);
         nameText.text = dialog.name;
         sentences.Clear();
@@ -98,8 +107,11 @@ public class DialogManager : MonoBehaviour {
             return;
         }
 
-        if(sentences.Count == 0 && !isTyping &&  dialogs.Count > 0)
+        if (sentences.Count == 0 && !isTyping && dialogs.Count > 0)
+        {
+            sprite = dialogs.Peek().sprite;
             startDialog(dialogs.Dequeue());
+        }
 
         else
         {

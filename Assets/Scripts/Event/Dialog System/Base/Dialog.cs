@@ -8,9 +8,11 @@ public class Dialog{
     public string name;
     [TextArea(3, 10)]
     public string[] sentences;
+    public Sprite sprite;
 
-    public Dialog(string name, string[] sentences) {
+    public Dialog(string name, string[] sentences, Sprite sprite) {
         this.name = name;
         this.sentences = sentences;
+        this.sprite = sprite;
     }
 }
