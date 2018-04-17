@@ -12,6 +12,9 @@ public class MoveAround : MonoBehaviour
     public float dir;
     [SerializeField]
     Sprite[] spriteList;
+    [SerializeField]
+    RuntimeAnimatorController[] animList;
+    Animator anim;
     SpriteRenderer spriteRenderer;
     public static MoveAround instance; 
 
@@ -30,6 +33,7 @@ public class MoveAround : MonoBehaviour
         dir = 180;
         rb = GetComponent<Rigidbody>();
         lastVelocity = Vector3.down;
+        anim = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -40,7 +44,17 @@ public class MoveAround : MonoBehaviour
             move();
             setDirection();
             setSprite();
+
+            if (velocity != Vector3.zero)
+            {
+                anim.SetBool("walk", true);
+                Debug.Log("SetBool: true");
+            }
+            else
+                anim.SetBool("walk", false);
         }
+        else
+            anim.SetBool("walk", false);
     }
 
     public void face(Direction dir)
@@ -112,34 +126,29 @@ public class MoveAround : MonoBehaviour
         int index = 0;
         if (isValidFacing(0))
             index = 0;
-        else if (isValidFacing(45))
-            index = 1;
         else if (isValidFacing(90))
-            index = 2;
-        else if (isValidFacing(135))
-            index = 3;
+            index = 1;
         else if (isValidFacing(180))
-            index = 4;
-        else if (isValidFacing(225))
-            index = 5;
+            index = 2;
         else if (isValidFacing(270))
-            index = 6;
-        else
-            index = 7;
+            index = 3;
         setSprite(index);
     }
 
     private bool isValidFacing(float angle)
     {
-        const float ANGLE = 22.5f;
+        const float ANGLE = 45;
         if(angle == 0)
-            return dir > 315 || dir < 22.5f;
+            return dir > 315 || dir < 45f;
         return dir >= (angle - ANGLE) && dir < (angle + ANGLE);
     }
 
     private void setSprite(int index)
     {
-        spriteRenderer.sprite = spriteList[index];
+        if (anim.runtimeAnimatorController == animList[index])
+            return;
+        anim.runtimeAnimatorController = animList[index];
+        Debug.Log("Change Anim");
     }
 
 }
