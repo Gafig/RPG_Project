@@ -31,6 +31,8 @@ public class GameMasterController : MonoBehaviour {
     }
 	
 	void Update () {
+        if(player == null)
+            player = GameObject.Find("Player");
         triggerEvents();
 	}
 
@@ -48,6 +50,17 @@ public class GameMasterController : MonoBehaviour {
     public void setShowTime(bool showTime)
     {
         this.showTime = showTime;
+        GameObject go = GameObject.Find("PermanantUI");
+        go.transform.FindChild("DateTimePanel").gameObject.SetActive(showTime);
+    }
+
+    public void setPermanantUI(bool set)
+    {
+        GameObject go = GameObject.Find("PermanantUI");
+        for (int i = 0; i < go.transform.childCount; i++) {
+            Transform t = go.transform.GetChild(i);
+            t.gameObject.SetActive(set);
+        }
     }
 
     public void startEvents(Event[] events)
@@ -64,7 +77,6 @@ public class GameMasterController : MonoBehaviour {
 
     public bool startEvent()
     {
-        Debug.Log("Start Event");
         if (betweenEvent)
             return false;
         DateTimeController.instance.stopTime();
@@ -75,7 +87,6 @@ public class GameMasterController : MonoBehaviour {
 
     public void endEvent()
     {
-        Debug.Log("End Event");
         betweenEvent = false;
         IsInputEnabled = true;
         DateTimeController.instance.startTime();

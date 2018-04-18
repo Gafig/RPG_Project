@@ -14,7 +14,9 @@ public class Wait : Event {
 
     IEnumerator wait()
     {
-        yield return new WaitForSeconds(waitInSeconds);
+        print(Time.time);
+        yield return new WaitForSecondsRealtime(waitInSeconds);
+        print(Time.time);
         GameMasterController.instance.endEvent();
     }
 }

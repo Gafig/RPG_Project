@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DoorScript : Event {
+public class AddLoad : Event
+{
 
     [SerializeField]
     string destination;
@@ -16,7 +16,7 @@ public class DoorScript : Event {
     {
         GameMasterController.instance.startEvent();
         StartCoroutine(fadeOut());
-        
+
     }
 
     private IEnumerator fadeOut()
@@ -31,7 +31,7 @@ public class DoorScript : Event {
         if (destination != null)
         {
             GameMasterController.instance.setLastDoorID(doorId);
-            AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(destination, LoadSceneMode.Single);
+            AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(destination, LoadSceneMode.Additive);
             while (!asyncLoadLevel.isDone)
             {
                 yield return null;
@@ -42,8 +42,8 @@ public class DoorScript : Event {
 
     private IEnumerator fadeIn()
     {
-        GameMasterController.instance.endEvent();
         Fade.instance.fadeIn();
         yield return new WaitUntil(() => !Fade.instance.isFading);
+        GameMasterController.instance.endEvent();
     }
 }
