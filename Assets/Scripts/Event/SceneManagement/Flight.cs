@@ -6,9 +6,6 @@ public class Flight : Event {
 
 	public GameObject battleCamera;
 	public GameObject followingCamera;
-	private int count = 0;
-
-	public BattleManager bm;
 
 	public override void trigger()
     {
@@ -30,12 +27,8 @@ public class Flight : Event {
 
 	 private void load()
     {
-
 		//after combat
         StartCoroutine(fadeIn());
-		// Debug.Log(count);
-        
-        
     }
 
     private IEnumerator fadeIn()

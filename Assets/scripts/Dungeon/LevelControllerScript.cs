@@ -8,8 +8,8 @@ public class LevelControllerScript : MonoBehaviour {
 
     public GameObject battleCamera;
 	public GameObject followingCamera;
-    public GameBattleManager gameBattleManager; //
     public Animator anim;
+    public GameBattleManager gm;
     public int currentFloor;
     FloorGenerator floorGenerator;
     public Image fade;
@@ -33,6 +33,7 @@ public class LevelControllerScript : MonoBehaviour {
         currentFloor = 0;
         /***/floorGenerator = GameObject.Find("FloorGenerator").GetComponent(typeof(FloorGenerator)) as FloorGenerator;
         player = GameObject.FindGameObjectWithTag("Player");
+        gm = GameObject.FindGameObjectWithTag("GameBattleManager").GetComponent<GameBattleManager>();
         //setPlayerPosition();
         StartCoroutine(generateFloor());
         playerRB = player.GetComponent<Rigidbody>();
@@ -101,24 +102,48 @@ public class LevelControllerScript : MonoBehaviour {
 
         if (totalStep >= stepNeed)
         {
-             //disable key
+            //disable key
             //changeScence
             //getMon
             Debug.Log("Start combat");
-            // followingCamera.SetActive(false);
-            // battleCamera.SetActive(true);
+            float p = Random.Range(0.0f,100.0f);
+            if(p > 0 && p <= 10){
+                if(gm != null){
+                    gm.EnterBattle(Rarity.VeryRare);
+                    // Debug.Log("Very Rare");
+                }
+            }
+             if(p > 10 && p <= 25){
+                if(gm != null){
+                    gm.EnterBattle(Rarity.Rare);
+                    // Debug.Log("Rare");
+                }
+            }
+             if(p > 25 && p <= 45){
+                if(gm != null){
+                    gm.EnterBattle(Rarity.SemiRare);
+                    // Debug.Log("semi Rare");
+                }
+            }
+             if(p > 45 && p <= 70){
+                if(gm != null){
+                    gm.EnterBattle(Rarity.Common);
+                    // Debug.Log("common");
+                }
+            }
+             if(p > 70 && p <= 100){
+                if(gm != null){
+                    gm.EnterBattle(Rarity.VeryCommon);
+                    // Debug.Log("Very common");
+                }
+            }
+
+
             react();
-            // if (!hasInteracted)
-            // {
-            //     hasInteracted = true;
-            //     // Debug.Log("Start combat");
-            //     react();
-            // }
-            
             checkInteract();
         }
         
-        Debug.Log (totalStep);
+        // Debug.Log (totalStep);
     }
 
 

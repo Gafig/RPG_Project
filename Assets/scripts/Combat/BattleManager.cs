@@ -3,48 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class BattleManager : MonoBehaviour {
 
-  	public GameObject battleCamera;
-	public GameObject followingCamera;
 	public BattleMenu currentMenu;
 
 	[Header("Selection")]
 	public GameObject selectionMenu;
-	public GameObject selectionInfo;
-	public Text selectionInfoText;
-	public Text fight;
-	private string fightT;
-	public Text bag;
+	public GameObject selectionAttack;
+	public GameObject selectionSpecial;
+	public GameObject selectionItem;
+	public TextMeshProUGUI attack;
+	private string attackT;
+	public TextMeshProUGUI special;
+	private string specialT;
+	public TextMeshProUGUI bag;
 	private string bagT;
-	public Text monster;
-	private string monsterT;
-	public Text run;
+	public TextMeshProUGUI run;
 	private string runT;
 
-	[Header("Moves")]
-	public GameObject movesMenu;
+	[Header("Attack")]
+	public GameObject attackMenu;
 	public GameObject movesDatail;
-	public Text PP;
-	public Text pType;
-	public Text moveO;
+	public TextMeshProUGUI PP;
+	public TextMeshProUGUI pType;
+	public TextMeshProUGUI moveO;
 	private string moveOT;
-	public Text moveT;
+	public TextMeshProUGUI moveT;
 	private string moveTT;
-	public Text moveTH;
+	public TextMeshProUGUI moveTH;
 	private string moveTHT;
-	public Text moveF;
+	public TextMeshProUGUI moveF;
 	private string moveFT;
+
+	[Header("Bag")]
+	public GameObject bagMenu;
+	public TextMeshProUGUI item;
+	private string itemT;
+
+
 
 	[Header("Info")]
 	public GameObject InfoMenu;
-	public Text InfoText;
+	public TextMeshProUGUI InfoText;
 	private bool end;
 
 	[Header("Misc")]
 	public int currentSelection;
-
+ 
 	// Use this for initialization
 	void Start () {
 		end = false;
@@ -62,6 +69,19 @@ public class BattleManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if(Input.GetKeyDown("s") || Input.GetKeyDown(KeyCode.DownArrow)){
+			if(currentSelection < 4){
+				currentSelection++;
+			}
+		}
+
+		if(Input.GetKeyDown("w") || Input.GetKeyDown(KeyCode.UpArrow)){
+			if(currentSelection > 0){
+				currentSelection--;
+			}
+		}
+
 		if(Input.GetKeyDown("z")){
 			if(currentSelection < 4){
 				currentSelection++;
@@ -151,8 +171,6 @@ public class BattleManager : MonoBehaviour {
 
 	public void endCombat(){
 		GameMasterController.instance.endEvent();
-		followingCamera.SetActive(true);
-        battleCamera.SetActive(false);
 		Debug.Log("Change camera back to dun");
 		end = false;
 		currentSelection = 0;
@@ -163,31 +181,36 @@ public class BattleManager : MonoBehaviour {
 		Debug.Log (m);
 		currentSelection = 1;
 
-		// switch (m) {
+		switch (m) {
 
-		// case BattleMenu.Selection:
-		// 	selectionMenu.gameObject.SetActive (true);
-		// 	selectionInfo.gameObject.SetActive (true);
-		// 	movesMenu.gameObject.SetActive (false);
-		// 	movesDatail.gameObject.SetActive (false);
-		// 	InfoMenu.gameObject.SetActive (false);
-		// 	break;
-		// case BattleMenu.Fight:
-		// 	selectionMenu.gameObject.SetActive (false);
-		// 	selectionInfo.gameObject.SetActive (false);
-		// 	movesMenu.gameObject.SetActive (true);
-		// 	movesDatail.gameObject.SetActive (true);
-		// 	InfoMenu.gameObject.SetActive (false);
-		// 	break;
+		case BattleMenu.Selection:
+			selectionMenu.gameObject.SetActive (true);
+			selectionAttack.gameObject.SetActive (false);
+			selectionSpecial.gameObject.SetActive (false);
+			selectionItem.gameObject.SetActive (false);
+			break;
+
+		case BattleMenu.Attack:
+			selectionMenu.gameObject.SetActive (false);
+			selectionAttack.gameObject.SetActive (true);
+			selectionSpecial.gameObject.SetActive (false);
+			selectionItem.gameObject.SetActive (false);
+			break;
+
+		case BattleMenu.Special:
+			selectionMenu.gameObject.SetActive (false);
+			selectionAttack.gameObject.SetActive (false);
+			selectionSpecial.gameObject.SetActive (true);
+			selectionItem.gameObject.SetActive (false);
+			break;
 		
-		// case BattleMenu.Info:
-		// 	selectionMenu.gameObject.SetActive (false);
-		// 	selectionInfo.gameObject.SetActive (false);
-		// 	movesMenu.gameObject.SetActive (false);
-		// 	movesDatail.gameObject.SetActive (false);
-		// 	InfoMenu.gameObject.SetActive (true);
-		// 	break;
-		// }
+		case BattleMenu.Bag:
+			selectionMenu.gameObject.SetActive (false);
+			selectionAttack.gameObject.SetActive (false);
+			selectionSpecial.gameObject.SetActive (false);
+			selectionItem.gameObject.SetActive (true);
+			break;
+		}
 
 	}
 }
@@ -195,8 +218,8 @@ public class BattleManager : MonoBehaviour {
 
 public enum BattleMenu{
 	Selection,
-	Monster,
+	Special,
 	Bag,
-	Fight,
+	Attack,
 	Info
 }
