@@ -6,6 +6,7 @@ public class BuildingController : MonoBehaviour {
 
     void Start()
     {
+        GameMasterController.instance.setShowTime(true);
         GameMasterController.instance.setPlayerToTheLastDoor();
     }
 

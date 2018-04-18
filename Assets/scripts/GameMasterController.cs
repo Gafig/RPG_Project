@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameMasterController : MonoBehaviour {
 
+    public bool showTime = true;
     public bool IsInputEnabled = true;
     public bool betweenEvent = false;
     public Queue<Event> currentEvents;
@@ -42,6 +43,11 @@ public class GameMasterController : MonoBehaviour {
             Event e = currentEvents.Dequeue();
             e.trigger();
         }
+    }
+
+    public void setShowTime(bool showTime)
+    {
+        this.showTime = showTime;
     }
 
     public void startEvents(Event[] events)

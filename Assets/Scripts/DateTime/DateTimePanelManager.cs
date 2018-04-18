@@ -14,6 +14,7 @@ public class DateTimePanelManager : MonoBehaviour {
 	void Update () {
         string datetext = string.Format("Day: {0:d2}", DateTimeController.instance.getDate());
         date.SetText( datetext );
-        time.SetText(DateTimeController.instance.getTime());		
+        time.SetText(DateTimeController.instance.getTime());
+        gameObject.SetActive(GameMasterController.instance.showTime);
 	}
 }
