@@ -12,11 +12,16 @@ public class DoorScript : Event {
     [SerializeField]
     string doorId;
 
+    bool hasInteracted = false;
+
     public override void trigger()
     {
-        GameMasterController.instance.startEvent();
-        StartCoroutine(fadeOut());
-        
+        if (!hasInteracted)
+        {
+            hasInteracted = true;
+            GameMasterController.instance.startEvent();
+            StartCoroutine(fadeOut());
+        }
     }
 
     private IEnumerator fadeOut()

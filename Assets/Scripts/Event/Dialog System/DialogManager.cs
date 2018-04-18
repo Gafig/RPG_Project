@@ -67,11 +67,11 @@ public class DialogManager : MonoBehaviour {
 
     IEnumerator typeSentence(string sentence)
     {
-        dialogText.SetText("");
+        dialogText.text = "";
         isTyping = true;
         foreach (char letter in sentence.ToCharArray())
         {
-            dialogText.SetText( dialogText.text + letter );
+            dialogText.text = dialogText.text + letter;
             yield return new WaitForSeconds(0.05f);
         }
         isTyping = false;
