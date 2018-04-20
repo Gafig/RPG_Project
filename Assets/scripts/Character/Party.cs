@@ -6,7 +6,20 @@ public class Party : MonoBehaviour {
 
 
 	public Character head;
-	public List<Character> party = new List<Character>();
+	public List<Character> partyList = new List<Character>();
+
+	private static Party instance;
+
+	public Party() {}
+
+	public static Party getInstance(){
+    	if (instance == null){
+            instance = new Party();
+        }
+        
+		return instance;
+      
+	}
 
 	
 	// Use this for initialization
@@ -21,21 +34,21 @@ public class Party : MonoBehaviour {
 
 
 	public void addMember(Character character){
-		if(!party.Contains(character)){
-			party.Add(character);
+		if(!partyList.Contains(character)){
+			partyList.Add(character);
 		}
 		
 	}
 
 	public void removeMember(Character character){
 		if(character != head){
-			party.Remove(character);
+			partyList.Remove(character);
 		}
 		
 	}
 
 	public void removeAllMember(){
-		foreach(Character member in party){
+		foreach(Character member in partyList){
 			removeMember(member);
 		}
 	}

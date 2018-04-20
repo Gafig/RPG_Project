@@ -7,9 +7,12 @@ using TMPro;
 
 public class BattleManager : MonoBehaviour {
 
+	private float prob;
+
 	public GameObject battleCamera;
 	public GameObject followingCamera;
 
+	public Party party;
 	public BattleMenu currentMenu;
 
 	[Header("Selection")]
@@ -52,13 +55,14 @@ public class BattleManager : MonoBehaviour {
 	[Header("Misc")]
 	public int currentSelection;
 	public Button atkBtn;
+	public Button spBtn;
+	public Button bagBtn;
+	public Button runBtn;
 
  
 	// Use this for initialization
 	void Start () {
 		currentSelection = 0;
-		GameMasterController.instance.setPermanantUI(false);
-        Debug.Log("setPermanantUI(false)");
 		// fightT = fight.text;
 		// bagT = bag.text;
 		// monsterT = monster.text;
@@ -68,15 +72,34 @@ public class BattleManager : MonoBehaviour {
 		// moveTHT = moveTH.text;
 		// moveFT = moveF.text;
 		atkBtn = GameObject.Find("AtkBtn").GetComponent<Button>();
+		spBtn = GameObject.Find("SpBtn").GetComponent<Button>();
+		bagBtn = GameObject.Find("BagBtn").GetComponent<Button>();
+		runBtn = GameObject.Find("RunBtn").GetComponent<Button>();
 		atkBtn.onClick.AddListener(attackFunction);
+		spBtn.onClick.AddListener(spAttackFunction);
+		bagBtn.onClick.AddListener(bagFunction);
+		runBtn.onClick.AddListener(runFunction);
 		
         
 
 	}
 
 	public void attackFunction(){
-		Debug.Log("Click");
+		Debug.Log("atk");
 		
+	}
+
+	public void spAttackFunction(){
+		Debug.Log("sp");				
+	}
+
+	public void bagFunction(){
+		Debug.Log("bag");
+	}
+
+	public void runFunction(){
+		Debug.Log("run");
+		endCombat();
 	}
 	
 	// Update is called once per frame
@@ -100,43 +123,43 @@ public class BattleManager : MonoBehaviour {
 		Debug.Log("setPermanantUI(true)");
 	}
 
-	public void ChangeMenu(BattleMenu m){
-		currentMenu = m;
-		Debug.Log (m);
-		currentSelection = 1;
+	// public void ChangeMenu(BattleMenu m){
+	// 	currentMenu = m;
+	// 	Debug.Log (m);
+	// 	currentSelection = 1;
 
-		switch (m) {
+	// 	switch (m) {
 
-		case BattleMenu.Selection:
-			selectionMenu.gameObject.SetActive (true);
-			selectionAttack.gameObject.SetActive (false);
-			selectionSpecial.gameObject.SetActive (false);
-			selectionItem.gameObject.SetActive (false);
-			break;
+	// 	case BattleMenu.Selection:
+	// 		selectionMenu.gameObject.SetActive (true);
+	// 		selectionAttack.gameObject.SetActive (false);
+	// 		selectionSpecial.gameObject.SetActive (false);
+	// 		selectionItem.gameObject.SetActive (false);
+	// 		break;
 
-		case BattleMenu.Attack:
-			selectionMenu.gameObject.SetActive (false);
-			selectionAttack.gameObject.SetActive (true);
-			selectionSpecial.gameObject.SetActive (false);
-			selectionItem.gameObject.SetActive (false);
-			break;
+	// 	case BattleMenu.Attack:
+	// 		selectionMenu.gameObject.SetActive (false);
+	// 		selectionAttack.gameObject.SetActive (true);
+	// 		selectionSpecial.gameObject.SetActive (false);
+	// 		selectionItem.gameObject.SetActive (false);
+	// 		break;
 
-		case BattleMenu.Special:
-			selectionMenu.gameObject.SetActive (false);
-			selectionAttack.gameObject.SetActive (false);
-			selectionSpecial.gameObject.SetActive (true);
-			selectionItem.gameObject.SetActive (false);
-			break;
+	// 	case BattleMenu.Special:
+	// 		selectionMenu.gameObject.SetActive (false);
+	// 		selectionAttack.gameObject.SetActive (false);
+	// 		selectionSpecial.gameObject.SetActive (true);
+	// 		selectionItem.gameObject.SetActive (false);
+	// 		break;
 		
-		case BattleMenu.Bag:
-			selectionMenu.gameObject.SetActive (false);
-			selectionAttack.gameObject.SetActive (false);
-			selectionSpecial.gameObject.SetActive (false);
-			selectionItem.gameObject.SetActive (true);
-			break;
-		}
+	// 	case BattleMenu.Bag:
+	// 		selectionMenu.gameObject.SetActive (false);
+	// 		selectionAttack.gameObject.SetActive (false);
+	// 		selectionSpecial.gameObject.SetActive (false);
+	// 		selectionItem.gameObject.SetActive (true);
+	// 		break;
+	// 	}
 
-	}
+	// }
 }
 
 

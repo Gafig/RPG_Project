@@ -137,10 +137,9 @@ public class LevelControllerScript : MonoBehaviour {
         // Debug.Log (totalStep + "count " + counttemp);
     }
 
-
     public void react()
     {
-       
+        
         GameMasterController.instance.IsInputEnabled = false;
         Debug.Log("Start combat");
         interaction = gameObject.GetComponent<EventHandler>();

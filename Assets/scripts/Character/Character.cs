@@ -51,4 +51,10 @@ public class Character : MonoBehaviour {
 	}
 }
 
+public enum Rarity{
+	Common,
+	Rare,
+	VeryRare,
+	human
+}
 

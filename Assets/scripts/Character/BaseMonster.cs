@@ -16,10 +16,11 @@ public class BaseMonster : Character {
 
 }
 
-public enum Rarity{
-	Common,
-	Rare,
-	VeryRare
-}
+// public enum Rarity{
+// 	Common,
+// 	Rare,
+// 	VeryRare,
+// 	human
+// }
 
 

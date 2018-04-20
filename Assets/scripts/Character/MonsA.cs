@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class MonsA : Character {
 
-	public Rarity rarity;
-
 	// Use this for initialization
 	void Start () {
 		

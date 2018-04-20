@@ -35,6 +35,9 @@ public class GameBattleManager : MonoBehaviour {
 
 	public void EnterBattle(Rarity rarity){
 
+		GameMasterController.instance.setPermanantUI(false);
+        Debug.Log("setPermanantUI(false)");
+
 		GetMonsterByRarity(rarity);
 
 
