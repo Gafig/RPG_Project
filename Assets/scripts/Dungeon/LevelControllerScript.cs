@@ -7,8 +7,6 @@ using UnityEngine.SceneManagement;
 public class LevelControllerScript : MonoBehaviour {
 
     private int counttemp = 0;
-    public GameObject battleCamera;
-	public GameObject followingCamera;
     public Animator anim;
     public GameBattleManager gm;
     public int currentFloor;
@@ -103,55 +101,48 @@ public class LevelControllerScript : MonoBehaviour {
 
         if (totalStep >= stepNeed)
         {
-            GameMasterController.instance.IsInputEnabled = false;
+            
             counttemp++;
             //disable key
             //changeScence
             //getMon
-            Debug.Log("Start combat");
-            float p = Random.Range(0.0f,100.0f);
-            if(p > 0 && p <= 10){
-                if(gm != null){
-                    gm.EnterBattle(Rarity.VeryRare);
-                    // Debug.Log("Very Rare");
-                }
-            }
-             if(p > 10 && p <= 25){
-                if(gm != null){
-                    gm.EnterBattle(Rarity.Rare);
-                    // Debug.Log("Rare");
-                }
-            }
-             if(p > 25 && p <= 45){
-                if(gm != null){
-                    gm.EnterBattle(Rarity.SemiRare);
-                    // Debug.Log("semi Rare");
-                }
-            }
-             if(p > 45 && p <= 70){
-                if(gm != null){
-                    gm.EnterBattle(Rarity.Common);
-                    // Debug.Log("common");
-                }
-            }
-             if(p > 70 && p <= 100){
-                if(gm != null){
-                    gm.EnterBattle(Rarity.VeryCommon);
-                    // Debug.Log("Very common");
-                }
-            }
-
-
+            
+            
             react();
+            
+            gm.EnterBattle(Rarity.VeryRare);
+            
+            
+            
+            // float p = Random.Range(0.0f,100.0f);
+            // if(p > 0 && p <= 30){
+            //     if(gm != null){
+            //         gm.EnterBattle(Rarity.VeryRare);
+            //     }
+            // }
+            //  if(p > 30 && p <= 70){
+            //     if(gm != null){ 
+            //         gm.EnterBattle(Rarity.Rare);
+            //     }
+            // }
+            
+            //  if(p > 70 && p <= 100){
+            //     if(gm != null){
+            //         gm.EnterBattle(Rarity.Common);
+            //     }
+            // }
             checkInteract();
         }
-        
-        Debug.Log (totalStep + "count " + counttemp);
+            
+        // Debug.Log (totalStep + "count " + counttemp);
     }
 
 
     public void react()
     {
+       
+        GameMasterController.instance.IsInputEnabled = false;
+        Debug.Log("Start combat");
         interaction = gameObject.GetComponent<EventHandler>();
         if(interaction == null)
         {
@@ -159,14 +150,14 @@ public class LevelControllerScript : MonoBehaviour {
             return;
         }
         interaction.triggerEvents();
+        
     }
 
     private void checkInteract()
     {
         if (!GameMasterController.instance.betweenEvent){
             hasInteracted = false;
-            Debug.Log("End combat");
-            
+            Debug.Log("betweenEvent?");
         }
         totalStep = 0;
 

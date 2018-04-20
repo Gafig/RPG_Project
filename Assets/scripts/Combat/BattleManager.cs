@@ -23,8 +23,6 @@ public class BattleManager : MonoBehaviour {
 	private string specialT;
 	public TextMeshProUGUI bag;
 	private string bagT;
-	public TextMeshProUGUI run;
-	private string runT;
 
 	[Header("Attack")]
 	public GameObject attackMenu;
@@ -50,15 +48,17 @@ public class BattleManager : MonoBehaviour {
 	[Header("Info")]
 	public GameObject InfoMenu;
 	public TextMeshProUGUI InfoText;
-	private bool end;
 
 	[Header("Misc")]
 	public int currentSelection;
+	public Button atkBtn;
+
  
 	// Use this for initialization
 	void Start () {
-		end = false;
 		currentSelection = 0;
+		GameMasterController.instance.setPermanantUI(false);
+        Debug.Log("setPermanantUI(false)");
 		// fightT = fight.text;
 		// bagT = bag.text;
 		// monsterT = monster.text;
@@ -67,118 +67,37 @@ public class BattleManager : MonoBehaviour {
 		// moveTT = moveT.text;
 		// moveTHT = moveTH.text;
 		// moveFT = moveF.text;
+		atkBtn = GameObject.Find("AtkBtn").GetComponent<Button>();
+		atkBtn.onClick.AddListener(attackFunction);
+		
+        
 
+	}
+
+	public void attackFunction(){
+		Debug.Log("Click");
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-		// if(Input.GetKeyDown("s") || Input.GetKeyDown(KeyCode.DownArrow)){
-		// 	if(currentSelection < 4){
-		// 		currentSelection++;
-		// 	}
-		// }
-
-		// if(Input.GetKeyDown("w") || Input.GetKeyDown(KeyCode.UpArrow)){
-		// 	if(currentSelection > 0){
-		// 		currentSelection--;
-		// 	}
-		// }
-
+		
 		if(Input.GetKeyDown("z")){
 			endCombat();
 		}
-		// if(Input.GetKeyDown("x")){
-		// 	if(currentSelection > 0){
-		// 		currentSelection--;
-		// 	}	
-		// }
-		// if (currentSelection == 0)
-		// 	currentSelection = 1;
 		
-		// if(currentSelection == 4){
-		// 	end = true;
-		// 	endCombat();
-		// }
-
-		// Debug.Log(currentSelection);
-		
-		// if(end){
-		// 	endCombat();
-		// }
-		
-		// switch (currentMenu) {
-		// case BattleMenu.Fight:
-		// 	switch (currentSelection) {
-		// 	case 1:
-		// 		moveO.text = "> " + moveOT;
-		// 		moveT.text = moveTT;
-		// 		moveTH.text = moveTHT;
-		// 		moveF.text = moveFT;
-		// 		break;
-		// 	case 2:
-		// 		moveO.text = moveOT;
-		// 		moveT.text = "> " + moveTT;
-		// 		moveTH.text = moveTHT;
-		// 		moveF.text = moveFT;
-		// 		break;
-		// 	case 3:
-		// 		moveO.text = moveOT;
-		// 		moveT.text = moveTT;
-		// 		moveTH.text = "> " + moveTHT;
-		// 		moveF.text = moveFT;
-		// 		break;
-		// 	case 4:
-		// 		moveO.text = moveOT;
-		// 		moveT.text = moveTT;
-		// 		moveTH.text = moveTHT;
-		// 		moveF.text = "> " + moveFT;
-		// 		break;
-		// 	}
-		// 	break;
-		// case BattleMenu.Selection:
-		// 	switch (currentSelection) {
-		// 	case 1:
-		// 		fight.text = "> " + fightT;
-		// 		bag.text = bagT;
-		// 		monster.text = monsterT;
-		// 		run.text = runT;
-		// 		break;
-		// 	case 2:
-		// 		fight.text = fightT;
-		// 		bag.text = "> " + bagT;
-		// 		monster.text = monsterT;
-		// 		run.text = runT;				
-		// 		break;
-		// 	case 3:
-				
-		// 		fight.text = fightT;
-		// 		bag.text = bagT;
-		// 		monster.text = "> " + monsterT;
-		// 		run.text = runT;
-		// 		break;
-		// 	case 4:
-		// 		fight.text = fightT;
-		// 		bag.text = bagT;
-		// 		monster.text = monsterT;
-		// 		run.text = "> " + runT;
-	
-		// 		break;
-		// 	}
-		// 	break;
-
-		// }
 		
 	}
 
 	public void endCombat(){
+		Debug.Log("End combat event");
 		GameMasterController.instance.endEvent();
 		GameMasterController.instance.IsInputEnabled = true;
 		followingCamera.SetActive(true);
         battleCamera.SetActive(false);
 		Debug.Log("Change camera back to dun");
-		end = false;
-		currentSelection = 0;
+		GameMasterController.instance.setPermanantUI(true);
+		Debug.Log("setPermanantUI(true)");
 	}
 
 	public void ChangeMenu(BattleMenu m){

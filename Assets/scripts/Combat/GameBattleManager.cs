@@ -10,13 +10,15 @@ public class GameBattleManager : MonoBehaviour {
 	// public GameObject player;
 	public List<BaseMonster> allMonster = new List<BaseMonster>();
 	public List<MonsterMoves> allMoves = new List<MonsterMoves> ();
+
+	public Party party;
 	
 	public BaseMonster mons;
 	public Transform defencePodium;
 	public Transform attackPodium;
 	public GameObject emptyMons;
+	public GameObject emptyCharacter;
 
-	public BattleManager bm;
 	 
 
 	// Use this for initialization
@@ -32,36 +34,39 @@ public class GameBattleManager : MonoBehaviour {
 	}
 
 	public void EnterBattle(Rarity rarity){
-		followingCamera.SetActive (false);
-		battleCamera.SetActive (true);
-		BaseMonster battleMonster = GetRandomMonsterFromList (GetMonsterByRarity (rarity));
 
-		Debug.Log (battleMonster.name);
+		GetMonsterByRarity(rarity);
 
 
 		GameObject dMons = Instantiate (emptyMons, defencePodium.transform.position, Quaternion.identity) as GameObject; 
+		GameObject character = Instantiate (emptyCharacter, attackPodium.transform.position, Quaternion.identity) as GameObject; 
 		Vector3 monsLocalPos = new Vector3 (0, 1, 0);
 		dMons.transform.parent = defencePodium;
 		dMons.transform.localPosition = monsLocalPos;
 
+		character.transform.parent = attackPodium;
+		character.transform.localPosition = monsLocalPos;
+
 		BaseMonster tempMons = dMons.AddComponent<BaseMonster> () as BaseMonster;
-		tempMons.Addmember(battleMonster);
+		// tempMons.Addmember(battleMonster);
 		// tempMons = battleMonster;
 
-		dMons.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
+		// dMons.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
+
 	
 		// bm.ChangeMenu (BattleMenu.Selection);
 		
 	}
 
-	public List<BaseMonster> GetMonsterByRarity(Rarity rarity){
-		List<BaseMonster> returnMonster = new List<BaseMonster> ();
-		foreach (BaseMonster Monster in allMonster) {
-			if (Monster.rarity == rarity)
-				returnMonster.Add (Monster);
-		}
+	public void GetMonsterByRarity(Rarity rarity){
+		// List<BaseMonster> returnMonster = new List<BaseMonster> ();
+		// foreach (BaseMonster Monster in allMonster) {
+		// 	if (Monster.rarity == rarity)
+		// 		returnMonster.Add (Monster);
+		// }
 
-		return returnMonster;
+		// return returnMonster;
+		Debug.Log(rarity);
 	} 
 
 	public BaseMonster GetRandomMonsterFromList(List<BaseMonster> monsList){
@@ -83,18 +88,11 @@ public class GameBattleManager : MonoBehaviour {
 public class MonsterMoves{
 	string Name;
 	public MoveType category;
-	public Stat moveStat;
 	public int PP;
 	public float Power;
 	public float accuracy;
 }
 
-[System.Serializable]
-public class Stat
-{
-	public float minimum;
-	public float maximum;
-}
 
 // poison, confuse,parasite
 public enum MoveType{
