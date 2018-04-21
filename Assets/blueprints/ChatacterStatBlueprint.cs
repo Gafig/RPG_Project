@@ -16,4 +16,5 @@ public class ChatacterStatBlueprint : ScriptableObject {
 	public int maxMana;
 	public int maxStamina;
 	public Rarity rarity;
+	
 }

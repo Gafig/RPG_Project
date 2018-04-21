@@ -59,11 +59,29 @@ public class BattleManager : MonoBehaviour {
 	public Button bagBtn;
 	public Button runBtn;
 
+	Character player;
+	Character monster;
+	public static BattleManager instance;
+
+	List<Character> objListOrder;
+
+	public List<Character> Queue;
+
+	private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+    }
+
  
 	// Use this for initialization
 	void Start () {
 		currentSelection = 0;
-		
+		Debug.Log("START");
+		player = GameBattleManager.instance.character.GetComponent<BaseMonster>();
+		monster = GameBattleManager.instance.dMons.GetComponent<BaseMonster>();
 		atkBtn = GameObject.Find("Atk").GetComponent<Button>();
 		spBtn = GameObject.Find("Sp").GetComponent<Button>();
 		bagBtn = GameObject.Find("Bag").GetComponent<Button>();
@@ -72,12 +90,46 @@ public class BattleManager : MonoBehaviour {
 		// spBtn.onClick.AddListener(spAttackFunction);
 		// bagBtn.onClick.AddListener(bagFunction);
 		// runBtn.onClick.AddListener(runFunction);
+
+		// objListOrder = new List<Character>();
+		// objListOrder.Add(player);
+		// objListOrder.Add(monster);
+		// Debug.Log(objListOrder[0]);
+
+		// objListOrder.Sort((x,y) => x.SpeedStat.CompareTo(y.SpeedStat));
+		// objListOrder.Reverse();
+		// Debug.Log(objListOrder[0] + "   NEXT  " + objListOrder[1]);
+
 		
         
 
 	}
 
+	// Update is called once per frame
+	void Update () {
+
+		
+		objListOrder = new List<Character>();
+		objListOrder.Add(player);
+		objListOrder.Add(monster);
+		objListOrder.Sort((x,y) => x.SpeedStat.CompareTo(y.SpeedStat));
+		objListOrder.Reverse();
+		Debug.Log(objListOrder[0] + "   NEXT  " + objListOrder[1]);
+		
+		// if(Input.GetKeyDown("z")){
+		// 	endCombat();
+		// }
+		
+		
+	}
+
+
+
 	public void attackFunction(){
+		
+		monster.attacked(player.getAttackStat());
+
+		Debug.Log(monster.getMaxHP());
 		Debug.Log("atk");
 		
 	}
@@ -95,15 +147,6 @@ public class BattleManager : MonoBehaviour {
 		endCombat();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-		if(Input.GetKeyDown("z")){
-			endCombat();
-		}
-		
-		
-	}
 
 	public void endCombat(){
 		// Debug.Log("End combat event");
@@ -115,6 +158,8 @@ public class BattleManager : MonoBehaviour {
 		GameMasterController.instance.setPermanantUI(true);
 		// Debug.Log("setPermanantUI(true)");
 
+
+		Destroy(GameBattleManager.instance.dMons);
 	}
 
 	// public void ChangeMenu(BattleMenu m){
