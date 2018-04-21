@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class LevelControllerScript : MonoBehaviour {
+public class LevelControllerScript : MonoBehaviour
+{
 
     private int counttemp = 0;
     public Animator anim;
@@ -27,10 +28,12 @@ public class LevelControllerScript : MonoBehaviour {
     public bool hasInteracted;
     [SerializeField]
     bool needPress = true;
-    
-    void Start () {
+
+    void Start()
+    {
         currentFloor = 0;
-        /***/floorGenerator = GameObject.Find("FloorGenerator").GetComponent(typeof(FloorGenerator)) as FloorGenerator;
+        /***/
+        floorGenerator = GameObject.Find("FloorGenerator").GetComponent(typeof(FloorGenerator)) as FloorGenerator;
         player = GameObject.FindGameObjectWithTag("Player");
         gm = GameObject.FindGameObjectWithTag("GameBattleManager").GetComponent<GameBattleManager>();
         //setPlayerPosition();
@@ -43,14 +46,15 @@ public class LevelControllerScript : MonoBehaviour {
         hasInteracted = false;
 
     }
-	
-	void Update () {
+
+    void Update()
+    {
         Vector3 playerCurrPos = player.transform.position;
         if (playerCurrPos != playerLastPos)
             totalStep++;
         playerLastPos = playerCurrPos;
         randomEncounter();
-	}
+    }
 
     void setPlayerPosition()
     {
@@ -72,7 +76,7 @@ public class LevelControllerScript : MonoBehaviour {
         StartCoroutine(generateFloor());
         StartCoroutine(FadeIn());
         GameMasterController.instance.IsInputEnabled = true;
-    } 
+    }
 
     IEnumerator generateFloor()
     {
@@ -101,56 +105,88 @@ public class LevelControllerScript : MonoBehaviour {
 
         if (totalStep >= stepNeed)
         {
-            
+
             counttemp++;
             //disable key
             //changeScence
             //getMon
-            
-            
+
+
             react();
-            
-            float p = Random.Range(0.0f,100.0f);
-            if(p > 0 && p <= 30){
-                if(gm != null){
-                    gm.EnterBattle(Rarity.VeryRare);
-                }
+
+            for(int i = 0 ; i < 3 ;i++){
+                float p = Random.Range(0.0f, 100.0f);
+                RandomMonster(p);
             }
-             if(p > 30 && p <= 70){
-                if(gm != null){ 
-                    gm.EnterBattle(Rarity.Rare);
-                }
-            }
-            
-             if(p > 70 && p <= 100){
-                if(gm != null){
-                    gm.EnterBattle(Rarity.Common);
-                }
-            }
+
+            // if(p1 > 0 && p1 <= 30){
+            //     if(gm != null){
+            //         gm.EnterBattle(Rarity.VeryRare);
+            //     }
+            // }
+            //  if(p1 > 30 && p1 <= 70){
+            //     if(gm != null){ 
+            //         gm.EnterBattle(Rarity.Rare);
+            //     }
+            // }
+
+            //  if(p1 > 70 && p1 <= 100){
+            //     if(gm != null){
+            //         gm.EnterBattle(Rarity.Common);
+            //     }
+            // }
             checkInteract();
         }
-            
+
         // Debug.Log (totalStep + "count " + counttemp);
+    }
+
+    public void RandomMonster(float p)
+    {
+        if (p > 0 && p <= 30)
+        {
+            if (gm != null)
+            {
+                gm.EnterBattle(Rarity.VeryRare);
+            }
+        }
+        if (p > 30 && p <= 70)
+        {
+            if (gm != null)
+            {
+                gm.EnterBattle(Rarity.Rare);
+            }
+        }
+
+        if (p > 70 && p <= 100)
+        {
+            if (gm != null)
+            {
+                gm.EnterBattle(Rarity.Common);
+            }
+        }
+
     }
 
     public void react()
     {
-        
+
         GameMasterController.instance.IsInputEnabled = false;
         // Debug.Log("Start combat");
         interaction = gameObject.GetComponent<EventHandler>();
-        if(interaction == null)
+        if (interaction == null)
         {
             Debug.Log("Error");
             return;
         }
         interaction.triggerEvents();
-        
+
     }
 
     private void checkInteract()
     {
-        if (!GameMasterController.instance.betweenEvent){
+        if (!GameMasterController.instance.betweenEvent)
+        {
             hasInteracted = false;
             Debug.Log("betweenEvent?");
         }

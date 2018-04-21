@@ -27,6 +27,8 @@ public class GameBattleManager : MonoBehaviour {
 	public Sprite sprite;
 
 	public static GameBattleManager instance;
+
+	public List<GameObject> dMonsList;
 	 
 	private void Awake()
     {
@@ -62,7 +64,8 @@ public class GameBattleManager : MonoBehaviour {
 		if(rarity == Rarity.VeryRare){
 			dMons = Instantiate (emptyMons2, defencePodium.transform.position, Quaternion.identity) as GameObject;
 		}
-		
+		dMonsList.Add(dMons);
+		Debug.Log("DMONSLIST" + dMonsList);
 
 		GameMasterController.instance.setPermanantUI(false);
         // Debug.Log("setPermanantUI(false)");
@@ -80,15 +83,15 @@ public class GameBattleManager : MonoBehaviour {
 
 		// BaseMonster tempMons = dMons.AddComponent<BaseMonster> () as BaseMonster;
 		// tempMons.Addmember(battleMonster);
-		Debug.Log(battleMonster);
+		// Debug.Log(battleMonster);
 		// tempMons = battleMonster;
 
 		dMons.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
 		// var type = Types.GetType("will2");
 		// dMons.AddComponent<will2>();
 		
-		Debug.Log(dMons);
-		Debug.Log(battleMonster.image);
+		// Debug.Log(dMons);
+		// Debug.Log(battleMonster.image);
 
 		// Destroy(dMons);
 	
@@ -102,8 +105,8 @@ public class GameBattleManager : MonoBehaviour {
 			if (Monster.rarity == rarity)
 				returnMonster.Add (Monster);
 		}
-		Debug.Log(rarity);
-		Debug.Log("returnMonster" + returnMonster);
+		// Debug.Log(rarity);
+		// Debug.Log("returnMonster" + returnMonster);
 
 		return returnMonster;
 		

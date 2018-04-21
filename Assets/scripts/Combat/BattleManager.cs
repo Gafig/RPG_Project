@@ -81,7 +81,7 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         currentSelection = 0;
-        Debug.Log("START");
+        // Debug.Log("START");
         // player = GameBattleManager.instance.character.GetComponent<BaseMonster>();
         // monster = GameBattleManager.instance.dMons.GetComponent<BaseMonster>();
         atkBtn = GameObject.Find("Atk").GetComponent<Button>();
@@ -126,11 +126,17 @@ public class BattleManager : MonoBehaviour
 
         objListOrder = new List<Character>();
         objListOrder.Add(player);
-        objListOrder.Add(monster);
-        Debug.Log(objListOrder[0] + "" + objListOrder[1]);
+		for(int i = 0; i < GameBattleManager.instance.dMonsList.Count; i++){
+        	objListOrder.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
+		}
+        Debug.Log(objListOrder.Count);
         objListOrder.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
         objListOrder.Reverse();
         Debug.Log(objListOrder[0] + "   NEXT  " + objListOrder[1]);
+		for(int i = 0 ; i < objListOrder.Count ; i++){
+			Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
+		}
+		Debug.Log(objListOrder[0] + "   NEXT  " + objListOrder[1] +  "   NEXT  " + objListOrder[2] + "   NEXT  " + objListOrder[3]);
 
     }
 
@@ -178,7 +184,10 @@ public class BattleManager : MonoBehaviour
         objListOrder.Clear();
         Debug.Log(objListOrder.Count);
 
-        Destroy(GameBattleManager.instance.dMons);
+		for(int i = 0; i < GameBattleManager.instance.dMonsList.Count ; i++){
+        	Destroy(GameBattleManager.instance.dMonsList[i]);
+		}
+		GameBattleManager.instance.dMonsList.Clear();
     }
 
     // public void ChangeMenu(BattleMenu m){
