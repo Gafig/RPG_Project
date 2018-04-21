@@ -63,22 +63,15 @@ public class BattleManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		currentSelection = 0;
-		// fightT = fight.text;
-		// bagT = bag.text;
-		// monsterT = monster.text;
-		// runT = run.text;
-		// moveOT = moveO.text;
-		// moveTT = moveT.text;
-		// moveTHT = moveTH.text;
-		// moveFT = moveF.text;
-		atkBtn = GameObject.Find("AtkBtn").GetComponent<Button>();
-		spBtn = GameObject.Find("SpBtn").GetComponent<Button>();
-		bagBtn = GameObject.Find("BagBtn").GetComponent<Button>();
-		runBtn = GameObject.Find("RunBtn").GetComponent<Button>();
-		atkBtn.onClick.AddListener(attackFunction);
-		spBtn.onClick.AddListener(spAttackFunction);
-		bagBtn.onClick.AddListener(bagFunction);
-		runBtn.onClick.AddListener(runFunction);
+		
+		atkBtn = GameObject.Find("Atk").GetComponent<Button>();
+		spBtn = GameObject.Find("Sp").GetComponent<Button>();
+		bagBtn = GameObject.Find("Bag").GetComponent<Button>();
+		runBtn = GameObject.Find("Run").GetComponent<Button>();
+		// atkBtn.onClick.AddListener(attackFunction);
+		// spBtn.onClick.AddListener(spAttackFunction);
+		// bagBtn.onClick.AddListener(bagFunction);
+		// runBtn.onClick.AddListener(runFunction);
 		
         
 
@@ -113,14 +106,15 @@ public class BattleManager : MonoBehaviour {
 	}
 
 	public void endCombat(){
-		Debug.Log("End combat event");
+		// Debug.Log("End combat event");
 		GameMasterController.instance.endEvent();
 		GameMasterController.instance.IsInputEnabled = true;
 		followingCamera.SetActive(true);
         battleCamera.SetActive(false);
-		Debug.Log("Change camera back to dun");
+		// Debug.Log("Change camera back to dun");
 		GameMasterController.instance.setPermanantUI(true);
-		Debug.Log("setPermanantUI(true)");
+		// Debug.Log("setPermanantUI(true)");
+
 	}
 
 	// public void ChangeMenu(BattleMenu m){

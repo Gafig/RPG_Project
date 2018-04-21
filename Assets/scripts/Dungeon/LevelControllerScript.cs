@@ -110,27 +110,23 @@ public class LevelControllerScript : MonoBehaviour {
             
             react();
             
-            gm.EnterBattle(Rarity.VeryRare);
+            float p = Random.Range(0.0f,100.0f);
+            if(p > 0 && p <= 30){
+                if(gm != null){
+                    gm.EnterBattle(Rarity.VeryRare);
+                }
+            }
+             if(p > 30 && p <= 70){
+                if(gm != null){ 
+                    gm.EnterBattle(Rarity.Rare);
+                }
+            }
             
-            
-            
-            // float p = Random.Range(0.0f,100.0f);
-            // if(p > 0 && p <= 30){
-            //     if(gm != null){
-            //         gm.EnterBattle(Rarity.VeryRare);
-            //     }
-            // }
-            //  if(p > 30 && p <= 70){
-            //     if(gm != null){ 
-            //         gm.EnterBattle(Rarity.Rare);
-            //     }
-            // }
-            
-            //  if(p > 70 && p <= 100){
-            //     if(gm != null){
-            //         gm.EnterBattle(Rarity.Common);
-            //     }
-            // }
+             if(p > 70 && p <= 100){
+                if(gm != null){
+                    gm.EnterBattle(Rarity.Common);
+                }
+            }
             checkInteract();
         }
             
@@ -141,7 +137,7 @@ public class LevelControllerScript : MonoBehaviour {
     {
         
         GameMasterController.instance.IsInputEnabled = false;
-        Debug.Log("Start combat");
+        // Debug.Log("Start combat");
         interaction = gameObject.GetComponent<EventHandler>();
         if(interaction == null)
         {
