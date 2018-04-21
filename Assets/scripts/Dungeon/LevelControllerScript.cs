@@ -118,6 +118,7 @@ public class LevelControllerScript : MonoBehaviour
                 float p = Random.Range(0.0f, 100.0f);
                 RandomMonster(p);
             }
+            gm.PlayerBattle();
 
             // if(p1 > 0 && p1 <= 30){
             //     if(gm != null){

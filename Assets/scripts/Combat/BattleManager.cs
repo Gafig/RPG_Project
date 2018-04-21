@@ -64,7 +64,7 @@ public class BattleManager : MonoBehaviour
     Character monster;
     public static BattleManager instance;
 
-    List<Character> objListOrder;
+    List<Character> objListOrder = new List<Character>();
 
     public List<Character> Queue;
 
@@ -92,14 +92,15 @@ public class BattleManager : MonoBehaviour
         // spBtn.onClick.AddListener(spAttackFunction);
         // bagBtn.onClick.AddListener(bagFunction);
         // runBtn.onClick.AddListener(runFunction);
+		
 
     }
 
     void OnEnable()
     {
         Debug.Log("enable ");
-        player = GameBattleManager.instance.character.GetComponent<BaseMonster>();
-        monster = GameBattleManager.instance.dMons.GetComponent<BaseMonster>();
+        // player = GameBattleManager.instance.character.GetComponent<BaseMonster>();
+        // monster = GameBattleManager.instance.dMons.GetComponent<BaseMonster>();
         queue();
 
     }
@@ -124,10 +125,17 @@ public class BattleManager : MonoBehaviour
     public void queue()
     {
 
-        objListOrder = new List<Character>();
-        objListOrder.Add(player);
+        // objListOrder = new List<Character>();
+        // objListOrder.Add(player);
+		
 		for(int i = 0; i < GameBattleManager.instance.dMonsList.Count; i++){
         	objListOrder.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
+		}
+		for(int i = 0; i < GameBattleManager.instance.charList.Count; i++){
+        	objListOrder.Add(GameBattleManager.instance.charList[i].GetComponent<BaseMonster>());
+		}
+		for(int i = 0 ; i < objListOrder.Count ; i++){
+			Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
 		}
         Debug.Log(objListOrder.Count);
         objListOrder.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
@@ -180,14 +188,18 @@ public class BattleManager : MonoBehaviour
         GameMasterController.instance.setPermanantUI(true);
         // Debug.Log("setPermanantUI(true)");
 
-        Debug.Log(objListOrder[0] + "   NEXT  " + objListOrder[1]);
+        // Debug.Log(objListOrder[0] + "   NEXT  " + objListOrder[1]);
         objListOrder.Clear();
-        Debug.Log(objListOrder.Count);
+        // Debug.Log(objListOrder.Count);
 
 		for(int i = 0; i < GameBattleManager.instance.dMonsList.Count ; i++){
         	Destroy(GameBattleManager.instance.dMonsList[i]);
 		}
+		for(int i = 0; i < GameBattleManager.instance.charList.Count ; i++){
+        	Destroy(GameBattleManager.instance.charList[i]);
+		}
 		GameBattleManager.instance.dMonsList.Clear();
+		GameBattleManager.instance.charList.Clear();
     }
 
     // public void ChangeMenu(BattleMenu m){

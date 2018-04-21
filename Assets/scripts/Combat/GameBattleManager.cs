@@ -22,18 +22,28 @@ public class GameBattleManager : MonoBehaviour {
 	public GameObject emptyMons1;
 	public GameObject emptyMons2;
 	public GameObject emptyCharacter;
+	public GameObject emptyCharacter1;
+	public GameObject emptyCharacter2;
+	public GameObject emptyCharacter3;
 	public GameObject dMons;
 	public GameObject character;
+	public GameObject character1;
+	public GameObject character2;
+	public GameObject character3;
+	
 	public Sprite sprite;
 
 	public static GameBattleManager instance;
 
-	public List<GameObject> dMonsList;
+	public List<GameObject> dMonsList =  new List<GameObject>();
+	public List<GameObject> charList=  new List<GameObject>();
 	 
 	private void Awake()
     {
-        if (instance == null)
+        if (instance == null){
+			Debug.Log("awake");
             instance = this;
+		}
         else if (instance != this)
             Destroy(gameObject);
     }
@@ -44,13 +54,34 @@ public class GameBattleManager : MonoBehaviour {
 		battleCamera.SetActive (false);
 
 		
-		character = Instantiate (emptyCharacter, attackPodium.transform.position, Quaternion.identity) as GameObject; 
-
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	public void PlayerBattle(){
+		character = Instantiate (emptyCharacter, attackPodium.transform.position, Quaternion.identity) as GameObject; 
+		character1 = Instantiate (emptyCharacter1, attackPodium.transform.position, Quaternion.identity) as GameObject; 
+		character2 = Instantiate (emptyCharacter2, attackPodium.transform.position, Quaternion.identity) as GameObject; 
+		character3 = Instantiate (emptyCharacter3, attackPodium.transform.position, Quaternion.identity) as GameObject; 
+
+		charList.Add(character);
+		charList.Add(character1);
+		charList.Add(character2);
+		charList.Add(character3);
+
+		Vector3 characterLocalPos = new Vector3 (0, 1, 0);
+		character.transform.parent = attackPodium;
+		character.transform.localPosition = characterLocalPos;
+		character1.transform.parent = attackPodium;
+		character1.transform.localPosition = characterLocalPos;
+		character2.transform.parent = attackPodium;
+		character2.transform.localPosition = characterLocalPos;
+		character3.transform.parent = attackPodium;
+		character3.transform.localPosition = characterLocalPos;
 	}
 
 	public void EnterBattle(Rarity rarity){
@@ -64,6 +95,10 @@ public class GameBattleManager : MonoBehaviour {
 		if(rarity == Rarity.VeryRare){
 			dMons = Instantiate (emptyMons2, defencePodium.transform.position, Quaternion.identity) as GameObject;
 		}
+
+		
+		
+
 		dMonsList.Add(dMons);
 		Debug.Log("DMONSLIST" + dMonsList);
 
@@ -78,8 +113,8 @@ public class GameBattleManager : MonoBehaviour {
 		dMons.transform.parent = defencePodium;
 		dMons.transform.localPosition = monsLocalPos;
 
-		character.transform.parent = attackPodium;
-		character.transform.localPosition = monsLocalPos;
+		
+		// character.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
 
 		// BaseMonster tempMons = dMons.AddComponent<BaseMonster> () as BaseMonster;
 		// tempMons.Addmember(battleMonster);
