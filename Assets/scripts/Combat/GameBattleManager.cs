@@ -14,7 +14,10 @@ public class GameBattleManager : MonoBehaviour {
 	public Party party;
 	
 	public BaseMonster mons;
+	public Transform defencePodiumtemp;
 	public Transform defencePodium;
+	public Transform defencePodium1;
+	public Transform defencePodium2;
 	public Transform attackPodium;
 	public GameObject emptyMons;
 	public GameObject emptyMons1;
@@ -65,14 +68,17 @@ public class GameBattleManager : MonoBehaviour {
 		philip = Instantiate (characterPhilip, attackPodium.transform.position, Quaternion.identity) as GameObject; 
 		jane = Instantiate (characterJane, attackPodium.transform.position, Quaternion.identity) as GameObject; 
 		rose = Instantiate (characterRose, attackPodium.transform.position, Quaternion.identity) as GameObject; 
-
-		charList.Add(william);
+		william.GetComponent<SpriteRenderer>().enabled = false;
+		philip.GetComponent<SpriteRenderer>().enabled = false;
+		jane.GetComponent<SpriteRenderer>().enabled = false;
+		rose.GetComponent<SpriteRenderer>().enabled = false;
 		charList.Add(philip);
+		charList.Add(william);
 		charList.Add(jane);
 		charList.Add(rose);
 
 		// Debug.Log("COUNT CHAR" + charList.Count);
-		Debug.Log("CHARSLIST" + charList[0] + charList[1]+ charList[2] + charList[3]);
+		// Debug.Log("CHARSLIST" + charList[0] + charList[1]+ charList[2] + charList[3]);
 
 		Vector3 characterLocalPos = new Vector3 (0, 1, 0);
 		william.transform.parent = attackPodium;
@@ -93,16 +99,27 @@ public class GameBattleManager : MonoBehaviour {
 		// character3.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
 	}
 
-	public void EnterBattle(Rarity rarity){
+	public void EnterBattle(Rarity rarity, int position){
+
+		if(position == 0){
+			defencePodiumtemp = defencePodium;
+		}
+		else if(position == 1){
+			defencePodiumtemp = defencePodium1;
+		}
+		else if(position == 2){
+			defencePodiumtemp = defencePodium2;
+		}
+
 
 		if(rarity == Rarity.Common){
-			dMons = Instantiate (emptyMons, defencePodium.transform.position, Quaternion.identity) as GameObject;
+			dMons = Instantiate (emptyMons, defencePodiumtemp.transform.position, Quaternion.identity) as GameObject;
 		}
 		if(rarity == Rarity.Rare){
-			dMons = Instantiate (emptyMons1, defencePodium.transform.position, Quaternion.identity) as GameObject;
+			dMons = Instantiate (emptyMons1, defencePodiumtemp.transform.position, Quaternion.identity) as GameObject;
 		}
 		if(rarity == Rarity.VeryRare){
-			dMons = Instantiate (emptyMons2, defencePodium.transform.position, Quaternion.identity) as GameObject;
+			dMons = Instantiate (emptyMons2, defencePodiumtemp.transform.position, Quaternion.identity) as GameObject;
 		}
 
 		dMonsList.Add(dMons);
@@ -113,13 +130,13 @@ public class GameBattleManager : MonoBehaviour {
 
 		// Debug.Log(GetMonsterByRarity(rarity));
 
-		BaseMonster battleMonster = GetRandomMonsterFromList(GetMonsterByRarity(rarity));
+		// BaseMonster battleMonster = GetRandomMonsterFromList(GetMonsterByRarity(rarity));
 		
 		Vector3 monsLocalPos = new Vector3 (0, 1, 0);
-		dMons.transform.parent = defencePodium;
+		dMons.transform.parent = defencePodiumtemp;
 		dMons.transform.localPosition = monsLocalPos;
 		dMons.transform.localScale = new Vector3(8,29,29);
-		dMons.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
+		// dMons.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
 
 		
 		// character.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
@@ -141,26 +158,26 @@ public class GameBattleManager : MonoBehaviour {
 		
 	}
 
-	public List<BaseMonster> GetMonsterByRarity(Rarity rarity){
-		List<BaseMonster> returnMonster = new List<BaseMonster> ();
-		foreach (BaseMonster Monster in allMonster) {
-			if (Monster.rarity == rarity)
-				returnMonster.Add (Monster);
-		}
-		// Debug.Log(rarity);
-		// Debug.Log("returnMonster" + returnMonster);
+	// public List<BaseMonster> GetMonsterByRarity(Rarity rarity){
+	// 	List<BaseMonster> returnMonster = new List<BaseMonster> ();
+	// 	foreach (BaseMonster Monster in allMonster) {
+	// 		if (Monster.rarity == rarity)
+	// 			returnMonster.Add (Monster);
+	// 	}
+	// 	// Debug.Log(rarity);
+	// 	// Debug.Log("returnMonster" + returnMonster);
 
-		return returnMonster;
+	// 	return returnMonster;
 		
-	} 
+	// } 
 
-	public BaseMonster GetRandomMonsterFromList(List<BaseMonster> monsList){
-		GameObject gameObject = new GameObject("Monster");
-    	mons = gameObject.AddComponent<BaseMonster>();
-		int monsIndex = (int) Random.Range (0, monsList.Count - 1);
-		mons = monsList[monsIndex];
-		return mons;
-	}
+	// public BaseMonster GetRandomMonsterFromList(List<BaseMonster> monsList){
+	// 	GameObject gameObject = new GameObject("Monster");
+    // 	mons = gameObject.AddComponent<BaseMonster>();
+	// 	int monsIndex = (int) Random.Range (0, monsList.Count - 1);
+	// 	mons = monsList[monsIndex];
+	// 	return mons;
+	// }
 }
 
 

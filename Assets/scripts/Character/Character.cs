@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
     public int SpAttackStat;
     public int EvasionStat;
     public int maxHP;
+    public int Hp;
     public int maxMana;
     public int maxStamina;
     public Rarity rarity;
@@ -46,6 +47,7 @@ public class Character : MonoBehaviour
                 this.SpAttackStat = statBlueprint.SpAttackStat;
                 this.EvasionStat = statBlueprint.EvasionStat;
                 this.maxHP = statBlueprint.maxHP;
+                this.Hp = maxHP;
                 this.maxMana = statBlueprint.maxMana;
                 this.maxStamina = statBlueprint.maxStamina;
                 this.rarity = statBlueprint.rarity;
@@ -63,15 +65,15 @@ public class Character : MonoBehaviour
     }
 
     public void attacked(int atk){
-        Debug.Log("MAX HP" + this.maxHP);
-        Debug.Log("atk  " + atk);
+        // Debug.Log("MAX HP" + this.maxHP);
+        // Debug.Log("atk  " + atk);
         
-        this.maxHP -= atk;
-        Debug.Log("MAX HP" + this.maxHP);
+        this.Hp -= atk;
+        // Debug.Log("MAX HP" + this.maxHP);
     }
 
     public void spAttack(int atk, int maxMana){
-        this.maxHP -= atk;
+        attacked(atk);
         this.maxMana -= maxMana;
     }
 
@@ -98,6 +100,10 @@ public class Character : MonoBehaviour
         return this.maxHP;
     }
 
+    public int getHP(){
+        return this.Hp;
+    }
+
     public int getMaxMana(){
         return this.maxMana;
     }
@@ -105,7 +111,7 @@ public class Character : MonoBehaviour
     public int getMaxStamina(){
         return this.maxStamina;
     }
-  
+
 
 
 }

@@ -69,7 +69,18 @@ public class BattleManager : MonoBehaviour
     List<Character> characterList = new List<Character>();
     List<BaseMonster> monsterList = new List<BaseMonster>();
 
+    float sumHp = 0;
+    float sumMaxHp = 0;
+
+    float flee = 0;
+
     public List<Character> Queue;
+
+    public GameObject clickedGameObject;
+
+    public BaseMonster monsterSelected;
+
+   
 
     private void Awake()
     {
@@ -101,14 +112,18 @@ public class BattleManager : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log("enable ");
+        // Debug.Log("enable ");
         // player = GameBattleManager.instance.character.GetComponent<BaseMonster>();
         // monster = GameBattleManager.instance.dMons.GetComponent<BaseMonster>();
         queue();
+        // GameBattleManager.instance.charList[0].SetActive(true);
+        // characterList[0].GetComponent<SpriteRenderer>().enabled = true;
+        
 
-        GameBattleManager.instance.charList[1].AddComponent<Character>();
-		
-
+        // for(int i = 0; i < characterList.Count ; i++){
+        //     sumHp += characterList[i].getHP();
+            // Debug.Log("HHHHHPPPPPP" + characterList[i].getHP());
+		// }
 
 
     }
@@ -138,47 +153,82 @@ public class BattleManager : MonoBehaviour
 		
 		for(int i = 0; i < GameBattleManager.instance.dMonsList.Count; i++){
         	objListOrder.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
-
-
             monsterList.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
 		}
 		for(int i = 0; i < GameBattleManager.instance.charList.Count; i++){
         	objListOrder.Add(GameBattleManager.instance.charList[i].GetComponent<Character>());
-
-
             characterList.Add(GameBattleManager.instance.charList[i].GetComponent<Character>());
-            Debug.Log(GameBattleManager.instance.charList[i].GetComponent<Character>());
+            // Debug.Log(GameBattleManager.instance.charList[i].GetComponent<Character>());
 		}
-		for(int i = 0 ; i < objListOrder.Count ; i++){
-			Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
-		}
+
+
+
+		// for(int i = 0 ; i < objListOrder.Count ; i++){
+		// 	Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
+		// }
+
         Debug.Log("COUNT " + objListOrder.Count);
         objListOrder.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
         objListOrder.Reverse();
+        characterQueue();
+        monsterQueue();
+
+
         // Debug.Log(objListOrder[0] + "   NEXT  " + objListOrder[1]);
-		for(int i = 0 ; i < objListOrder.Count ; i++){
-			Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
-		}
-        for(int i = 0 ; i < objListOrder.Count ; i++){
-		    Debug.Log(objListOrder[i] + "   NEXT  ");
-        }
+		// for(int i = 0 ; i < objListOrder.Count ; i++){
+		// 	Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
+		// }
+        // for(int i = 0 ; i < objListOrder.Count ; i++){
+		//     Debug.Log(objListOrder[i] + "   NEXT  ");
+        // }
 
     }
 
+    public void characterQueue(){
+        characterList.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
+        characterList.Reverse();
+        for(int i = 0; i < characterList.Count ; i++){
+            sumMaxHp += characterList[i].getMaxHP();
+        }
+        Debug.Log(characterList[0]+ " NNN " + characterList[1]+ " NNN "+ characterList[2]+ " NNN "+characterList[3]+ " NNN ");
+        characterList[0].GetComponent<SpriteRenderer>().enabled = true;
+        // for(int i = 0 ; i < characterList.Count ; i++){
+		//     Debug.Log(characterList[i] + "   NEXT  ");
+        // }
+    }
+
+    public void monsterQueue(){
+        monsterList.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
+        monsterList.Reverse();
+        // for(int i = 0 ; i < monsterList.Count ; i++){
+		//     Debug.Log(monsterList[i] + "   NEXT  ");
+        // }
+    }
+
+     public void clicked(GameObject click){
+        clickedGameObject = click;
+        Debug.Log("asdafwf" + clickedGameObject.GetComponent<BaseMonster>().getHP());
+        monsterSelected = clickedGameObject.GetComponent<BaseMonster>();
+    }
 
 
     public void attackFunction()
     {
-        // GameBattleManager.instance.dMonsList[0].GetComponent<BaseMonster>().attacked(GameBattleManager.instance.charList[0].AddComponent<Character>().getAttackStat());
-
-        monsterList[0].attacked(characterList[0].getAttackStat());
+        // Debug.Log("monster "+ monsterList[0].OnMouseDown());
+        Debug.Log("Before MONSTER HP" + monsterList[0].getHP());
+        monsterSelected.attacked(characterList[0].getAttackStat());
+        Debug.Log("select " + monsterSelected.getHP());
+        Debug.Log("CHAR ATK" + characterList[0].getAttackStat());
         // monster.attacked(character.getAttackStat());
 
         // monster.attacked(player.getAttackStat());
-
-        Debug.Log("MONSTER HP" + monsterList[0].getMaxHP());
-        Debug.Log("CHARACTER ATK" + characterList[0].getAttackStat());
+        characterList[0].attacked(monsterSelected.getAttackStat());
+        characterList[0].GetComponent<SpriteRenderer>().enabled = false;
+        characterList[1].GetComponent<SpriteRenderer>().enabled = true;
+        Debug.Log("after MONSTER HP" + monsterSelected.getHP());
+        // Debug.Log("CHARACTER ATK" + characterList[0].getAttackStat());
         Debug.Log("atk");
+
 
     }
 
@@ -195,7 +245,47 @@ public class BattleManager : MonoBehaviour
     public void runFunction()
     {
         Debug.Log("run");
-        endCombat();
+        Debug.Log(" before FLEE" + sumHp);
+        for(int i = 0; i < characterList.Count ; i++){
+            sumHp += characterList[i].getHP();
+            // Debug.Log("HHHHHPPPPPP" + characterList[i].getHP());
+		}
+
+        Debug.Log("PPPP1: " + flee);
+        flee = ((sumHp/sumMaxHp)*100) - 20;
+        // if(flee < 50){
+        //     flee = (sumHp/sumMaxHp)*100;
+        //     Debug.Log("CHANGEEEE");
+        // }
+
+        float fleeP = Random.Range(0.0f, 100f);
+
+        
+        // Debug.Log(sumMaxHp +": PPPP :" + fleeP);
+        
+       
+       if(flee < 60 && flee >= 30){
+           flee = ((sumHp/sumMaxHp)*100);
+       }
+       if(flee < 30 && flee > 0){
+           flee = ((sumHp/sumMaxHp)*100) + 27;
+       }
+       if(flee <= 0){
+           flee = 25;
+       }
+       Debug.Log("SUM HP : " + sumHp +" : flee : " + flee + " : sum maxhp : "+ sumMaxHp + " : fleeP : " + fleeP );
+
+        if(flee > fleeP){
+            Debug.Log("FLEEEEEE");
+            endCombat();
+        }
+        else{
+            Debug.Log("Can't fleeee");
+        }
+
+        Debug.Log(" after FLEE" + sumHp);
+
+        sumHp = 0;
     }
 
 
@@ -217,11 +307,24 @@ public class BattleManager : MonoBehaviour
 		for(int i = 0; i < GameBattleManager.instance.dMonsList.Count ; i++){
         	Destroy(GameBattleManager.instance.dMonsList[i]);
 		}
-		for(int i = 0; i < GameBattleManager.instance.charList.Count ; i++){
-        	Destroy(GameBattleManager.instance.charList[i]);
-		}
+		// for(int i = 0; i < GameBattleManager.instance.charList.Count ; i++){
+        // 	Destroy(GameBattleManager.instance.charList[i]);
+		// }
 		GameBattleManager.instance.dMonsList.Clear();
-		GameBattleManager.instance.charList.Clear();
+		// GameBattleManager.instance.charList.Clear();
+        monsterList.Clear();
+        characterList.Clear();
+
+        
+        sumMaxHp = 0;
+        
+    }
+
+    public void reset(){
+        
+        sumHp = 0;
+        flee = 0;
+        sumMaxHp = 0;
     }
 
     // public void ChangeMenu(BattleMenu m){

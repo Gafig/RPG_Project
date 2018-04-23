@@ -116,46 +116,33 @@ public class LevelControllerScript : MonoBehaviour
 
             for(int i = 0 ; i < 3 ;i++){
                 float p = Random.Range(0.0f, 100.0f);
-                RandomMonster(p);
+                RandomMonster(p,i);
             }
-            gm.PlayerBattle();
+            if(gm.william == null){
+                gm.PlayerBattle();
+            }
+            
 
-            // if(p1 > 0 && p1 <= 30){
-            //     if(gm != null){
-            //         gm.EnterBattle(Rarity.VeryRare);
-            //     }
-            // }
-            //  if(p1 > 30 && p1 <= 70){
-            //     if(gm != null){ 
-            //         gm.EnterBattle(Rarity.Rare);
-            //     }
-            // }
-
-            //  if(p1 > 70 && p1 <= 100){
-            //     if(gm != null){
-            //         gm.EnterBattle(Rarity.Common);
-            //     }
-            // }
             checkInteract();
         }
 
         // Debug.Log (totalStep + "count " + counttemp);
     }
 
-    public void RandomMonster(float p)
+    public void RandomMonster(float p, int pos)
     {
         if (p > 0 && p <= 30)
         {
             if (gm != null)
             {
-                gm.EnterBattle(Rarity.VeryRare);
+                gm.EnterBattle(Rarity.VeryRare, pos);
             }
         }
         if (p > 30 && p <= 70)
         {
             if (gm != null)
             {
-                gm.EnterBattle(Rarity.Rare);
+                gm.EnterBattle(Rarity.Rare, pos);
             }
         }
 
@@ -163,7 +150,7 @@ public class LevelControllerScript : MonoBehaviour
         {
             if (gm != null)
             {
-                gm.EnterBattle(Rarity.Common);
+                gm.EnterBattle(Rarity.Common, pos);
             }
         }
 
