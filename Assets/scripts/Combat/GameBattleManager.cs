@@ -15,21 +15,19 @@ public class GameBattleManager : MonoBehaviour {
 	
 	public BaseMonster mons;
 	public Transform defencePodium;
-	public Transform defencePodium1;
-	public Transform defencePodium2;
 	public Transform attackPodium;
 	public GameObject emptyMons;
 	public GameObject emptyMons1;
 	public GameObject emptyMons2;
-	public GameObject emptyCharacter;
-	public GameObject emptyCharacter1;
-	public GameObject emptyCharacter2;
-	public GameObject emptyCharacter3;
+	public GameObject characterWilliam;
+	public GameObject characterPhilip;
+	public GameObject characterJane;
+	public GameObject characterRose;
 	public GameObject dMons;
-	public GameObject character;
-	public GameObject character1;
-	public GameObject character2;
-	public GameObject character3;
+	public GameObject william;
+	public GameObject philip;
+	public GameObject jane;
+	public GameObject rose;
 	
 	public Sprite sprite;
 
@@ -63,25 +61,36 @@ public class GameBattleManager : MonoBehaviour {
 	}
 
 	public void PlayerBattle(){
-		character = Instantiate (emptyCharacter, attackPodium.transform.position, Quaternion.identity) as GameObject; 
-		character1 = Instantiate (emptyCharacter1, attackPodium.transform.position, Quaternion.identity) as GameObject; 
-		character2 = Instantiate (emptyCharacter2, attackPodium.transform.position, Quaternion.identity) as GameObject; 
-		character3 = Instantiate (emptyCharacter3, attackPodium.transform.position, Quaternion.identity) as GameObject; 
+		william = Instantiate (characterWilliam, attackPodium.transform.position, Quaternion.identity) as GameObject; 
+		philip = Instantiate (characterPhilip, attackPodium.transform.position, Quaternion.identity) as GameObject; 
+		jane = Instantiate (characterJane, attackPodium.transform.position, Quaternion.identity) as GameObject; 
+		rose = Instantiate (characterRose, attackPodium.transform.position, Quaternion.identity) as GameObject; 
 
-		charList.Add(character);
-		charList.Add(character1);
-		charList.Add(character2);
-		charList.Add(character3);
+		charList.Add(william);
+		charList.Add(philip);
+		charList.Add(jane);
+		charList.Add(rose);
+
+		// Debug.Log("COUNT CHAR" + charList.Count);
+		Debug.Log("CHARSLIST" + charList[0] + charList[1]+ charList[2] + charList[3]);
 
 		Vector3 characterLocalPos = new Vector3 (0, 1, 0);
-		character.transform.parent = attackPodium;
-		character.transform.localPosition = characterLocalPos;
-		character1.transform.parent = attackPodium;
-		character1.transform.localPosition = characterLocalPos;
-		character2.transform.parent = attackPodium;
-		character2.transform.localPosition = characterLocalPos;
-		character3.transform.parent = attackPodium;
-		character3.transform.localPosition = characterLocalPos;
+		william.transform.parent = attackPodium;
+		william.transform.localPosition = characterLocalPos;
+		william.transform.localScale = new Vector3(8,29,29);
+		// character.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
+		philip.transform.parent = attackPodium;
+		philip.transform.localPosition = characterLocalPos;
+		philip.transform.localScale = new Vector3(8,29,29);
+		// character1.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
+		jane.transform.parent = attackPodium;
+		jane.transform.localPosition = characterLocalPos;
+		jane.transform.localScale = new Vector3(8,29,29);
+		// character2.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
+		rose.transform.parent = attackPodium;
+		rose.transform.localPosition = characterLocalPos;
+		rose.transform.localScale = new Vector3(8,29,29);
+		// character3.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
 	}
 
 	public void EnterBattle(Rarity rarity){
@@ -96,11 +105,8 @@ public class GameBattleManager : MonoBehaviour {
 			dMons = Instantiate (emptyMons2, defencePodium.transform.position, Quaternion.identity) as GameObject;
 		}
 
-		
-		
-
 		dMonsList.Add(dMons);
-		Debug.Log("DMONSLIST" + dMonsList);
+		// Debug.Log("DMONSLIST" + dMonsList);
 
 		GameMasterController.instance.setPermanantUI(false);
         // Debug.Log("setPermanantUI(false)");
@@ -112,6 +118,8 @@ public class GameBattleManager : MonoBehaviour {
 		Vector3 monsLocalPos = new Vector3 (0, 1, 0);
 		dMons.transform.parent = defencePodium;
 		dMons.transform.localPosition = monsLocalPos;
+		dMons.transform.localScale = new Vector3(8,29,29);
+		dMons.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
 
 		
 		// character.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
@@ -121,7 +129,6 @@ public class GameBattleManager : MonoBehaviour {
 		// Debug.Log(battleMonster);
 		// tempMons = battleMonster;
 
-		dMons.GetComponent<SpriteRenderer> ().sprite = battleMonster.image;
 		// var type = Types.GetType("will2");
 		// dMons.AddComponent<will2>();
 		

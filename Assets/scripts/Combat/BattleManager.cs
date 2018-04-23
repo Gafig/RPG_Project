@@ -66,6 +66,9 @@ public class BattleManager : MonoBehaviour
 
     List<Character> objListOrder = new List<Character>();
 
+    List<Character> characterList = new List<Character>();
+    List<BaseMonster> monsterList = new List<BaseMonster>();
+
     public List<Character> Queue;
 
     private void Awake()
@@ -103,6 +106,11 @@ public class BattleManager : MonoBehaviour
         // monster = GameBattleManager.instance.dMons.GetComponent<BaseMonster>();
         queue();
 
+        GameBattleManager.instance.charList[1].AddComponent<Character>();
+		
+
+
+
     }
 
     // Update is called once per frame
@@ -130,21 +138,30 @@ public class BattleManager : MonoBehaviour
 		
 		for(int i = 0; i < GameBattleManager.instance.dMonsList.Count; i++){
         	objListOrder.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
+
+
+            monsterList.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
 		}
 		for(int i = 0; i < GameBattleManager.instance.charList.Count; i++){
-        	objListOrder.Add(GameBattleManager.instance.charList[i].GetComponent<BaseMonster>());
+        	objListOrder.Add(GameBattleManager.instance.charList[i].GetComponent<Character>());
+
+
+            characterList.Add(GameBattleManager.instance.charList[i].GetComponent<Character>());
+            Debug.Log(GameBattleManager.instance.charList[i].GetComponent<Character>());
 		}
 		for(int i = 0 ; i < objListOrder.Count ; i++){
 			Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
 		}
-        Debug.Log(objListOrder.Count);
+        Debug.Log("COUNT " + objListOrder.Count);
         objListOrder.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
         objListOrder.Reverse();
-        Debug.Log(objListOrder[0] + "   NEXT  " + objListOrder[1]);
+        // Debug.Log(objListOrder[0] + "   NEXT  " + objListOrder[1]);
 		for(int i = 0 ; i < objListOrder.Count ; i++){
 			Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
 		}
-		Debug.Log(objListOrder[0] + "   NEXT  " + objListOrder[1] +  "   NEXT  " + objListOrder[2] + "   NEXT  " + objListOrder[3]);
+        for(int i = 0 ; i < objListOrder.Count ; i++){
+		    Debug.Log(objListOrder[i] + "   NEXT  ");
+        }
 
     }
 
@@ -152,10 +169,15 @@ public class BattleManager : MonoBehaviour
 
     public void attackFunction()
     {
+        // GameBattleManager.instance.dMonsList[0].GetComponent<BaseMonster>().attacked(GameBattleManager.instance.charList[0].AddComponent<Character>().getAttackStat());
 
-        monster.attacked(player.getAttackStat());
+        monsterList[0].attacked(characterList[0].getAttackStat());
+        // monster.attacked(character.getAttackStat());
 
-        Debug.Log(monster.getMaxHP());
+        // monster.attacked(player.getAttackStat());
+
+        Debug.Log("MONSTER HP" + monsterList[0].getMaxHP());
+        Debug.Log("CHARACTER ATK" + characterList[0].getAttackStat());
         Debug.Log("atk");
 
     }

@@ -37,7 +37,7 @@ public class Character : MonoBehaviour
         if (statBlueprint != null)
             if (previousStatBlueprint != statBlueprint)
             {
-                Debug.Log("change");
+                // Debug.Log("change");
                 this.PName = statBlueprint.name;
                 this.image = statBlueprint.image;
                 this.AttackStat = statBlueprint.AttackStat;
@@ -68,6 +68,11 @@ public class Character : MonoBehaviour
         
         this.maxHP -= atk;
         Debug.Log("MAX HP" + this.maxHP);
+    }
+
+    public void spAttack(int atk, int maxMana){
+        this.maxHP -= atk;
+        this.maxMana -= maxMana;
     }
 
     public int getAttackStat(){
