@@ -82,6 +82,8 @@ public class BattleManager : MonoBehaviour
 
     public BaseMonster monsterSelected;
 
+    public int attackStat;
+
 
 
     private void Awake()
@@ -118,6 +120,7 @@ public class BattleManager : MonoBehaviour
         // player = GameBattleManager.instance.character.GetComponent<BaseMonster>();
         // monster = GameBattleManager.instance.dMons.GetComponent<BaseMonster>();
         queue();
+        
         // GameBattleManager.instance.charList[0].SetActive(true);
         // characterList[0].GetComponent<SpriteRenderer>().enabled = true;
 
@@ -224,11 +227,35 @@ public class BattleManager : MonoBehaviour
 
     public void attackFunction()
     {
+
         // Debug.Log("monster "+ monsterList[0].OnMouseDown());
         Debug.Log("Before MONSTER HP" + monsterList[0].getHP());
 
+        attackStat = characterList[currentSelection].getAttackStat();
         //player atk monster selected
-        monsterSelected.attacked(characterList[currentSelection].getAttackStat());
+        monsterSelected.attacked(attackStat);
+        attackHelp();
+        
+
+        
+
+    }
+
+    public void spAttackFunction()
+    {
+
+        Debug.Log("sp");
+
+        attackStat = characterList[currentSelection].getSpAttackStat();
+        attackHelp();
+        //use mana
+        characterList[currentSelection].useMana(20);
+
+        
+    }
+
+
+    private void attackHelp(){
 
         Debug.Log("select " + monsterSelected.getHP());
         Debug.Log("CHAR ATK" + characterList[0].getAttackStat());
@@ -244,7 +271,7 @@ public class BattleManager : MonoBehaviour
             // monsterSelected.GetComponent<BaseMonster>()
             if (monsterList.Count == 0)
             {
-                endCombat();
+                endCombat();    
                 addMoney();
             }
             else
@@ -262,26 +289,6 @@ public class BattleManager : MonoBehaviour
             }
         }
         //die all end battle
-
-
-        // for (int i = 0; i < monsterList.Count; i++)
-        // {
-        //     Debug.Log("Monster : " + monsterList[i]);
-        // }
-        // Debug.Log("COUNTTT" + monsterList.Count);
-
-
-
-        //destroy player that die
-        // if (characterList[currentSelection].getHP() <= 0)
-        // {
-        //     Destroy(characterList[currentSelection].gameObject);
-        //     characterList.Remove(characterList[currentSelection]);
-        //     Debug.Log("coutnt after dead " + characterList.Count);
-        // }
-
-        Debug.Log("is END" + isBattleEnd);
-
         if (!isBattleEnd)
         {
 
@@ -306,13 +313,23 @@ public class BattleManager : MonoBehaviour
 
 
 
+        // for (int i = 0; i < monsterList.Count; i++)
+        // {
+        //     Debug.Log("Monster : " + monsterList[i]);
+        // }
+        // Debug.Log("COUNTTT" + monsterList.Count);
 
-    }
 
-    public void spAttackFunction()
-    {
-        Debug.Log("sp");
-        
+
+        //destroy player that die
+        // if (characterList[currentSelection].getHP() <= 0)
+        // {
+        //     Destroy(characterList[currentSelection].gameObject);
+        //     characterList.Remove(characterList[currentSelection]);
+        //     Debug.Log("coutnt after dead " + characterList.Count);
+        // }
+
+        Debug.Log("is END" + isBattleEnd);
     }
 
     public void bagFunction()

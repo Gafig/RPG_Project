@@ -16,6 +16,7 @@ public class Character : MonoBehaviour
     public int Hp;
     public int maxMana;
     public int maxStamina;
+    public int Mana;
     public Rarity rarity;
 
     public ChatacterStatBlueprint statBlueprint;
@@ -49,6 +50,7 @@ public class Character : MonoBehaviour
                 this.maxHP = statBlueprint.maxHP;
                 this.Hp = maxHP;
                 this.maxMana = statBlueprint.maxMana;
+                this.Mana = maxMana;
                 this.maxStamina = statBlueprint.maxStamina;
                 this.rarity = statBlueprint.rarity;
                 previousStatBlueprint = statBlueprint;
@@ -72,9 +74,8 @@ public class Character : MonoBehaviour
         // Debug.Log("MAX HP" + this.maxHP);
     }
 
-    public void spAttack(int atk, int maxMana){
+    public void spAttack(int atk){
         attacked(atk);
-        this.maxMana -= maxMana;
     }
 
     public int getAttackStat(){
@@ -106,6 +107,14 @@ public class Character : MonoBehaviour
 
     public int getMaxMana(){
         return this.maxMana;
+    }
+
+    public int getMana(){
+        return this.Mana;
+    }
+
+    public void useMana(int mana){
+        this.Mana -= mana;
     }
 
     public int getMaxStamina(){
