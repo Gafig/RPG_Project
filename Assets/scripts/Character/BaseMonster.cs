@@ -15,7 +15,13 @@ public class BaseMonster : Character {
 	// Update is called once per frame
 	public void Update () {
 		UpdateAfterBlueprint();
-		
+		// isDead();
+	}
+
+	void isDead(){
+		if(this.getHP() <= 0){
+			Destroy(this);
+		}
 	}
 
 	void OnMouseDown(){

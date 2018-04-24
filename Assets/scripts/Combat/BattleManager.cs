@@ -64,6 +64,8 @@ public class BattleManager : MonoBehaviour
     Character monster;
     public static BattleManager instance;
 
+    public bool isBattleEnd = false;
+
     List<Character> objListOrder = new List<Character>();
 
     List<Character> characterList = new List<Character>();
@@ -80,7 +82,7 @@ public class BattleManager : MonoBehaviour
 
     public BaseMonster monsterSelected;
 
-   
+
 
     private void Awake()
     {
@@ -94,7 +96,7 @@ public class BattleManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        currentSelection = 0;
+
         // Debug.Log("START");
         // player = GameBattleManager.instance.character.GetComponent<BaseMonster>();
         // monster = GameBattleManager.instance.dMons.GetComponent<BaseMonster>();
@@ -106,7 +108,7 @@ public class BattleManager : MonoBehaviour
         // spBtn.onClick.AddListener(spAttackFunction);
         // bagBtn.onClick.AddListener(bagFunction);
         // runBtn.onClick.AddListener(runFunction);
-		
+
 
     }
 
@@ -118,12 +120,12 @@ public class BattleManager : MonoBehaviour
         queue();
         // GameBattleManager.instance.charList[0].SetActive(true);
         // characterList[0].GetComponent<SpriteRenderer>().enabled = true;
-        
+
 
         // for(int i = 0; i < characterList.Count ; i++){
         //     sumHp += characterList[i].getHP();
-            // Debug.Log("HHHHHPPPPPP" + characterList[i].getHP());
-		// }
+        // Debug.Log("HHHHHPPPPPP" + characterList[i].getHP());
+        // }
 
 
     }
@@ -150,22 +152,24 @@ public class BattleManager : MonoBehaviour
 
         // objListOrder = new List<Character>();
         // objListOrder.Add(player);
-		
-		for(int i = 0; i < GameBattleManager.instance.dMonsList.Count; i++){
-        	objListOrder.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
+
+        for (int i = 0; i < GameBattleManager.instance.dMonsList.Count; i++)
+        {
+            objListOrder.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
             monsterList.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
-		}
-		for(int i = 0; i < GameBattleManager.instance.charList.Count; i++){
-        	objListOrder.Add(GameBattleManager.instance.charList[i].GetComponent<Character>());
+        }
+        for (int i = 0; i < GameBattleManager.instance.charList.Count; i++)
+        {
+            objListOrder.Add(GameBattleManager.instance.charList[i].GetComponent<Character>());
             characterList.Add(GameBattleManager.instance.charList[i].GetComponent<Character>());
             // Debug.Log(GameBattleManager.instance.charList[i].GetComponent<Character>());
-		}
+        }
 
 
 
-		// for(int i = 0 ; i < objListOrder.Count ; i++){
-		// 	Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
-		// }
+        // for(int i = 0 ; i < objListOrder.Count ; i++){
+        // 	Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
+        // }
 
         Debug.Log("COUNT " + objListOrder.Count);
         objListOrder.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
@@ -173,39 +177,45 @@ public class BattleManager : MonoBehaviour
         characterQueue();
         monsterQueue();
 
+        currentSelection = 0;
+
 
         // Debug.Log(objListOrder[0] + "   NEXT  " + objListOrder[1]);
-		// for(int i = 0 ; i < objListOrder.Count ; i++){
-		// 	Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
-		// }
         // for(int i = 0 ; i < objListOrder.Count ; i++){
-		//     Debug.Log(objListOrder[i] + "   NEXT  ");
+        // 	Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
+        // }
+        // for(int i = 0 ; i < objListOrder.Count ; i++){
+        //     Debug.Log(objListOrder[i] + "   NEXT  ");
         // }
 
     }
 
-    public void characterQueue(){
+    public void characterQueue()
+    {
         characterList.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
         characterList.Reverse();
-        for(int i = 0; i < characterList.Count ; i++){
+        for (int i = 0; i < characterList.Count; i++)
+        {
             sumMaxHp += characterList[i].getMaxHP();
         }
-        Debug.Log(characterList[0]+ " NNN " + characterList[1]+ " NNN "+ characterList[2]+ " NNN "+characterList[3]+ " NNN ");
+        Debug.Log(characterList[0] + " NNN " + characterList[1] + " NNN " + characterList[2] + " NNN " + characterList[3] + " NNN ");
         characterList[0].GetComponent<SpriteRenderer>().enabled = true;
         // for(int i = 0 ; i < characterList.Count ; i++){
-		//     Debug.Log(characterList[i] + "   NEXT  ");
+        //     Debug.Log(characterList[i] + "   NEXT  ");
         // }
     }
 
-    public void monsterQueue(){
+    public void monsterQueue()
+    {
         monsterList.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
         monsterList.Reverse();
         // for(int i = 0 ; i < monsterList.Count ; i++){
-		//     Debug.Log(monsterList[i] + "   NEXT  ");
+        //     Debug.Log(monsterList[i] + "   NEXT  ");
         // }
     }
 
-     public void clicked(GameObject click){
+    public void clicked(GameObject click)
+    {
         clickedGameObject = click;
         Debug.Log("asdafwf" + clickedGameObject.GetComponent<BaseMonster>().getHP());
         monsterSelected = clickedGameObject.GetComponent<BaseMonster>();
@@ -216,26 +226,85 @@ public class BattleManager : MonoBehaviour
     {
         // Debug.Log("monster "+ monsterList[0].OnMouseDown());
         Debug.Log("Before MONSTER HP" + monsterList[0].getHP());
-        monsterSelected.attacked(characterList[0].getAttackStat());
+
+        //player atk monster selected
+        monsterSelected.attacked(characterList[currentSelection].getAttackStat());
+
         Debug.Log("select " + monsterSelected.getHP());
         Debug.Log("CHAR ATK" + characterList[0].getAttackStat());
         // monster.attacked(character.getAttackStat());
 
         // monster.attacked(player.getAttackStat());
 
-        characterList[0].attacked(monsterSelected.getAttackStat());
-        
-        characterList[currentSelection].GetComponent<SpriteRenderer>().enabled = false;
-        currentSelection++;
-        if(currentSelection > 3){
-            currentSelection=0;
-        }
-        
-        characterList[currentSelection].GetComponent<SpriteRenderer>().enabled = true;
+        //destroy monster that die
+        if (monsterSelected.getHP() <= 0)
+        {
+            monsterList.Remove(monsterSelected);
+            Destroy(monsterSelected.gameObject);
+            // monsterSelected.GetComponent<BaseMonster>()
+            if (monsterList.Count == 0)
+            {
+                endCombat();
+                addMoney();
+            }
+            else
+            {
+                //monster atk player
+                characterList[currentSelection].attacked(monsterList[0].getAttackStat());
+                //destroy player that die
+                if (characterList[currentSelection].getHP() <= 0)
+                {
+                    Destroy(characterList[currentSelection].gameObject);
+                    characterList.Remove(characterList[currentSelection]);
+                    Debug.Log("coutnt after dead " + characterList.Count);
+                }
 
-        Debug.Log("after MONSTER HP" + monsterSelected.getHP());
-        // Debug.Log("CHARACTER ATK" + characterList[0].getAttackStat());
-        Debug.Log("atk");
+            }
+        }
+        //die all end battle
+
+
+        // for (int i = 0; i < monsterList.Count; i++)
+        // {
+        //     Debug.Log("Monster : " + monsterList[i]);
+        // }
+        // Debug.Log("COUNTTT" + monsterList.Count);
+
+
+
+        //destroy player that die
+        // if (characterList[currentSelection].getHP() <= 0)
+        // {
+        //     Destroy(characterList[currentSelection].gameObject);
+        //     characterList.Remove(characterList[currentSelection]);
+        //     Debug.Log("coutnt after dead " + characterList.Count);
+        // }
+
+        Debug.Log("is END" + isBattleEnd);
+
+        if (!isBattleEnd)
+        {
+
+            // Debug.Log("current char " + characterList[currentSelection].name);
+            //change player active
+            characterList[currentSelection].GetComponent<SpriteRenderer>().enabled = false;
+            currentSelection++;
+            if (currentSelection > characterList.Count - 1)
+            {
+                currentSelection = 0;
+            }
+            // Debug.Log("current char " + characterList[currentSelection].name);
+
+            characterList[currentSelection].GetComponent<SpriteRenderer>().enabled = true;
+            //change player active
+
+            // Debug.Log("after MONSTER HP" + monsterSelected.getHP());
+            // Debug.Log("CHARACTER ATK" + characterList[0].getAttackStat());
+            // Debug.Log("atk");
+
+        }
+
+
 
 
     }
@@ -243,6 +312,7 @@ public class BattleManager : MonoBehaviour
     public void spAttackFunction()
     {
         Debug.Log("sp");
+        
     }
 
     public void bagFunction()
@@ -254,13 +324,14 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log("run");
         Debug.Log(" before FLEE" + sumHp);
-        for(int i = 0; i < characterList.Count ; i++){
+        for (int i = 0; i < characterList.Count; i++)
+        {
             sumHp += characterList[i].getHP();
             // Debug.Log("HHHHHPPPPPP" + characterList[i].getHP());
-		}
+        }
 
         Debug.Log("PPPP1: " + flee);
-        flee = ((sumHp/sumMaxHp)*100) - 20;
+        flee = ((sumHp / sumMaxHp) * 100) - 20;
         // if(flee < 50){
         //     flee = (sumHp/sumMaxHp)*100;
         //     Debug.Log("CHANGEEEE");
@@ -268,26 +339,31 @@ public class BattleManager : MonoBehaviour
 
         float fleeP = Random.Range(0.0f, 100f);
 
-        
-        // Debug.Log(sumMaxHp +": PPPP :" + fleeP);
-        
-       
-       if(flee < 60 && flee >= 30){
-           flee = ((sumHp/sumMaxHp)*100);
-       }
-       if(flee < 30 && flee > 0){
-           flee = ((sumHp/sumMaxHp)*100) + 27;
-       }
-       if(flee <= 0){
-           flee = 25;
-       }
-       Debug.Log("SUM HP : " + sumHp +" : flee : " + flee + " : sum maxhp : "+ sumMaxHp + " : fleeP : " + fleeP );
 
-        if(flee > fleeP){
+        // Debug.Log(sumMaxHp +": PPPP :" + fleeP);
+
+
+        if (flee < 60 && flee >= 30)
+        {
+            flee = ((sumHp / sumMaxHp) * 100);
+        }
+        if (flee < 30 && flee > 0)
+        {
+            flee = ((sumHp / sumMaxHp) * 100) + 27;
+        }
+        if (flee <= 0)
+        {
+            flee = 25;
+        }
+        Debug.Log("SUM HP : " + sumHp + " : flee : " + flee + " : sum maxhp : " + sumMaxHp + " : fleeP : " + fleeP);
+
+        if (flee > fleeP)
+        {
             Debug.Log("FLEEEEEE");
             endCombat();
         }
-        else{
+        else
+        {
             Debug.Log("Can't fleeee");
         }
 
@@ -299,6 +375,7 @@ public class BattleManager : MonoBehaviour
 
     public void endCombat()
     {
+        isBattleEnd = true;
         // Debug.Log("End combat event");
         GameMasterController.instance.endEvent();
         GameMasterController.instance.IsInputEnabled = true;
@@ -312,24 +389,32 @@ public class BattleManager : MonoBehaviour
         objListOrder.Clear();
         // Debug.Log(objListOrder.Count);
 
-		for(int i = 0; i < GameBattleManager.instance.dMonsList.Count ; i++){
-        	Destroy(GameBattleManager.instance.dMonsList[i]);
-		}
-		// for(int i = 0; i < GameBattleManager.instance.charList.Count ; i++){
+        for (int i = 0; i < GameBattleManager.instance.dMonsList.Count; i++)
+        {
+            Destroy(GameBattleManager.instance.dMonsList[i]);
+        }
+        // for(int i = 0; i < GameBattleManager.instance.charList.Count ; i++){
         // 	Destroy(GameBattleManager.instance.charList[i]);
-		// }
-		GameBattleManager.instance.dMonsList.Clear();
-		// GameBattleManager.instance.charList.Clear();
+        // }
+        GameBattleManager.instance.dMonsList.Clear();
+        // GameBattleManager.instance.charList.Clear();
         monsterList.Clear();
         characterList.Clear();
+        Debug.Log("END COMBAT");
 
-        
         sumMaxHp = 0;
-        
+
     }
 
-    public void reset(){
-        
+
+    public void addMoney()
+    {
+        Debug.Log("MONEY");
+    }
+
+    public void reset()
+    {
+
         sumHp = 0;
         flee = 0;
         sumMaxHp = 0;
