@@ -5,22 +5,11 @@ using UnityEngine.UI;
 
 public class YesNo : MonoBehaviour {
 
-    public static YesNo instance;
+    public Button yesBtn;
+    public Button noBtn;
 
     private void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else if (instance != this)
-            Destroy(gameObject);
-        DontDestroyOnLoad(gameObject);
+        //gameObject.SetActive(false);
     }
-
-    private void Start()
-    {
-        gameObject.SetActive(false);
-    }
-
-    public Button yesBtn;
-    public Button noBtn;
 }

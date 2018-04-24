@@ -5,6 +5,7 @@ using UnityEngine;
 public class Question : Event {
 
     [SerializeField]
+    GameObject yesNoUI, ui;
     YesNo yn;
     [SerializeField]
     DialogConversation question;
@@ -23,10 +24,7 @@ public class Question : Event {
         dm.startConversation(question);
     }
     void Start () {
-        yn = FindObjectOfType<YesNo>();
-        yn.gameObject.SetActive(false);
-        dm = FindObjectOfType<DialogManager>();
-
+        dm = DialogManager.instance;
     }
 	
 	// Update is called once per frame
@@ -37,8 +35,12 @@ public class Question : Event {
         {
             if (dm.readyToAsk)
             {
-                yn.gameObject.SetActive(true);
-                setBtn();
+                if (yn == null)
+                {
+                    ui = Instantiate(yesNoUI);
+                    yn = ui.GetComponent<YesNo>();
+                    setBtn();
+                }
             }
         }
     }
@@ -65,6 +67,7 @@ public class Question : Event {
         dm.isBetweenConversation = false;
         dm.endDialog();
         removeAllListener();
-        yn.gameObject.SetActive(false);
+        Destroy(ui);
+        yn = null;
     }
 }

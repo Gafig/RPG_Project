@@ -23,8 +23,18 @@ public class DialogManager : MonoBehaviour {
     private Queue<Dialog> dialogs;
     private Queue<string> sentences;
     public Event currentEvent;
-	// Use this for initialization
-	void Start () {
+    public static DialogManager instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
+    }
+
+    void Start () {
         isTyping = false;
         sentences = new Queue<string>();
         dialogs = new Queue<Dialog>();
