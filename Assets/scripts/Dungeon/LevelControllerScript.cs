@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelControllerScript : MonoBehaviour {
 
+    private int counttemp = 0;
     public GameObject battleCamera;
 	public GameObject followingCamera;
     public Animator anim;
@@ -102,6 +103,8 @@ public class LevelControllerScript : MonoBehaviour {
 
         if (totalStep >= stepNeed)
         {
+            GameMasterController.instance.IsInputEnabled = false;
+            counttemp++;
             //disable key
             //changeScence
             //getMon
@@ -143,7 +146,7 @@ public class LevelControllerScript : MonoBehaviour {
             checkInteract();
         }
         
-        // Debug.Log (totalStep);
+        Debug.Log (totalStep + "count " + counttemp);
     }
 
 

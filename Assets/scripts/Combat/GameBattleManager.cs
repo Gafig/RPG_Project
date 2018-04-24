@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameBattleManager : MonoBehaviour {
 
 
+	public GameObject battleCamera;
+	public GameObject followingCamera;
 	// public GameObject player;
 	public List<BaseMonster> allMonster = new List<BaseMonster>();
 	public List<MonsterMoves> allMoves = new List<MonsterMoves> ();
@@ -19,6 +21,8 @@ public class GameBattleManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		followingCamera.SetActive (true);
+		battleCamera.SetActive (false);
 
 	}
 	
@@ -28,6 +32,8 @@ public class GameBattleManager : MonoBehaviour {
 	}
 
 	public void EnterBattle(Rarity rarity){
+		followingCamera.SetActive (false);
+		battleCamera.SetActive (true);
 		BaseMonster battleMonster = GetRandomMonsterFromList (GetMonsterByRarity (rarity));
 
 		Debug.Log (battleMonster.name);
