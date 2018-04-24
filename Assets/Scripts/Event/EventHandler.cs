@@ -12,4 +12,12 @@ public class EventHandler:MonoBehaviour{
         startEvent.trigger();
     }
 
+    private void Update()
+    {
+        Transform eventTranform = transform.FindChild("Event");
+        if(eventTranform != null)
+        {
+            startEvent = eventTranform.GetChild(0).FindChild("StartEvent").GetComponent<StartEvent>();
+        }
+    }
 }

@@ -31,7 +31,7 @@ public class DateTimeController : MonoBehaviour {
     {
         while (true) {
             yield return new WaitForSecondsRealtime(1.0f);
-            timeInMinutes += 60;
+            timeInMinutes += 1;
             //Debug.Log("time: " + timeInMinutes);
         }
     }

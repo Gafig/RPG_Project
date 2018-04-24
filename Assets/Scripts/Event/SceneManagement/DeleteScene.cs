@@ -9,7 +9,8 @@ public class DeleteScene : Event {
 
     public override void trigger()
     {
-        if(sceneName!=null)
+        if (sceneName != null)
+            triggerNextEvent();
             SceneManager.UnloadSceneAsync(sceneName);
     }
 }

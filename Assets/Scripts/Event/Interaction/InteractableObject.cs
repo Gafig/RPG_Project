@@ -50,9 +50,16 @@ public class InteractableObject : MonoBehaviour, Interactable {
 
     private void FixedUpdate()
     {
+        if(playerInteraction != null)
+        {
+            if (playerInteraction.focusObject == this.gameObject)
+            {
+                focus();
+            }
+        }
         if (isFocus)
         {
-            if (playerInteraction.focusObject != this)
+            if (playerInteraction.focusObject != this.gameObject)
                 defocus();
             if (Input.GetKeyDown("z") || !needPress)
                 if (!hasInteracted)
