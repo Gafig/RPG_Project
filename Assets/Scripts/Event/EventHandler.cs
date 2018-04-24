@@ -5,11 +5,11 @@ using UnityEngine;
 public class EventHandler:MonoBehaviour{
 
     [SerializeField]
-    public Event[] events;
+    public StartEvent startEvent;
 
     public void triggerEvents()
     {
-        GameMasterController.instance.startEvents(events);
+        startEvent.trigger();
     }
 
 }

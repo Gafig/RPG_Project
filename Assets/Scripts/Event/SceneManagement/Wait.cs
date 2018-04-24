@@ -8,7 +8,6 @@ public class Wait : Event {
 
     public override void trigger()
     {
-        GameMasterController.instance.startEvent();
         StartCoroutine(wait());
     }
 
@@ -17,6 +16,6 @@ public class Wait : Event {
         print(Time.time);
         yield return new WaitForSecondsRealtime(waitInSeconds);
         print(Time.time);
-        GameMasterController.instance.endEvent();
+        triggerNextEvent();
     }
 }

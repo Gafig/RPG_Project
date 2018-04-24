@@ -19,7 +19,6 @@ public class DoorScript : Event {
         if (!hasInteracted)
         {
             hasInteracted = true;
-            GameMasterController.instance.startEvent();
             StartCoroutine(fadeOut());
         }
     }
@@ -47,7 +46,7 @@ public class DoorScript : Event {
 
     private IEnumerator fadeIn()
     {
-        GameMasterController.instance.endEvent();
+        triggerNextEvent();
         Fade.instance.fadeIn();
         yield return new WaitUntil(() => !Fade.instance.isFading);
     }

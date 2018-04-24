@@ -6,8 +6,7 @@ public class EnableUI : Event {
 
     public override void trigger()
     {
-        GameMasterController.instance.startEvent();
         GameMasterController.instance.setPermanantUI(true);
-        GameMasterController.instance.endEvent();
+        triggerNextEvent();
     }
 }

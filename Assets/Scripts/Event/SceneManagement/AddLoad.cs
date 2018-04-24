@@ -14,7 +14,6 @@ public class AddLoad : Event
 
     public override void trigger()
     {
-        GameMasterController.instance.startEvent();
         StartCoroutine(fadeOut());
 
     }
@@ -44,6 +43,6 @@ public class AddLoad : Event
     {
         Fade.instance.fadeIn();
         yield return new WaitUntil(() => !Fade.instance.isFading);
-        GameMasterController.instance.endEvent();
+        triggerNextEvent();
     }
 }
