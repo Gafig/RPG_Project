@@ -222,9 +222,17 @@ public class BattleManager : MonoBehaviour
         // monster.attacked(character.getAttackStat());
 
         // monster.attacked(player.getAttackStat());
+
         characterList[0].attacked(monsterSelected.getAttackStat());
-        characterList[0].GetComponent<SpriteRenderer>().enabled = false;
-        characterList[1].GetComponent<SpriteRenderer>().enabled = true;
+        
+        characterList[currentSelection].GetComponent<SpriteRenderer>().enabled = false;
+        currentSelection++;
+        if(currentSelection > 3){
+            currentSelection=0;
+        }
+        
+        characterList[currentSelection].GetComponent<SpriteRenderer>().enabled = true;
+
         Debug.Log("after MONSTER HP" + monsterSelected.getHP());
         // Debug.Log("CHARACTER ATK" + characterList[0].getAttackStat());
         Debug.Log("atk");
