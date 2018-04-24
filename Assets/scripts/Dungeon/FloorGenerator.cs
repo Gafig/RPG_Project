@@ -32,7 +32,7 @@ public class FloorGenerator : MonoBehaviour {
         rooms.Clear();
         isDone = false;
         for (int i = 0; i < roomAmount; i++) {
-            Room newRoom = new Room();
+            Room newRoom = new Room(i);
             rooms.Add(newRoom);
         }
         placeBlocks();
@@ -337,40 +337,55 @@ public class Room
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 19, 19, 19, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
         };
 
-    public Room()
+    public Room(int i)
     {
-        room = new Block[emptyRoomTemplate.GetLength(0), emptyRoomTemplate.GetLength(1)];
-        for (int y = 0; y < emptyRoomTemplate.GetLength(0); y++)
-            for (int x = 0; x < emptyRoomTemplate.GetLength(1); x++)
-            {
-                if (emptyRoomTemplate[y, x] == 0)
-                    room[y, x] = new EmptySpace();
-                else if (emptyRoomTemplate[y, x] == 1)
-                    room[y, x] = new Wall.Outer();
-                else if (emptyRoomTemplate[y, x] == 2)
+        if (i != 2)
+        {
+            room = new Block[emptyRoomTemplate.GetLength(0), emptyRoomTemplate.GetLength(1)];
+            for (int y = 0; y < emptyRoomTemplate.GetLength(0); y++)
+                for (int x = 0; x < emptyRoomTemplate.GetLength(1); x++)
                 {
-                    Wall.Inner wall;
-                    if (emptyRoomTemplate[y, x - 1] == 2 || emptyRoomTemplate[y, x - 1] == 1)
+                    if (emptyRoomTemplate[y, x] == 0)
+                        room[y, x] = new EmptySpace();
+                    else if (emptyRoomTemplate[y, x] == 1)
+                        room[y, x] = new Wall.Outer();
+                    else if (emptyRoomTemplate[y, x] == 2)
                     {
-                        int min = Math.Min(emptyRoomTemplate[y - 1, x] - 2, emptyRoomTemplate[y + 1, x] - 2);
-                        int max = Math.Max(emptyRoomTemplate[y - 1, x] - 2, emptyRoomTemplate[y + 1, x] - 2);
-                        wall = new Wall.Inner(min, max, x, y);
+                        Wall.Inner wall;
+                        if (emptyRoomTemplate[y, x - 1] == 2 || emptyRoomTemplate[y, x - 1] == 1)
+                        {
+                            int min = Math.Min(emptyRoomTemplate[y - 1, x] - 2, emptyRoomTemplate[y + 1, x] - 2);
+                            int max = Math.Max(emptyRoomTemplate[y - 1, x] - 2, emptyRoomTemplate[y + 1, x] - 2);
+                            wall = new Wall.Inner(min, max, x, y);
+                        }
+                        else
+                        {
+                            int min = Math.Min(emptyRoomTemplate[y, x - 1] - 2, emptyRoomTemplate[y, x + 1] - 2);
+                            int max = Math.Max(emptyRoomTemplate[y, x - 1] - 2, emptyRoomTemplate[y, x + 1] - 2);
+                            wall = new Wall.Inner(min, max, x, y);
+                        }
+                        room[y, x] = wall;
+                        mergeWall(wall);
                     }
                     else
-                    {
-                        int min = Math.Min(emptyRoomTemplate[y, x - 1] - 2, emptyRoomTemplate[y, x + 1] - 2);
-                        int max = Math.Max(emptyRoomTemplate[y, x - 1] - 2, emptyRoomTemplate[y, x + 1] - 2);
-                        wall = new Wall.Inner(min, max, x, y);
-                    }
-                    room[y, x] = wall;
-                    mergeWall(wall);
+                        room[y, x] = new Floor.Vanilla();
                 }
-                else
-                    room[y, x] = new Floor.Vanilla();
-            }
-        createTree();
-        shuffleList();
-        explodeWalls();
+            createTree();
+            shuffleList();
+            explodeWalls();
+        }
+        else
+        {
+            room = new Block[emptyRoomTemplate.GetLength(0), emptyRoomTemplate.GetLength(1)];
+            for (int y = 0; y < emptyRoomTemplate.GetLength(0); y++)
+                for (int x = 0; x < emptyRoomTemplate.GetLength(1); x++)
+                {  
+                    if (emptyRoomTemplate[y, x] == 1)
+                        room[y, x] = new Wall.Outer();
+                    else
+                        room[y, x] = new Floor.Vanilla();
+                }
+        }
     }
 
     void mergeWall(Wall.Inner wall)

@@ -77,7 +77,7 @@ public class LevelControllerScript : MonoBehaviour {
 
     IEnumerator generateFloor()
     {
-        floorGenerator.generate(1, currentFloor);
+        floorGenerator.generate(3, currentFloor);
         yield return new WaitUntil(() => floorGenerator.isFinished());
         GameMasterController.instance.setPlayerToTheLastDoor();
         isDone = false;
