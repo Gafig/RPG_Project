@@ -10,6 +10,8 @@ public class DialogManager : MonoBehaviour {
 
     //public Text nameText;
     //public Text dialogText;
+    public bool isQuestion = false;
+    public bool readyToAsk = false;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI dialogText;
     public Image image;
@@ -78,14 +80,9 @@ public class DialogManager : MonoBehaviour {
 
     public void displayNextSentence()
     {
-        /*
-        if (sentences.Count == 0 && !isTyping)
-        {
-            endDialog();
-            return;
-        }*/
+        
 
-        if (!isTyping)
+        if (!isTyping && sentences.Count != 0)
         {
             sentence = sentences.Dequeue();
             StartCoroutine(typeSentence(sentence));
@@ -102,9 +99,14 @@ public class DialogManager : MonoBehaviour {
     {
         if(dialogs.Count == 0 && sentences.Count == 0 && !isTyping)
         {
-            isBetweenConversation = false;
-            endDialog();
-            return;
+            if(!isQuestion){
+                isBetweenConversation = false;
+                endDialog();
+                return;
+            }
+            else{
+                readyToAsk = true;
+            }
         }
 
         if (sentences.Count == 0 && !isTyping && dialogs.Count > 0)
@@ -123,6 +125,8 @@ public class DialogManager : MonoBehaviour {
     {
         Event current = currentEvent;
         currentEvent = null;
+        isQuestion = false;
+        readyToAsk = false;
         current.triggerNextEvent();
         if (!isBetweenConversation)
         {

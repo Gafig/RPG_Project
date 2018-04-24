@@ -5,7 +5,7 @@ using UnityEngine;
 public class Event:MonoBehaviour {
 
     [SerializeField]
-    Event nextEvent;
+    public Event nextEvent;
 
     public void triggerNextEvent()
     {
