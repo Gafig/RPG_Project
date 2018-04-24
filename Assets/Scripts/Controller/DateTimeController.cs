@@ -30,7 +30,7 @@ public class DateTimeController : MonoBehaviour {
     IEnumerator testUpdateTime()
     {
         while (true) {
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSecondsRealtime(1.0f);
             timeInMinutes += 60;
             //Debug.Log("time: " + timeInMinutes);
         }
