@@ -7,6 +7,9 @@ using TMPro;
 
 public class BattleManager : MonoBehaviour {
 
+	public GameObject battleCamera;
+	public GameObject followingCamera;
+
 	public BattleMenu currentMenu;
 
 	[Header("Selection")]
@@ -70,40 +73,39 @@ public class BattleManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if(Input.GetKeyDown("s") || Input.GetKeyDown(KeyCode.DownArrow)){
-			if(currentSelection < 4){
-				currentSelection++;
-			}
-		}
+		// if(Input.GetKeyDown("s") || Input.GetKeyDown(KeyCode.DownArrow)){
+		// 	if(currentSelection < 4){
+		// 		currentSelection++;
+		// 	}
+		// }
 
-		if(Input.GetKeyDown("w") || Input.GetKeyDown(KeyCode.UpArrow)){
-			if(currentSelection > 0){
-				currentSelection--;
-			}
-		}
+		// if(Input.GetKeyDown("w") || Input.GetKeyDown(KeyCode.UpArrow)){
+		// 	if(currentSelection > 0){
+		// 		currentSelection--;
+		// 	}
+		// }
 
 		if(Input.GetKeyDown("z")){
-			if(currentSelection < 4){
-				currentSelection++;
-			}
-		}
-		if(Input.GetKeyDown("x")){
-			if(currentSelection > 0){
-				currentSelection--;
-			}	
-		}
-		if (currentSelection == 0)
-			currentSelection = 1;
-		
-		if(currentSelection == 4){
-			end = true;
-		}
-
-		Debug.Log(currentSelection);
-		
-		if(end){
 			endCombat();
 		}
+		// if(Input.GetKeyDown("x")){
+		// 	if(currentSelection > 0){
+		// 		currentSelection--;
+		// 	}	
+		// }
+		// if (currentSelection == 0)
+		// 	currentSelection = 1;
+		
+		// if(currentSelection == 4){
+		// 	end = true;
+		// 	endCombat();
+		// }
+
+		// Debug.Log(currentSelection);
+		
+		// if(end){
+		// 	endCombat();
+		// }
 		
 		// switch (currentMenu) {
 		// case BattleMenu.Fight:
@@ -171,6 +173,9 @@ public class BattleManager : MonoBehaviour {
 
 	public void endCombat(){
 		GameMasterController.instance.endEvent();
+		GameMasterController.instance.IsInputEnabled = true;
+		followingCamera.SetActive(true);
+        battleCamera.SetActive(false);
 		Debug.Log("Change camera back to dun");
 		end = false;
 		currentSelection = 0;
