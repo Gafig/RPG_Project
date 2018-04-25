@@ -33,6 +33,7 @@ public class ReturnToMainMenu : Event {
             Destroy(GameObject.Find("GameController"));
             Destroy(GameObject.Find("PermanantUI"));
             Destroy(GameObject.Find("TimeController"));
+            Destroy(GameObject.Find("Player"));
             AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(destination, LoadSceneMode.Single);
         }
     }

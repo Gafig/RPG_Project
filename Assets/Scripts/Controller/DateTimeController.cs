@@ -23,7 +23,6 @@ public class DateTimeController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        timeInMinutes = 0;
         startTime();
 	}
 
@@ -64,7 +63,7 @@ public class DateTimeController : MonoBehaviour {
 
     public void setTimeTo(int day, int hour, int minute)
     {
-        timeInMinutes = day * MINUTES_IN_A_DAY + hour * 60 + minute;
+        timeInMinutes = (day - 1) * MINUTES_IN_A_DAY + hour * 60 + minute;
     }
 
     public void setTimeTo(int day, string time)
