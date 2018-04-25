@@ -6,10 +6,13 @@ public class DialogConversationTrigger : Event {
 
     public DialogConversation conversation;
     public DialogConversationBluePrint blueprint;
+    private bool started = false;
 
     public override void trigger()
     {
         FindObjectOfType<DialogManager>().startConversation(conversation);
+        FindObjectOfType<DialogManager>().currentEvent = this;
+        Debug.Log("Trigger" + this);
     }
 
     private void Start()
@@ -22,6 +25,11 @@ public class DialogConversationTrigger : Event {
     {
         if (blueprint != null)
             conversation = new DialogConversation(blueprint.dialogs);
+        /*if(FindObjectOfType<DialogManager>().currentEvent == this)
+        {
+            if (!FindObjectOfType<DialogManager>().isBetweenConversation)
+                triggerNextEvent();
+        }*/
     }
 
 }

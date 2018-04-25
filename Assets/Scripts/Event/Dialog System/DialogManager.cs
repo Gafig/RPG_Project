@@ -16,10 +16,11 @@ public class DialogManager : MonoBehaviour {
     public Animator animator;
     private string sentence;
     private bool isTyping;
-    private bool isBetweenConversation;
+    public bool isBetweenConversation;
     Sprite sprite;
     private Queue<Dialog> dialogs;
     private Queue<string> sentences;
+    public Event currentEvent;
 	// Use this for initialization
 	void Start () {
         isTyping = false;
@@ -38,8 +39,6 @@ public class DialogManager : MonoBehaviour {
 
     public void startConversation(DialogConversation conversation)
     {
-        if (!NotifyGameControllerStart())
-            return;
         isBetweenConversation = true;
         dialogs.Clear();
         foreach (Dialog dialog in conversation.dialogs)
@@ -67,11 +66,11 @@ public class DialogManager : MonoBehaviour {
 
     IEnumerator typeSentence(string sentence)
     {
-        dialogText.SetText("");
+        dialogText.text = "";
         isTyping = true;
         foreach (char letter in sentence.ToCharArray())
         {
-            dialogText.SetText( dialogText.text + letter );
+            dialogText.text = dialogText.text + letter;
             yield return new WaitForSeconds(0.05f);
         }
         isTyping = false;
@@ -79,11 +78,12 @@ public class DialogManager : MonoBehaviour {
 
     public void displayNextSentence()
     {
+        /*
         if (sentences.Count == 0 && !isTyping)
         {
             endDialog();
             return;
-        }
+        }*/
 
         if (!isTyping)
         {
@@ -121,22 +121,14 @@ public class DialogManager : MonoBehaviour {
 
     public void endDialog()
     {
-        NotifyGameControllerFinish();
+        Event current = currentEvent;
+        currentEvent = null;
+        current.triggerNextEvent();
         if (!isBetweenConversation)
         {
             Debug.Log("Stop");
             animator.SetBool("isOpen", false);
         }
         
-    }
-
-    public bool NotifyGameControllerStart()
-    {
-        return GameMasterController.instance.startEvent();
-    }
-
-    public void NotifyGameControllerFinish()
-    {
-        GameMasterController.instance.endEvent();
     }
 }

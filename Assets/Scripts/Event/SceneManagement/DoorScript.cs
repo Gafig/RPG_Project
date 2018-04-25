@@ -12,11 +12,15 @@ public class DoorScript : Event {
     [SerializeField]
     string doorId;
 
+    bool hasInteracted = false;
+
     public override void trigger()
     {
-        GameMasterController.instance.startEvent();
-        StartCoroutine(fadeOut());
-        
+        if (!hasInteracted)
+        {
+            hasInteracted = true;
+            StartCoroutine(fadeOut());
+        }
     }
 
     private IEnumerator fadeOut()
@@ -42,7 +46,7 @@ public class DoorScript : Event {
 
     private IEnumerator fadeIn()
     {
-        GameMasterController.instance.endEvent();
+        triggerNextEvent();
         Fade.instance.fadeIn();
         yield return new WaitUntil(() => !Fade.instance.isFading);
     }

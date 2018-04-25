@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class LevelControllerScript : MonoBehaviour
 {
 
+    public Flight flight;
     private int counttemp = 0;
     public Animator anim;
     public GameBattleManager gm;
@@ -80,7 +81,7 @@ public class LevelControllerScript : MonoBehaviour
 
     IEnumerator generateFloor()
     {
-        floorGenerator.generate(1, currentFloor);
+        floorGenerator.generate(3, currentFloor);
         yield return new WaitUntil(() => floorGenerator.isFinished());
         GameMasterController.instance.setPlayerToTheLastDoor();
         isDone = false;
@@ -113,7 +114,7 @@ public class LevelControllerScript : MonoBehaviour
 
 
             react();
-
+            BattleManager.instance.flight = flight;
             for(int i = 0 ; i < 3 ;i++){
                 float p = Random.Range(0.0f, 100.0f);
                 RandomMonster(p,i);

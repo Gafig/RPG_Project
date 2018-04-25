@@ -4,5 +4,14 @@ using UnityEngine;
 
 public class Event:MonoBehaviour {
 
+    [SerializeField]
+    Event nextEvent;
+
+    public void triggerNextEvent()
+    {
+        if(nextEvent != null)
+            nextEvent.trigger();
+    }
+
     public virtual void trigger() { }
 }

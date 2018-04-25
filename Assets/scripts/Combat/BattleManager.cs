@@ -84,6 +84,8 @@ public class BattleManager : MonoBehaviour
 
     public int attackStat;
 
+    public Flight flight;
+
 
 
     private void Awake()
@@ -177,6 +179,7 @@ public class BattleManager : MonoBehaviour
         Debug.Log("COUNT " + objListOrder.Count);
         objListOrder.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
         objListOrder.Reverse();
+        Debug.Log("AAAA "+ objListOrder.Count);
         characterQueue();
         monsterQueue();
 
@@ -212,6 +215,7 @@ public class BattleManager : MonoBehaviour
     {
         monsterList.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
         monsterList.Reverse();
+        Debug.Log("monslist "+ monsterList.Count);
         // for(int i = 0 ; i < monsterList.Count ; i++){
         //     Debug.Log(monsterList[i] + "   NEXT  ");
         // }
@@ -394,7 +398,7 @@ public class BattleManager : MonoBehaviour
     {
         isBattleEnd = true;
         // Debug.Log("End combat event");
-        GameMasterController.instance.endEvent();
+        flight.triggerNextEvent();
         GameMasterController.instance.IsInputEnabled = true;
         followingCamera.SetActive(true);
         battleCamera.SetActive(false);

@@ -8,6 +8,7 @@ public class OpenDoor : Event {
     Animator anim;
     [SerializeField]
     bool open = false;
+    public bool doneAnimate = false; 
     private void Start()
     {
         anim = transform.parent.gameObject.GetComponent<Animator>();
@@ -15,8 +16,8 @@ public class OpenDoor : Event {
 
     public override void trigger()
     {
+        doneAnimate = false;
         open = !open;
-        GameMasterController.instance.startEvent();
         StartCoroutine(Animate());
     }
 
@@ -25,6 +26,6 @@ public class OpenDoor : Event {
         anim.SetBool("open", open);
         yield return new WaitForSeconds(1f);
         //Debug.Log("Open the door");
-        GameMasterController.instance.endEvent();
+        doneAnimate = true;
     }
 }

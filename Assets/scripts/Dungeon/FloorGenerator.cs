@@ -32,7 +32,7 @@ public class FloorGenerator : MonoBehaviour {
         rooms.Clear();
         isDone = false;
         for (int i = 0; i < roomAmount; i++) {
-            Room newRoom = new Room();
+            Room newRoom = new Room(i);
             rooms.Add(newRoom);
         }
         placeBlocks();
@@ -337,40 +337,90 @@ public class Room
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 19, 19, 19, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
         };
 
-    public Room()
+    private int[,] treasureRoomTemplate =
+        {
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
+            {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
+            {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
+            {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
+            {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1},
+            {1, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 1},
+            {1, 6, 6, 6, 6, 6, 2, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 9, 9, 9, 9, 9, 1},
+            {1, 6, 6, 6, 6, 6, 2, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 9, 9, 9, 9, 9, 1},
+            {1, 6, 6, 6, 6, 6, 2, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 9, 9, 9, 9, 9, 1},
+            {1, 6, 6, 6, 6, 6, 2, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 9, 9, 9, 9, 9, 1},
+            {1, 6, 6, 6, 6, 6, 2, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 9, 9, 9, 9, 9, 1},
+            {1, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 1},
+            {1, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 2, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 2, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 1},
+            {1, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 2, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 2, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 1},
+            {1, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 2, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 2, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 1},
+            {1, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 2, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 2, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 1},
+            {1, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 2, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 2, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 1},
+            {1, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 1},
+            {1, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 1},
+            {1, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 1},
+            {1, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 1},
+            {1, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 1},
+            {1, 13, 13, 13, 13, 13, 2, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 2, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 16, 16, 16, 16, 16, 1},
+            {1, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 1},
+            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
+            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
+            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
+            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
+            {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 19, 19, 19, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+        };
+
+    public Room(int i)
     {
-        room = new Block[emptyRoomTemplate.GetLength(0), emptyRoomTemplate.GetLength(1)];
-        for (int y = 0; y < emptyRoomTemplate.GetLength(0); y++)
-            for (int x = 0; x < emptyRoomTemplate.GetLength(1); x++)
-            {
-                if (emptyRoomTemplate[y, x] == 0)
-                    room[y, x] = new EmptySpace();
-                else if (emptyRoomTemplate[y, x] == 1)
-                    room[y, x] = new Wall.Outer();
-                else if (emptyRoomTemplate[y, x] == 2)
+        if (i != 2)
+        {
+            room = new Block[emptyRoomTemplate.GetLength(0), emptyRoomTemplate.GetLength(1)];
+            for (int y = 0; y < emptyRoomTemplate.GetLength(0); y++)
+                for (int x = 0; x < emptyRoomTemplate.GetLength(1); x++)
                 {
-                    Wall.Inner wall;
-                    if (emptyRoomTemplate[y, x - 1] == 2 || emptyRoomTemplate[y, x - 1] == 1)
+                    if (emptyRoomTemplate[y, x] == 0)
+                        room[y, x] = new EmptySpace();
+                    else if (emptyRoomTemplate[y, x] == 1)
+                        room[y, x] = new Wall.Outer();
+                    else if (emptyRoomTemplate[y, x] == 2)
                     {
-                        int min = Math.Min(emptyRoomTemplate[y - 1, x] - 2, emptyRoomTemplate[y + 1, x] - 2);
-                        int max = Math.Max(emptyRoomTemplate[y - 1, x] - 2, emptyRoomTemplate[y + 1, x] - 2);
-                        wall = new Wall.Inner(min, max, x, y);
+                        Wall.Inner wall;
+                        if (emptyRoomTemplate[y, x - 1] == 2 || emptyRoomTemplate[y, x - 1] == 1)
+                        {
+                            int min = Math.Min(emptyRoomTemplate[y - 1, x] - 2, emptyRoomTemplate[y + 1, x] - 2);
+                            int max = Math.Max(emptyRoomTemplate[y - 1, x] - 2, emptyRoomTemplate[y + 1, x] - 2);
+                            wall = new Wall.Inner(min, max, x, y);
+                        }
+                        else
+                        {
+                            int min = Math.Min(emptyRoomTemplate[y, x - 1] - 2, emptyRoomTemplate[y, x + 1] - 2);
+                            int max = Math.Max(emptyRoomTemplate[y, x - 1] - 2, emptyRoomTemplate[y, x + 1] - 2);
+                            wall = new Wall.Inner(min, max, x, y);
+                        }
+                        room[y, x] = wall;
+                        mergeWall(wall);
                     }
                     else
-                    {
-                        int min = Math.Min(emptyRoomTemplate[y, x - 1] - 2, emptyRoomTemplate[y, x + 1] - 2);
-                        int max = Math.Max(emptyRoomTemplate[y, x - 1] - 2, emptyRoomTemplate[y, x + 1] - 2);
-                        wall = new Wall.Inner(min, max, x, y);
-                    }
-                    room[y, x] = wall;
-                    mergeWall(wall);
+                        room[y, x] = new Floor.Vanilla();
                 }
-                else
-                    room[y, x] = new Floor.Vanilla();
-            }
-        createTree();
-        shuffleList();
-        explodeWalls();
+            createTree();
+            shuffleList();
+            explodeWalls();
+        }
+        else
+        {
+            room = new Block[treasureRoomTemplate.GetLength(0), treasureRoomTemplate.GetLength(1)];
+            for (int y = 0; y < treasureRoomTemplate.GetLength(0); y++)
+                for (int x = 0; x < treasureRoomTemplate.GetLength(1); x++)
+                {  
+                    if (treasureRoomTemplate[y, x] == 1)
+                        room[y, x] = new Wall.Outer();
+                    else
+                        room[y, x] = new Floor.Vanilla();
+                }
+        }
     }
 
     void mergeWall(Wall.Inner wall)

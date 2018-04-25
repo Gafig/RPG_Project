@@ -5,11 +5,19 @@ using UnityEngine;
 public class EventHandler:MonoBehaviour{
 
     [SerializeField]
-    public Event[] events;
+    public StartEvent startEvent;
 
     public void triggerEvents()
     {
-        GameMasterController.instance.startEvents(events);
+        startEvent.trigger();
     }
 
+    private void Update()
+    {
+        Transform eventTranform = transform.FindChild("Event");
+        if(eventTranform != null)
+        {
+            startEvent = eventTranform.GetChild(0).FindChild("StartEvent").GetComponent<StartEvent>();
+        }
+    }
 }

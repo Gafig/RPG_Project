@@ -31,7 +31,7 @@ public class PlayerInteraction : MonoBehaviour {
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, moveAround.lastVelocity, out hit, 0.6f))
+        if (Physics.Raycast(transform.position, moveAround.lastVelocity, out hit, 0.7f))
         {
             if (hit.collider.tag.Equals("interactable"))
             {
