@@ -64,6 +64,8 @@ public class GameBattleManager : MonoBehaviour {
 	}
 
 	public void PlayerBattle(){
+
+		
 		william = Instantiate (characterWilliam, attackPodium.transform.position, Quaternion.identity) as GameObject; 
 		philip = Instantiate (characterPhilip, attackPodium.transform.position, Quaternion.identity) as GameObject; 
 		jane = Instantiate (characterJane, attackPodium.transform.position, Quaternion.identity) as GameObject; 
@@ -72,10 +74,17 @@ public class GameBattleManager : MonoBehaviour {
 		philip.GetComponent<SpriteRenderer>().enabled = false;
 		jane.GetComponent<SpriteRenderer>().enabled = false;
 		rose.GetComponent<SpriteRenderer>().enabled = false;
+		// Party.getInstance().addMember(william);
 		charList.Add(philip);
 		charList.Add(william);
 		charList.Add(jane);
 		charList.Add(rose);
+
+		 for (int i = 0; i < GameBattleManager.instance.charList.Count; i++)
+        {
+            Party.getInstance().addMember(GameBattleManager.instance.charList[i].GetComponent<Character>());
+            // Debug.Log(GameBattleManager.instance.charList[i].GetComponent<Character>());
+        }
 
 		// Debug.Log("COUNT CHAR" + charList.Count);
 		// Debug.Log("CHARSLIST" + charList[0] + charList[1]+ charList[2] + charList[3]);

@@ -121,8 +121,11 @@ public class BattleManager : MonoBehaviour
         // Debug.Log("enable ");
         // player = GameBattleManager.instance.character.GetComponent<BaseMonster>();
         // monster = GameBattleManager.instance.dMons.GetComponent<BaseMonster>();
-        queue();
-        
+        if (objListOrder.Count == 0)
+        {
+            Debug.Log("ENABLE");
+            queue();
+        }
         // GameBattleManager.instance.charList[0].SetActive(true);
         // characterList[0].GetComponent<SpriteRenderer>().enabled = true;
 
@@ -173,15 +176,22 @@ public class BattleManager : MonoBehaviour
 
 
         // for(int i = 0 ; i < objListOrder.Count ; i++){
-        // 	Debug.Log(objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
+        // 	Debug.Log("QQQQQQQQ"+objListOrder[i].PName +" "+ objListOrder[i].SpeedStat);
         // }
 
         Debug.Log("COUNT " + objListOrder.Count);
-        objListOrder.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
-        objListOrder.Reverse();
-        Debug.Log("AAAA "+ objListOrder.Count);
-        characterQueue();
-        monsterQueue();
+        if(objListOrder.Count != 0 ){
+            objListOrder.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
+            objListOrder.Reverse();
+            if(characterList.Count != 0 && monsterList.Count != 0){
+                characterQueue();
+                monsterQueue();
+            }
+            
+        }
+        
+        Debug.Log("AAAA " + objListOrder.Count);
+        
 
         currentSelection = 0;
 
@@ -215,7 +225,7 @@ public class BattleManager : MonoBehaviour
     {
         monsterList.Sort((x, y) => x.SpeedStat.CompareTo(y.SpeedStat));
         monsterList.Reverse();
-        Debug.Log("monslist "+ monsterList.Count);
+        Debug.Log("monslist " + monsterList.Count);
         // for(int i = 0 ; i < monsterList.Count ; i++){
         //     Debug.Log(monsterList[i] + "   NEXT  ");
         // }
@@ -239,9 +249,9 @@ public class BattleManager : MonoBehaviour
         //player atk monster selected
         monsterSelected.attacked(attackStat);
         attackHelp();
-        
 
-        
+
+
 
     }
 
@@ -255,11 +265,12 @@ public class BattleManager : MonoBehaviour
         //use mana
         characterList[currentSelection].useMana(20);
 
-        
+
     }
 
 
-    private void attackHelp(){
+    private void attackHelp()
+    {
 
         Debug.Log("select " + monsterSelected.getHP());
         Debug.Log("CHAR ATK" + characterList[0].getAttackStat());
@@ -275,7 +286,7 @@ public class BattleManager : MonoBehaviour
             // monsterSelected.GetComponent<BaseMonster>()
             if (monsterList.Count == 0)
             {
-                endCombat();    
+                endCombat();
                 addMoney();
             }
             else
