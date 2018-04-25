@@ -7,17 +7,13 @@ public class PopUpText : MonoBehaviour {
 
     public TextMeshProUGUI dialogText;
     public Event ev;
-    bool isTyping;
+    bool isTyping = false;
     string sentence;
-    
-    // Use this for initialization
-    void Start () {
-		
-	}
+    bool started = false;
 	
 	// Update is called once per frame
 	void Update () {
-        if (isTyping)
+        if (!isTyping && started)
             if (Input.GetKeyDown("z"))
             {
                 ev.triggerNextEvent();
@@ -27,6 +23,7 @@ public class PopUpText : MonoBehaviour {
 
     public void type(string sentence)
     {
+        started = true;
         this.sentence = sentence;
         StartCoroutine(typeSentence(sentence));
     }
@@ -39,7 +36,7 @@ public class PopUpText : MonoBehaviour {
         {
             Debug.Log(letter);
             dialogText.text = dialogText.text + letter;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.05f);
         }
         isTyping = false;
     }
