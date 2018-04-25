@@ -101,7 +101,7 @@ public class GameBattleManager : MonoBehaviour {
 
 	public void EnterBattle(Rarity rarity, int position){
 
-		BattleManager.instance.isBattleEnd = false;
+		// BattleManager.instance.isBattleEnd = false;
 
 		if(position == 0){
 			defencePodiumtemp = defencePodium;
