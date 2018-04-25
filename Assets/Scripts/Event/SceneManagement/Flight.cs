@@ -9,11 +9,12 @@ public class Flight : Event {
 
 	public override void trigger()
     {
-        GameMasterController.instance.startEvent();
+        
+        // Debug.Log("Start combat event");
 		followingCamera.SetActive(false);
         battleCamera.SetActive(true);
-		Debug.Log("Start combat event and change camera to battle");
-        StartCoroutine(fadeOut());
+        //GameMasterController.instance.startEvent();
+		// Debug.Log("Start combat event and change camera to battle");
         
     }
 	 private IEnumerator fadeOut()
@@ -29,12 +30,11 @@ public class Flight : Event {
     {
 		//after combat
         StartCoroutine(fadeIn());
+		
     }
 
     private IEnumerator fadeIn()
     {
-		Debug.Log("End combat event");
-        // GameMasterController.instance.endEvent();
         Fade.instance.fadeIn();
         yield return new WaitUntil(() => !Fade.instance.isFading);
     }
