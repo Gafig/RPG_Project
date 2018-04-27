@@ -28,7 +28,7 @@ public class FlagController : MonoBehaviour {
 
     private void Update()
     {
-        if (dizzyRelation >= 100 && speedyRelation >= 100 && vadyRelation >= 100)
+        if (dizzyRelation >= 50 && speedyRelation >= 50 && vadyRelation >= 50)
             REGULARFlag = true;
     }
 

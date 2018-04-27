@@ -10,5 +10,6 @@ public class UpdateRelation : Event {
     public override void trigger()
     {
         FlagController.instance.updateRelation(character, value);
+        triggerNextEvent();
     }
 }
