@@ -60,7 +60,7 @@ public class LevelControllerScript : MonoBehaviour
 
     void setPlayerPosition()
     {
-        player.transform.position = new Vector3(17, -2, -0.1f);
+        player.transform.position = new Vector3(18, -2, -0.1f);
         //player.transform.position = new Vector3(0, 0, -0.1f);
         //GameMasterController.instance.setPlayerToTheLastDoor();
     }
@@ -79,10 +79,10 @@ public class LevelControllerScript : MonoBehaviour
         if (currentFloor < 0)
             currentFloor = 0;
         FlagController.instance.dunTolevel[currentFloor] = true;
-        setPlayerPosition();
+        //setPlayerPosition();
         StartCoroutine(generateFloor());
-        StartCoroutine(FadeIn());
-        GameMasterController.instance.IsInputEnabled = true;
+        //StartCoroutine(FadeIn());
+        //GameMasterController.instance.IsInputEnabled = true;
     }
 
     IEnumerator generateFloor()
@@ -105,6 +105,7 @@ public class LevelControllerScript : MonoBehaviour
     {
         Fade.instance.fadeIn();
         yield return new WaitUntil(() => !Fade.instance.isFading);
+        GameMasterController.instance.IsInputEnabled = true;
     }
 
     void randomEncounter()
