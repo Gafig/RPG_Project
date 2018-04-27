@@ -12,6 +12,10 @@ public class FlagController : MonoBehaviour {
 
     public bool triggeredEnding = false;
 
+    public int dizzyRelation = 0;
+    public int speedyRelation = 0;
+    public int vadyRelation = 0;
+
     private void Awake()
     {
         if (instance == null)
@@ -22,11 +26,13 @@ public class FlagController : MonoBehaviour {
 
     private void Update()
     {
+        if (dizzyRelation >= 100 && speedyRelation >= 100 && vadyRelation >= 100)
+            REGULARFlag = true;
     }
 
     public void checkEnding()
     {
-        if (DateTimeController.instance.getDate() >= 6)
+        if (DateTimeController.instance.getDate() >= 7)
         {
             Debug.Log("Check");
             if (!triggeredEnding)
@@ -54,5 +60,13 @@ public class FlagController : MonoBehaviour {
                 ending = "Ending01";
         }
         AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(ending, LoadSceneMode.Single);
+    }
+
+    public void updateRelation(string character, int amount)
+    {
+        if (character.Equals("Dizzy"))
+        {
+            dizzyRelation += amount;
+        }
     }
 }
