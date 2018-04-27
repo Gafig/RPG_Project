@@ -91,6 +91,12 @@ public class BattleManager : MonoBehaviour
     public GameObject select2;
     public GameObject select3;
 
+    int STATE_EMPTY = -1;
+    int STATE_QUEUE = 0;
+    int STATE_SORT = 1;
+    int STATE_SELECTED_MONSTER = 2;
+    public int currentState = -1;
+
 
 
     private void Awake()
@@ -105,6 +111,7 @@ public class BattleManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+          setState(STATE_QUEUE);
 
         // Debug.Log("START");
         // player = GameBattleManager.instance.character.GetComponent<BaseMonster>();
@@ -126,15 +133,17 @@ public class BattleManager : MonoBehaviour
 
     void OnEnable()
     {
+        setState(STATE_QUEUE);
         // Debug.Log("enable ");
         // player = GameBattleManager.instance.character.GetComponent<BaseMonster>();
         // monster = GameBattleManager.instance.dMons.GetComponent<BaseMonster>();
-        Debug.Log("ENABLE");
-        if (objListOrder.Count == 0)
-        {
-            // Debug.Log("ENABLE");
-            queue();
-        }
+        // Debug.Log("ENABLE " + objListOrder.Count);
+
+        // if (objListOrder.Count == 0)
+        // {
+        //     // Debug.Log("ENABLE");
+        //     queue();
+        // }
         // GameBattleManager.instance.charList[0].SetActive(true);
         // characterList[0].GetComponent<SpriteRenderer>().enabled = true;
 
@@ -147,29 +156,43 @@ public class BattleManager : MonoBehaviour
 
     }
 
+    public void setState(int state)
+    {
+        currentState = state;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("state"+currentState);
+        if (currentState == STATE_QUEUE)
+        {
+            // perform something
+            if (objListOrder.Count == 0)
+            {
+                Debug.Log("enter queue");
+                queue();
+            }
+            currentState = STATE_SELECTED_MONSTER; // change state to sort 
+       
 
-        if (objListOrder.Count == 0)
-        {
-            // Debug.Log("enter queue");
-            queue();
+          
         }
-        else
+        else if (currentState == STATE_SELECTED_MONSTER)
         {
-            // objListOrder.RemoveAt(0);
-            // Debug.Log("battle");
+            // performe something;
+                    monsterSelected = monsterList[0];
+                    Debug.Log("monsterSeelcted");
+                    Debug.Log("000 " + monsterList[0]);
+                    select1.SetActive(false);
+                    select2.SetActive(false);
+                    select3.SetActive(false);
+                    monsterSelected.transform.parent.gameObject.transform.GetChild(0).gameObject.SetActive(true);
+
+            setState(STATE_EMPTY);
         }
 
-        if (monsterSelected == null)
-        {
-            monsterSelected = monsterList[0];
-            select1.SetActive(false);
-            select2.SetActive(false);
-            select3.SetActive(false);
-            monsterSelected.transform.parent.gameObject.transform.GetChild(0).gameObject.SetActive(true);
-        }
+
 
     }
 
@@ -181,6 +204,8 @@ public class BattleManager : MonoBehaviour
 
         for (int i = 0; i < GameBattleManager.instance.dMonsList.Count; i++)
         {
+            
+            Debug.Log(GameBattleManager.instance.dMonsList[i]);
             objListOrder.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
             monsterList.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
         }
@@ -191,6 +216,7 @@ public class BattleManager : MonoBehaviour
         // {
         //     Debug.Log("LOGGGGG " + monsterSelect[i].getPName());
         // }
+        Debug.Log("COUNT LIST " + GameBattleManager.instance.charList.Count);
 
         for (int i = 0; i < GameBattleManager.instance.charList.Count; i++)
         {
@@ -281,6 +307,7 @@ public class BattleManager : MonoBehaviour
 
         // Debug.Log("monster "+ monsterList[0].OnMouseDown());
         // Debug.Log("Before MONSTER HP" + monsterList[0].getHP());
+        Debug.Log("LIST COUNT " + objListOrder.Count);
         Debug.Log("START " + currentSelection);
         Debug.Log("WHO " + characterList[currentSelection].PName);
         attackStat = characterList[currentSelection].getAttackStat();
@@ -288,11 +315,7 @@ public class BattleManager : MonoBehaviour
         monsterSelected.attacked(attackStat);
         attackHelp();
 
-
-
-
-
-
+        Debug.Log("LIST COUNT2 " + objListOrder.Count);
 
     }
 
@@ -333,10 +356,10 @@ public class BattleManager : MonoBehaviour
             else
             {
                 //monster atk player
-                Debug.Log("ATKKKK " + currentSelection +" " + characterList[currentSelection].PName);
+                Debug.Log("ATKKKK " + currentSelection + " " + characterList[currentSelection].PName);
                 characterList[currentSelection].attacked(monsterList[0].getAttackStat());
 
-//animation test
+                //animation test
                 // monsterList[0].GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0.2f);
 
 
@@ -410,8 +433,9 @@ public class BattleManager : MonoBehaviour
             // Debug.Log("HHHHHPPPPPP" + characterList[i].getHP());
         }
 
-        // Debug.Log("PPPP1: " + flee);
+
         flee = ((sumHp / sumMaxHp) * 100) - 20;
+        Debug.Log("PPPP1: " + flee);
         // if(flee < 50){
         //     flee = (sumHp/sumMaxHp)*100;
         //     Debug.Log("CHANGEEEE");
@@ -473,16 +497,20 @@ public class BattleManager : MonoBehaviour
         {
             Destroy(GameBattleManager.instance.dMonsList[i]);
         }
+        GameBattleManager.instance.dMonsList.Clear();
 
-        GameBattleManager.instance.charList.Clear();
+        // GameBattleManager.instance.charList.Clear();
         // for(int i = 0; i < GameBattleManager.instance.charList.Count ; i++){
         // 	Destroy(GameBattleManager.instance.charList[i]);
         // }
-        GameBattleManager.instance.dMonsList.Clear();
+        // GameBattleManager.instance.dMonsList.Clear();    
         // GameBattleManager.instance.charList.Clear();
         monsterList.Clear();
         characterList.Clear();
         Debug.Log("END COMBAT");
+        Debug.Log("LIST COUNT3 " + objListOrder.Count);
+
+        // Debug.Log("LIST "+ characterList.Count);
 
         sumMaxHp = 0;
 

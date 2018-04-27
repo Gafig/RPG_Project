@@ -82,13 +82,13 @@ public class GameBattleManager : MonoBehaviour
         // Party.getInstance().addMember(william);
 
         // Debug.Log("philip + " + philip.GetComponent<Character>().isAlive());
-        if (philip.GetComponent<Character>().isAlive())
-        {
-            charList.Add(philip);
-        }
         if (william.GetComponent<Character>().isAlive())
         {
             charList.Add(william);
+        }
+		if (philip.GetComponent<Character>().isAlive())
+        {
+            charList.Add(philip);
         }
         if (jane.GetComponent<Character>().isAlive())
         {
@@ -101,7 +101,7 @@ public class GameBattleManager : MonoBehaviour
 
         for (int i = 0; i < GameBattleManager.instance.charList.Count; i++)
         {
-            Party.getInstance().addMember(GameBattleManager.instance.charList[i].GetComponent<Character>());
+            Party.instance.addMember(GameBattleManager.instance.charList[i].GetComponent<Character>());
 
             // Debug.Log(GameBattleManager.instance.charList[i].GetComponent<Character>());
         }

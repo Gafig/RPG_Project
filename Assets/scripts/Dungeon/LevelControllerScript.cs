@@ -169,6 +169,8 @@ public class LevelControllerScript : MonoBehaviour
             return;
         }
         interaction.triggerEvents();
+        // gameObject.GetComponent<BattleManager>().setState(0);
+        // GameObject battleCam = GameObject.Find("BattleCamera");
 
     }
 
