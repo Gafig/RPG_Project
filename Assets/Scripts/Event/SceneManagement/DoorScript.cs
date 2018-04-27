@@ -14,6 +14,8 @@ public class DoorScript : Event {
 
     bool hasInteracted = false;
 
+    bool hasLoaded = false;
+
     public override void trigger()
     {
         if (!hasInteracted)
@@ -46,8 +48,12 @@ public class DoorScript : Event {
 
     private IEnumerator fadeIn()
     {
-        triggerNextEvent();
-        Fade.instance.fadeIn();
+        if (!hasLoaded)
+        {
+            hasLoaded = true;
+            triggerNextEvent();
+            Fade.instance.fadeIn();
+        }
         yield return new WaitUntil(() => !Fade.instance.isFading);
     }
 }

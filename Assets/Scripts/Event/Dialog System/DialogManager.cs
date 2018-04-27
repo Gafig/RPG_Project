@@ -140,7 +140,7 @@ public class DialogManager : MonoBehaviour {
         current.triggerNextEvent();
         if (!isBetweenConversation)
         {
-            Debug.Log("Stop");
+            //Debug.Log("Stop");
             animator.SetBool("isOpen", false);
         }
         

@@ -106,4 +106,9 @@ public class DateTimeController : MonoBehaviour {
     {
         return timeInMinutes % MINUTES_IN_A_DAY / 60;
     }
+
+    public int getcurrentTimeInDayInMinute()
+    {
+        return timeInMinutes % MINUTES_IN_A_DAY;
+    }
 }

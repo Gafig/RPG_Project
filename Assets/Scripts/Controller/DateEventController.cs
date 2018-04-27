@@ -26,7 +26,6 @@ public class DateEventController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log("Date = " + DateTimeController.instance.getDate());
 
         if (DateTimeController.instance.getDate() != date)
         {

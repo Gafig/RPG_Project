@@ -48,7 +48,7 @@ public class MoveAround : MonoBehaviour
             if (velocity != Vector3.zero)
             {
                 anim.SetBool("walk", true);
-                Debug.Log("SetBool: true");
+                //Debug.Log("SetBool: true");
             }
             else
                 anim.SetBool("walk", false);
@@ -148,7 +148,7 @@ public class MoveAround : MonoBehaviour
         if (anim.runtimeAnimatorController == animList[index])
             return;
         anim.runtimeAnimatorController = animList[index];
-        Debug.Log("Change Anim");
+        //Debug.Log("Change Anim");
     }
 
 }
