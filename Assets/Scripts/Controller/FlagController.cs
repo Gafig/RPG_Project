@@ -9,6 +9,7 @@ public class FlagController : MonoBehaviour {
 
     public bool SwordFlag;
     public bool REGULARFlag;
+    public int hospitalVisit, hqVisit, dunVisit, restVisit;
 
     public bool triggeredEnding = false;
 
