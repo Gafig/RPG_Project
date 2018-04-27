@@ -20,7 +20,7 @@ public class DangeonLevelConnector : MonoBehaviour {
         {
             if (!isDone)
             {
-                Debug.Log("Da hell?");
+                //Debug.Log("Da hell?");
                 levelController = GameObject.Find("LevelController").GetComponent<LevelControllerScript>();
                 GameMasterController.instance.setLastDoorID(id);
                 if (dir == Direction.down)

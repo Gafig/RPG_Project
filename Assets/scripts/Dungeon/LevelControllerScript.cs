@@ -39,6 +39,7 @@ public class LevelControllerScript : MonoBehaviour
         gm = GameObject.FindGameObjectWithTag("GameBattleManager").GetComponent<GameBattleManager>();
         //setPlayerPosition();
         StartCoroutine(generateFloor());
+        //prepareNextFloor();
         playerRB = player.GetComponent<Rigidbody>();
         totalStep = 0;
         playerLastPos = player.transform.position;
@@ -73,6 +74,11 @@ public class LevelControllerScript : MonoBehaviour
 
     void prepareNextFloor()
     {
+        if (currentFloor > 4)
+            currentFloor = 4;
+        if (currentFloor < 0)
+            currentFloor = 0;
+        FlagController.instance.dunTolevel[currentFloor] = true;
         setPlayerPosition();
         StartCoroutine(generateFloor());
         StartCoroutine(FadeIn());

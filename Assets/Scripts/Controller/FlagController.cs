@@ -16,6 +16,7 @@ public class FlagController : MonoBehaviour {
     public int dizzyRelation = 0;
     public int speedyRelation = 0;
     public int vadyRelation = 0;
+    public bool[] dunTolevel = { false, false, false, false, false };
 
     private void Awake()
     {
