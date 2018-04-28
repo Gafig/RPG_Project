@@ -70,5 +70,9 @@ public class FlagController : MonoBehaviour {
         {
             dizzyRelation += amount;
         }
+        if (character.Equals("Speedy"))
+        {
+            speedyRelation += amount;
+        }
     }
 }

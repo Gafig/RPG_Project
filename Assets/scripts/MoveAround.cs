@@ -54,7 +54,11 @@ public class MoveAround : MonoBehaviour
                 anim.SetBool("walk", false);
         }
         else
+        {
+            rb.velocity = Vector3.zero;
+            setSprite();
             anim.SetBool("walk", false);
+        }
     }
 
     public void face(Direction dir)

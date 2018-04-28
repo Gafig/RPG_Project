@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FacePlayer : Event {
+public class GivePlayerMoney : Event {
+
+    public int cost;
     public override void trigger()
     {
-        transform.root.GetComponent<ControllMovement>().facePlayer();
+        Wallet.instance.add(cost);
         triggerNextEvent();
     }
 }
