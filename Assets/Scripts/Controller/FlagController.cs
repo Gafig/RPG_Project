@@ -16,6 +16,7 @@ public class FlagController : MonoBehaviour {
     public int dizzyRelation = 0;
     public int speedyRelation = 0;
     public int vadyRelation = 0;
+    public bool[] dunTolevel = { false, false, false, false, false };
 
     private void Awake()
     {
@@ -27,7 +28,7 @@ public class FlagController : MonoBehaviour {
 
     private void Update()
     {
-        if (dizzyRelation >= 100 && speedyRelation >= 100 && vadyRelation >= 100)
+        if (dizzyRelation >= 50 && speedyRelation >= 50 && vadyRelation >= 50)
             REGULARFlag = true;
     }
 

@@ -15,12 +15,15 @@ public class DoorScript : Event {
     bool hasInteracted = false;
 
     bool hasLoaded = false;
+    string sceneName;
 
     public override void trigger()
     {
         if (!hasInteracted)
         {
             hasInteracted = true;
+            Scene scene = SceneManager.GetActiveScene();
+            sceneName = scene.name;
             StartCoroutine(fadeOut());
         }
     }
@@ -41,19 +44,8 @@ public class DoorScript : Event {
             while (!asyncLoadLevel.isDone)
             {
                 yield return null;
-                StartCoroutine(fadeIn());
+                triggerNextEvent();
             }
         }
-    }
-
-    private IEnumerator fadeIn()
-    {
-        if (!hasLoaded)
-        {
-            hasLoaded = true;
-            triggerNextEvent();
-            Fade.instance.fadeIn();
-        }
-        yield return new WaitUntil(() => !Fade.instance.isFading);
     }
 }
