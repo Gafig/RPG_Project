@@ -16,13 +16,14 @@ public class StartEventByTime : Event {
             {
                 Debug.Log("triggered");
                 triggered++;
-                GameMasterController.instance.startEvent();
-                triggerNextEvent();
+                StartCoroutine(tryStart());
             }
         }
     }
 
-    private void Update()
+    IEnumerator tryStart()
     {
+        yield return new WaitUntil(() => GameMasterController.instance.startEvent());
+        triggerNextEvent();
     }
 }

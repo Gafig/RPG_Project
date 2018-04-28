@@ -6,7 +6,12 @@ public class StartEvent : Event {
 
     public override void trigger()
     {
-        GameMasterController.instance.startEvent();
+        StartCoroutine(tryStart());
+    }
+
+    IEnumerator tryStart()
+    {
+        yield return new WaitUntil(() => GameMasterController.instance.startEvent());
         triggerNextEvent();
     }
 }
