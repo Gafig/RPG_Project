@@ -10,12 +10,19 @@ public class FlagController : MonoBehaviour {
     public bool SwordFlag;
     public bool REGULARFlag;
     public int hospitalVisit, hqVisit, dunVisit, restVisit;
-
+    
     public bool triggeredEnding = false;
 
     public int dizzyRelation = 0;
+    public int dizzyLastCheck = 0;
     public int speedyRelation = 0;
+    public int speedyLastCheck = 0;
     public int vadyRelation = 0;
+    public int vadyLastCheck = 0;
+    public bool triggerDizzyDialog = false;
+    public bool triggerSpeedyDialog = false;
+    public bool triggerVadyDialog = false;
+
     public bool[] dunTolevel = { false, false, false, false, false };
 
     private void Awake()
