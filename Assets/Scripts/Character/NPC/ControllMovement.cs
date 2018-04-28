@@ -29,6 +29,12 @@ public class ControllMovement : MonoBehaviour {
         setSprite();
     }
 
+    public void setDirection(int direction)
+    {
+        dir = direction;
+        setSprite();
+    }
+
     private void setSprite()
     {
         int index = 0;

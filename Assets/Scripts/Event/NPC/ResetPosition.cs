@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GivePlayerMoney : Event {
+public class ResetPosition : Event {
 
-    public int cost;
+    public int direction = 180;
+
     public override void trigger()
     {
-        Wallet.instance.add(cost);
+        transform.root.GetComponent<ControllMovement>().setDirection(direction);
         triggerNextEvent();
     }
 }
