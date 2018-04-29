@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DizzyCondition : Event {
 
-    public int dizzyEvent = 1;
+    public int eventDate = 1;
 
     [SerializeField]
     Event onDate;
@@ -14,7 +14,7 @@ public class DizzyCondition : Event {
 
     public override void trigger()
     {
-        if (DateTimeController.instance.getDate() == dizzyEvent)
+        if (DateTimeController.instance.getDate() == eventDate)
             nextEvent = onDate;
         else
             nextEvent = outDate;

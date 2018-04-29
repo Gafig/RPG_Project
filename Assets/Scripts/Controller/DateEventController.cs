@@ -26,16 +26,10 @@ public class DateEventController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-        if (DateTimeController.instance.getDate() != date)
+        date = DateTimeController.instance.getDate();
+        if (date >= 2 && !FlagController.instance.greetingDay[date - 2])
         {
-            date = DateTimeController.instance.getDate();
-            greeting = false;
-        }
-
-        if (!greeting)
-        {
-            greeting = true;
+            FlagController.instance.greetingDay[date - 2] = true;
             events[date-2].transform.GetComponentInChildren<StartEvent>().trigger();
         } 
 	}

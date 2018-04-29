@@ -23,7 +23,8 @@ public class FlagController : MonoBehaviour {
     public bool triggerSpeedyDialog = false;
     public bool triggerVadyDialog = false;
 
-    public bool[] dunTolevel = { false, false, false, false, false };
+    public bool[] greetingDay = { false, false, false, false, false, false };
+    public bool[] dunTolevel = { true, false, false, false, false };
 
     private void Awake()
     {
@@ -80,6 +81,10 @@ public class FlagController : MonoBehaviour {
         if (character.Equals("Speedy"))
         {
             speedyRelation += amount;
+        }
+        if (character.Equals("Vady"))
+        {
+            vadyRelation += amount;
         }
     }
 }

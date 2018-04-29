@@ -17,9 +17,11 @@ public class DoorScript : Event {
     bool hasLoaded = false;
     string sceneName;
 
+    public bool repeatable;
+
     public override void trigger()
     {
-        if (!hasInteracted)
+        if (!hasInteracted || repeatable)
         {
             hasInteracted = true;
             Scene scene = SceneManager.GetActiveScene();
