@@ -42,6 +42,16 @@ public class DialogManager : MonoBehaviour {
 
     private void Update()
     {
+        if(currentEvent != null)
+        {
+            Debug.Log(currentEvent.GetType()  + " result: " + (currentEvent.GetType() == typeof(DialogConversationTrigger)) );
+            if(currentEvent.GetType() == typeof(DialogConversationTrigger))
+                ShareUI.instance.skipButton.gameObject.SetActive(true);
+            else
+                ShareUI.instance.skipButton.gameObject.SetActive(false);
+        }
+        else
+            ShareUI.instance.skipButton.gameObject.SetActive(false);
         if (isBetweenConversation)
         {
             if (Input.GetKeyDown("z"))
@@ -144,5 +154,15 @@ public class DialogManager : MonoBehaviour {
             animator.SetBool("isOpen", false);
         }
         
+    }
+
+    public void skip()
+    {
+        StopAllCoroutines();
+        dialogs.Clear();
+        sentences.Clear();
+        isBetweenConversation = false;
+        isTyping = false;
+        endDialog();
     }
 }
