@@ -14,15 +14,8 @@ public class AddLoad : Event
 
     public override void trigger()
     {
-        StartCoroutine(fadeOut());
-
-    }
-
-    private IEnumerator fadeOut()
-    {
-        Fade.instance.fadeOut();
-        yield return new WaitUntil(() => !Fade.instance.isFading);
         StartCoroutine(load());
+
     }
 
     private IEnumerator load()
