@@ -7,6 +7,7 @@ public class DateTimeController : MonoBehaviour {
     public static DateTimeController instance;
 
     private const int MINUTES_IN_A_DAY = 1440;
+    public bool timeRun = false;
 
     private IEnumerator updateTimeCou;
 
@@ -37,13 +38,21 @@ public class DateTimeController : MonoBehaviour {
 
     public void stopTime()
     {
-        StopCoroutine(updateTimeCou);
+        if (timeRun)
+        {
+            timeRun = false;
+            StopCoroutine(updateTimeCou);
+        }
     }
 
     public void startTime()
     {
-        updateTimeCou = testUpdateTime();
-        StartCoroutine(updateTimeCou);
+        if (!timeRun)
+        {
+            timeRun = true;
+            updateTimeCou = testUpdateTime();
+            StartCoroutine(updateTimeCou);
+        }
     }
 
     public void updateTimeInHour(int hour)
