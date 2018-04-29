@@ -71,7 +71,13 @@ public class BattleManager : MonoBehaviour
     public TextMeshProUGUI monsterName2;
     public TextMeshProUGUI monsterName3;
 
+    public Slider monsterHealth1;
+    public Slider monsterHealth2;
+    public Slider monsterHealth3;
+
+
     public bool isStart = true;
+
 
     // int STATE_EMPTY = -1;
     // int STATE_QUEUE = 0;
@@ -139,6 +145,15 @@ public class BattleManager : MonoBehaviour
             monsterName1.text = GameBattleManager.instance.dMonsList[0].GetComponent<BaseMonster>().getPName();
             monsterName2.text = GameBattleManager.instance.dMonsList[1].GetComponent<BaseMonster>().getPName();
             monsterName3.text = GameBattleManager.instance.dMonsList[2].GetComponent<BaseMonster>().getPName();
+            monsterHealth1.maxValue = GameBattleManager.instance.dMonsList[0].GetComponent<BaseMonster>().getMaxHP();
+            monsterHealth1.value = monsterHealth1.maxValue;
+
+            monsterHealth2.maxValue = GameBattleManager.instance.dMonsList[1].GetComponent<BaseMonster>().getMaxHP();
+            monsterHealth2.value = monsterHealth2.maxValue;
+
+            monsterHealth3.maxValue = GameBattleManager.instance.dMonsList[2].GetComponent<BaseMonster>().getMaxHP();
+            monsterHealth3.value = monsterHealth3.maxValue;
+            // Debug.Log("HPP " + monsterHealth1.value);
             isStart = false;
         }
 
@@ -221,37 +236,51 @@ public class BattleManager : MonoBehaviour
 
     public void attackFunction()
     {
-        if (currentSelection < characterList.Count) {
+        if (currentSelection < characterList.Count)
+        {
             msg.text = "now " + characterList[currentSelection].getPName() + " attacking " + monsterSelected.getPName();
 
+            // monsterSelected.transform.parent.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+
+            //stat atk player
             attackStat = characterList[currentSelection].getAttackStat();
+
             //player atk monster selected
             monsterSelected.attacked(attackStat);
+
+
+            Debug.Log("max " + monsterHealth1.maxValue);
+            Debug.Log("HPP2 " + monsterHealth1.value);
+            Debug.Log("HPP3 " + monsterSelected.getHP());
             attackHelp();
 
 
         }
-        
+
     }
 
     public void spAttackFunction()
     {
-        if (currentSelection < characterList.Count) {
-        Debug.Log("sp");
+        if (currentSelection < characterList.Count)
+        {
+            Debug.Log("sp");
 
-        attackStat = characterList[currentSelection].getSpAttackStat();
-        attackHelp();
-        //use mana
-        characterList[currentSelection].useMana(20);
+            attackStat = characterList[currentSelection].getSpAttackStat();
+            attackHelp();
+            //use mana
+            characterList[currentSelection].useMana(20);
 
 
         }
-        
+
     }
 
 
     private void attackHelp()
     {
+
+        //update monster healthbar
+        setHealthBar();
 
         //destroy monster that die
         if (monsterSelected.getHP() <= 0)
@@ -265,18 +294,18 @@ public class BattleManager : MonoBehaviour
                 addMoney();
             }
             else
-        {
-            //monster atk player
-            Debug.Log("Before " + currentSelection + " " + characterList[currentSelection].PName);
-            characterList[currentSelection].attacked(monsterList[0].getAttackStat());
+            {
+                //monster atk player
+                Debug.Log("Before " + currentSelection + " " + characterList[currentSelection].PName);
+                characterList[currentSelection].attacked(monsterList[0].getAttackStat());
+
+            }
 
         }
 
-        }
-        
 
         //destroy player that die
-        
+
         if (currentSelection < characterList.Count && characterList[currentSelection].getHP() <= 0)
         {
             if (characterList[currentSelection].getPName() == "william")
@@ -312,6 +341,34 @@ public class BattleManager : MonoBehaviour
         }
 
 
+    }
+
+    public void setHealthBar()
+    {
+        if (monsterHealth1 == monsterSelected.transform.parent.gameObject.transform.GetChild(1).GetChild(4).GetComponent<Slider>())
+        {
+            if (monsterSelected.getHP() <= 0)
+            {
+                monsterHealth1.gameObject.SetActive(false);
+            }
+            monsterHealth1.value = monsterSelected.getHP();
+        }
+        if (monsterHealth2 == monsterSelected.transform.parent.gameObject.transform.GetChild(1).GetChild(4).GetComponent<Slider>())
+        {
+            if (monsterSelected.getHP() <= 0)
+            {
+                monsterHealth2.gameObject.SetActive(false);
+            }
+            monsterHealth2.value = monsterSelected.getHP();
+        }
+        if (monsterHealth3 == monsterSelected.transform.parent.gameObject.transform.GetChild(1).GetChild(4).GetComponent<Slider>())
+        {
+            if (monsterSelected.getHP() <= 0)
+            {
+                monsterHealth3.gameObject.SetActive(false);
+            }
+            monsterHealth3.value = monsterSelected.getHP();
+        }
     }
 
     public void runFunction()
@@ -377,6 +434,11 @@ public class BattleManager : MonoBehaviour
         characterList.Clear();
         // Debug.Log(characterList);
         isStart = true;
+
+        monsterHealth1.gameObject.SetActive(true);
+        monsterHealth2.gameObject.SetActive(true);
+        monsterHealth3.gameObject.SetActive(true);
+
         Debug.Log("END COMBAT");
 
         sumMaxHp = 0;
