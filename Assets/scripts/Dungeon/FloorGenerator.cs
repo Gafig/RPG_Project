@@ -12,6 +12,7 @@ public class FloorGenerator : MonoBehaviour {
     public GameObject playerSpawner;
     public GameObject nextLevelConnectorSprite;
     public GameObject floorObj;
+    public GameObject sword, placedSword;
 
     List<Room> rooms = new List<Room>();
     private enum DIR : int { WEST = 1, EAST, NORTH, SOUTH, NW, NE, SW, SE };
@@ -21,6 +22,7 @@ public class FloorGenerator : MonoBehaviour {
     private int currRoom = 0, depth = 0;
     [SerializeField]
     private Sprite[] floorSprites;
+    public Sprite stair;
 
     public bool isFinished(){
         return isDone;
@@ -28,11 +30,12 @@ public class FloorGenerator : MonoBehaviour {
 
     public void generate(int roomAmount, int depth)
     {
+        Destroy(placedSword);
         this.depth = depth;
         rooms.Clear();
         isDone = false;
         for (int i = 0; i < roomAmount; i++) {
-            Room newRoom = new Room(i);
+            Room newRoom = new Room(i + depth * roomAmount);
             rooms.Add(newRoom);
         }
         placeBlocks();
@@ -41,6 +44,8 @@ public class FloorGenerator : MonoBehaviour {
 
    void placeBlocks()
     {
+        if(depth >= 4)
+            placedSword = Instantiate(sword, new Vector3(18f, -100f, -0.1f), Quaternion.identity) as GameObject;
         if (floorObj == null)
             floorObj = new GameObject("floor");
         else
@@ -86,6 +91,14 @@ public class FloorGenerator : MonoBehaviour {
         spriteRenderer.sprite = floorSprites[UnityEngine.Random.Range(0, floorSprites.Length)];
     }
 
+    private void placeStairAt(int x, int y)
+    {
+        GameObject floorBlock = (Instantiate(floorSprite, new Vector3(x, y, 0), Quaternion.identity) as GameObject);
+        floorBlock.transform.parent = floorObj.transform;
+        SpriteRenderer spriteRenderer = floorBlock.GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = stair;
+    }
+
     private void placeEntrance(int y)
     {
         if(depth > 0)
@@ -106,11 +119,14 @@ public class FloorGenerator : MonoBehaviour {
 
     private void placeExit(int y)
     {
-        placePassagePieces(y);
-        placePassagePieces(y - 1);
-        placeBottomSpawnerPieces(y - 2);
-        placePassagePieces(y - 3);
-        placeEndPieces(y - 4);
+        if (depth < 4)
+        {
+            placePassagePieces(y);
+            placePassagePieces(y - 1);
+            placeBottomSpawnerPieces(y - 2);
+            placePassagePieces(y - 3);
+            placeEndPieces(y - 4);
+        }
     }
 
     private void placeEndPieces(int y)
@@ -159,24 +175,24 @@ public class FloorGenerator : MonoBehaviour {
     private void placeTopSpawnerPieces(int y)
     {
         (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        placeFloorAt(17, y);
+        placeStairAt(17, y);
 
         GameObject spawner = (Instantiate(playerSpawner, new Vector3(18, y, 0), Quaternion.identity) as GameObject);
         setSpawner(spawner, depth, Direction.down);
 
-        placeFloorAt(19, y);
+        placeStairAt(19, y);
         (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
     }
 
     private void placeBottomSpawnerPieces(int y)
     {
         (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        placeFloorAt(17, y);
+        placeStairAt(17, y);
 
         GameObject spawner = (Instantiate(playerSpawner, new Vector3(18, y, 0), Quaternion.identity) as GameObject);
         setSpawner(spawner, depth+1, Direction.up);
 
-        placeFloorAt(19, y);
+        placeStairAt(19, y);
         (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
     }
 
@@ -192,9 +208,9 @@ public class FloorGenerator : MonoBehaviour {
     private void placePassagePieces(int y)
     {
         (Instantiate(wallSprite, new Vector3(16, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
-        placeFloorAt(17, y);
-        placeFloorAt(18, y);
-        placeFloorAt(19, y);
+        placeStairAt(17, y);
+        placeStairAt(18, y);
+        placeStairAt(19, y);
         (Instantiate(wallSprite, new Vector3(20, y, 0), Quaternion.identity) as GameObject).transform.parent = floorObj.transform;
 
     }
@@ -369,12 +385,12 @@ public class Room
             {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
             {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
             {1, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 2, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 19, 19, 19, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
         };
 
     public Room(int i)
     {
-        if (i != 2)
+        if (i <= 13)
         {
             room = new Block[emptyRoomTemplate.GetLength(0), emptyRoomTemplate.GetLength(1)];
             for (int y = 0; y < emptyRoomTemplate.GetLength(0); y++)

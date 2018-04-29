@@ -39,6 +39,7 @@ public class LevelControllerScript : MonoBehaviour
         gm = GameObject.FindGameObjectWithTag("GameBattleManager").GetComponent<GameBattleManager>();
         //setPlayerPosition();
         StartCoroutine(generateFloor());
+        //prepareNextFloor();
         playerRB = player.GetComponent<Rigidbody>();
         totalStep = 0;
         playerLastPos = player.transform.position;
@@ -59,7 +60,7 @@ public class LevelControllerScript : MonoBehaviour
 
     void setPlayerPosition()
     {
-        player.transform.position = new Vector3(17, -2, -0.1f);
+        player.transform.position = new Vector3(18, -2, -0.1f);
         //player.transform.position = new Vector3(0, 0, -0.1f);
         //GameMasterController.instance.setPlayerToTheLastDoor();
     }
@@ -73,10 +74,15 @@ public class LevelControllerScript : MonoBehaviour
 
     void prepareNextFloor()
     {
-        setPlayerPosition();
+        if (currentFloor > 4)
+            currentFloor = 4;
+        if (currentFloor < 0)
+            currentFloor = 0;
+        FlagController.instance.dunTolevel[currentFloor] = true;
+        //setPlayerPosition();
         StartCoroutine(generateFloor());
-        StartCoroutine(FadeIn());
-        GameMasterController.instance.IsInputEnabled = true;
+        //StartCoroutine(FadeIn());
+        //GameMasterController.instance.IsInputEnabled = true;
     }
 
     IEnumerator generateFloor()
@@ -85,7 +91,7 @@ public class LevelControllerScript : MonoBehaviour
         yield return new WaitUntil(() => floorGenerator.isFinished());
         GameMasterController.instance.setPlayerToTheLastDoor();
         isDone = false;
-        //StartCoroutine(FadeIn());
+        StartCoroutine(FadeIn());
     }
 
     IEnumerator FadeOut()
@@ -99,6 +105,7 @@ public class LevelControllerScript : MonoBehaviour
     {
         Fade.instance.fadeIn();
         yield return new WaitUntil(() => !Fade.instance.isFading);
+        GameMasterController.instance.IsInputEnabled = true;
     }
 
     void randomEncounter()

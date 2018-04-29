@@ -12,7 +12,8 @@ public class DialogConversationTrigger : Event {
     {
         FindObjectOfType<DialogManager>().startConversation(conversation);
         FindObjectOfType<DialogManager>().currentEvent = this;
-        Debug.Log("Trigger" + this);
+        
+        //Debug.Log("Trigger" + this);
     }
 
     private void Start()

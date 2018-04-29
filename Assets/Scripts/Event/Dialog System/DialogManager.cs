@@ -10,6 +10,8 @@ public class DialogManager : MonoBehaviour {
 
     //public Text nameText;
     //public Text dialogText;
+    public bool isQuestion = false;
+    public bool readyToAsk = false;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI dialogText;
     public Image image;
@@ -21,8 +23,18 @@ public class DialogManager : MonoBehaviour {
     private Queue<Dialog> dialogs;
     private Queue<string> sentences;
     public Event currentEvent;
-	// Use this for initialization
-	void Start () {
+    public static DialogManager instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
+    }
+
+    void Start () {
         isTyping = false;
         sentences = new Queue<string>();
         dialogs = new Queue<Dialog>();
@@ -30,6 +42,16 @@ public class DialogManager : MonoBehaviour {
 
     private void Update()
     {
+        if(currentEvent != null)
+        {
+            Debug.Log(currentEvent.GetType()  + " result: " + (currentEvent.GetType() == typeof(DialogConversationTrigger)) );
+            if(currentEvent.GetType() == typeof(DialogConversationTrigger))
+                ShareUI.instance.skipButton.gameObject.SetActive(true);
+            else
+                ShareUI.instance.skipButton.gameObject.SetActive(false);
+        }
+        else
+            ShareUI.instance.skipButton.gameObject.SetActive(false);
         if (isBetweenConversation)
         {
             if (Input.GetKeyDown("z"))
@@ -78,14 +100,9 @@ public class DialogManager : MonoBehaviour {
 
     public void displayNextSentence()
     {
-        /*
-        if (sentences.Count == 0 && !isTyping)
-        {
-            endDialog();
-            return;
-        }*/
+        
 
-        if (!isTyping)
+        if (!isTyping && sentences.Count != 0)
         {
             sentence = sentences.Dequeue();
             StartCoroutine(typeSentence(sentence));
@@ -102,9 +119,14 @@ public class DialogManager : MonoBehaviour {
     {
         if(dialogs.Count == 0 && sentences.Count == 0 && !isTyping)
         {
-            isBetweenConversation = false;
-            endDialog();
-            return;
+            if(!isQuestion){
+                isBetweenConversation = false;
+                endDialog();
+                return;
+            }
+            else{
+                readyToAsk = true;
+            }
         }
 
         if (sentences.Count == 0 && !isTyping && dialogs.Count > 0)
@@ -123,12 +145,24 @@ public class DialogManager : MonoBehaviour {
     {
         Event current = currentEvent;
         currentEvent = null;
+        isQuestion = false;
+        readyToAsk = false;
         current.triggerNextEvent();
         if (!isBetweenConversation)
         {
-            Debug.Log("Stop");
+            //Debug.Log("Stop");
             animator.SetBool("isOpen", false);
         }
         
+    }
+
+    public void skip()
+    {
+        StopAllCoroutines();
+        dialogs.Clear();
+        sentences.Clear();
+        isBetweenConversation = false;
+        isTyping = false;
+        endDialog();
     }
 }
