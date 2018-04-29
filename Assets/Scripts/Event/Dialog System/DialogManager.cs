@@ -145,4 +145,14 @@ public class DialogManager : MonoBehaviour {
         }
         
     }
+
+    public void skip()
+    {
+        StopAllCoroutines();
+        dialogs.Clear();
+        sentences.Clear();
+        isBetweenConversation = false;
+        isTyping = false;
+        endDialog();
+    }
 }
