@@ -75,10 +75,10 @@ public class GameBattleManager : MonoBehaviour
         william = Instantiate(characterWilliam, attackPodium.transform.position, Quaternion.identity) as GameObject;
         jane = Instantiate(characterJane, attackPodium.transform.position, Quaternion.identity) as GameObject;
         rose = Instantiate(characterRose, attackPodium.transform.position, Quaternion.identity) as GameObject;
-        // philip.GetComponent<SpriteRenderer>().enabled = false;
-        // william.GetComponent<SpriteRenderer>().enabled = false;
-        // jane.GetComponent<SpriteRenderer>().enabled = false;
-        // rose.GetComponent<SpriteRenderer>().enabled = false;
+        philip.GetComponent<SpriteRenderer>().enabled = false;
+        william.GetComponent<SpriteRenderer>().enabled = false;
+        jane.GetComponent<SpriteRenderer>().enabled = false;
+        rose.GetComponent<SpriteRenderer>().enabled = false;
         // Party.getInstance().addMember(william);
 
         // Debug.Log("philip + " + philip.GetComponent<Character>().isAlive());

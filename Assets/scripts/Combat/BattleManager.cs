@@ -66,6 +66,11 @@ public class BattleManager : MonoBehaviour
     public GameObject select2;
     public GameObject select3;
 
+    public GameObject playerselect1;
+    public GameObject playerselect2;
+    public GameObject playerselect3;
+    public GameObject playerselect4;
+
     public TextMeshProUGUI msg;
     public TextMeshProUGUI monsterName1;
     public TextMeshProUGUI monsterName2;
@@ -75,6 +80,23 @@ public class BattleManager : MonoBehaviour
     public Slider monsterHealth2;
     public Slider monsterHealth3;
 
+    public GameObject characterPanel1;
+    public GameObject characterPanel2;
+    public GameObject characterPanel3;
+    public GameObject characterPanel4;
+
+    public TextMeshProUGUI characterName1;
+    public TextMeshProUGUI characterName2;
+    public TextMeshProUGUI characterName3;
+    public TextMeshProUGUI characterName4;
+    public Slider playerHealth1;
+    public Slider playerHealth2;
+    public Slider playerHealth3;
+    public Slider playerHealth4;
+
+    public int show;
+
+    public List<Character> tempCharacter;
 
     public bool isStart = true;
 
@@ -107,6 +129,10 @@ public class BattleManager : MonoBehaviour
         select2.SetActive(false);
         select3.SetActive(false);
 
+        playerselect1.SetActive(true);
+        playerselect2.SetActive(false);
+        playerselect3.SetActive(false);
+        playerselect4.SetActive(false);
 
     }
 
@@ -135,6 +161,7 @@ public class BattleManager : MonoBehaviour
             select1.SetActive(false);
             select2.SetActive(false);
             select3.SetActive(false);
+
             monsterSelected.transform.parent.gameObject.transform.GetChild(0).gameObject.SetActive(true);
         }
 
@@ -153,6 +180,48 @@ public class BattleManager : MonoBehaviour
 
             monsterHealth3.maxValue = GameBattleManager.instance.dMonsList[2].GetComponent<BaseMonster>().getMaxHP();
             monsterHealth3.value = monsterHealth3.maxValue;
+
+            show = tempCharacter.Count - 1;
+
+            // playerselect1.SetActive(false);
+            // playerselect2.SetActive(false);
+            // playerselect3.SetActive(false);
+            // playerselect4.SetActive(false);
+
+            if (show >= 0)
+            {
+                characterName1.text = tempCharacter[0].getPName();
+                characterPanel1.SetActive(true);
+                playerHealth1.maxValue = characterList[0].getMaxHP();
+                playerHealth1.value = characterList[0].getHP();
+                // playerselect1.SetActive(false);
+            }
+            if (show >= 1)
+            {
+                characterName2.text = tempCharacter[1].getPName();
+                characterPanel2.SetActive(true);
+                playerHealth2.maxValue = characterList[1].getMaxHP();
+                playerHealth2.value = characterList[1].getHP();
+                // playerselect2.SetActive(false);
+            }
+            if (show >= 2)
+            {
+                characterName3.text = tempCharacter[2].getPName();
+                characterPanel3.SetActive(true);
+                playerHealth3.maxValue = characterList[2].getMaxHP();
+                playerHealth3.value = characterList[2].getHP();
+                // playerselect3.SetActive(false);
+            }
+            if (show >= 3)
+            {
+                characterName4.text = tempCharacter[3].getPName();
+                characterPanel4.SetActive(true);
+                playerHealth4.maxValue = characterList[3].getMaxHP();
+                playerHealth4.value = characterList[3].getHP();
+                // playerselect4.SetActive(false);
+            }
+
+
             // Debug.Log("HPP " + monsterHealth1.value);
             isStart = false;
         }
@@ -166,7 +235,7 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < GameBattleManager.instance.dMonsList.Count; i++)
         {
 
-            Debug.Log(GameBattleManager.instance.dMonsList[i]);
+            // Debug.Log(GameBattleManager.instance.dMonsList[i]);
             objListOrder.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
             monsterList.Add(GameBattleManager.instance.dMonsList[i].GetComponent<BaseMonster>());
         }
@@ -180,6 +249,7 @@ public class BattleManager : MonoBehaviour
                 // Debug.Log("HP "+ GameBattleManager.instance.charList[i].GetComponent<Character>().getHP());
                 objListOrder.Add(GameBattleManager.instance.charList[i].GetComponent<Character>());
                 characterList.Add(GameBattleManager.instance.charList[i].GetComponent<Character>());
+
             }
             // Debug.Log(GameBattleManager.instance.charList[i].GetComponent<Character>());
         }
@@ -209,6 +279,9 @@ public class BattleManager : MonoBehaviour
         {
             sumMaxHp += characterList[i].getMaxHP();
         }
+
+        tempCharacter = new List<Character>(characterList);
+
         // Debug.Log(characterList[0] + " NNN " + characterList[1] + " NNN " + characterList[2] + " NNN " + characterList[3] + " NNN ");
         // characterList[0].GetComponent<SpriteRenderer>().enabled = true;
 
@@ -249,9 +322,9 @@ public class BattleManager : MonoBehaviour
             monsterSelected.attacked(attackStat);
 
 
-            Debug.Log("max " + monsterHealth1.maxValue);
-            Debug.Log("HPP2 " + monsterHealth1.value);
-            Debug.Log("HPP3 " + monsterSelected.getHP());
+            // Debug.Log("max " + monsterHealth1.maxValue);
+            // Debug.Log("HPP2 " + monsterHealth1.value);
+            // Debug.Log("HPP3 " + monsterSelected.getHP());
             attackHelp();
 
 
@@ -297,10 +370,17 @@ public class BattleManager : MonoBehaviour
             {
                 //monster atk player
                 Debug.Log("Before " + currentSelection + " " + characterList[currentSelection].PName);
+                // Debug.Log("ATK NEXT");
                 characterList[currentSelection].attacked(monsterList[0].getAttackStat());
-
+                updateCharacterHealthBar();
             }
 
+        }
+        else
+        {
+            // Debug.Log("ATK BACK");
+            characterList[currentSelection].attacked(monsterSelected.getAttackStat());
+            updateCharacterHealthBar();
         }
 
 
@@ -318,6 +398,7 @@ public class BattleManager : MonoBehaviour
             {
                 characterList[currentSelection].gameObject.SetActive(false);
                 characterList.Remove(characterList[currentSelection]);
+                updateCharacterSelect();
 
             }
             // Debug.Log("coutnt after dead " + characterList.Count);
@@ -329,6 +410,7 @@ public class BattleManager : MonoBehaviour
             // characterList[currentSelection].GetComponent<SpriteRenderer>().enabled = false;
             Debug.Log("current " + characterList[currentSelection].PName);
             currentSelection++;
+            updateCharacterSelect();
             if (currentSelection > characterList.Count - 1)
             {
                 currentSelection = 0;
@@ -340,6 +422,80 @@ public class BattleManager : MonoBehaviour
 
         }
 
+
+    }
+
+    public void updateCharacterHealthBar()
+    {
+        if (currentSelection == 0)
+        {
+            playerHealth1.value = characterList[0].getHP();
+            if (playerHealth1.value <= 0)
+            {
+                playerHealth1.gameObject.SetActive(false);
+            }
+
+        }
+        if (currentSelection == 1)
+        {
+            playerHealth2.value = characterList[1].getHP();
+            if (playerHealth2.value <= 0)
+            {
+                playerHealth2.gameObject.SetActive(false);
+            }
+
+        }
+        if (currentSelection == 2)
+        {
+            playerHealth3.value = characterList[2].getHP();
+            if (playerHealth3.value <= 0)
+            {
+                playerHealth3.gameObject.SetActive(false);
+            }
+
+        }
+        if (currentSelection == 3)
+        {
+            playerHealth4.value = characterList[3].getHP();
+            if (playerHealth4.value <= 0)
+            {
+                playerHealth4.gameObject.SetActive(false);
+            }
+
+        }
+
+    }
+
+    public void updateCharacterSelect()
+    {
+        if (currentSelection == 0)
+        {
+            playerselect1.SetActive(true);
+            playerselect2.SetActive(false);
+            playerselect3.SetActive(false);
+            playerselect4.SetActive(false);
+        }
+        if (currentSelection == 1)
+        {
+            playerselect1.SetActive(false);
+            playerselect2.SetActive(true);
+            playerselect3.SetActive(false);
+            playerselect4.SetActive(false);
+        }
+        if (currentSelection == 2)
+        {
+            playerselect1.SetActive(false);
+            playerselect2.SetActive(false);
+            playerselect3.SetActive(true);
+            playerselect4.SetActive(false);
+        }
+        if (currentSelection == 3)
+        {
+            playerselect1.SetActive(false);
+            playerselect2.SetActive(false);
+            playerselect3.SetActive(false);
+            playerselect4.SetActive(true);
+        }
 
     }
 
@@ -438,6 +594,14 @@ public class BattleManager : MonoBehaviour
         monsterHealth1.gameObject.SetActive(true);
         monsterHealth2.gameObject.SetActive(true);
         monsterHealth3.gameObject.SetActive(true);
+        characterPanel1.SetActive(false);
+        characterPanel2.SetActive(false);
+        characterPanel3.SetActive(false);
+        characterPanel4.SetActive(false);
+        playerselect1.SetActive(true);
+        playerselect2.SetActive(false);
+        playerselect3.SetActive(false);
+        playerselect4.SetActive(false);
 
         Debug.Log("END COMBAT");
 
