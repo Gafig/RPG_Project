@@ -7,6 +7,7 @@ public class PlayerInteraction : MonoBehaviour {
 	// Use this for initialization
     private MoveAround moveAround;
     public GameObject focusObject;
+    public GameObject ray;
 
     public static PlayerInteraction instance;
 
@@ -33,6 +34,7 @@ public class PlayerInteraction : MonoBehaviour {
 
         if (Physics.Raycast(transform.position, moveAround.lastVelocity, out hit, 0.7f))
         {
+            ray = hit.transform.gameObject;
             if (hit.collider.tag.Equals("interactable"))
             {
                 /*if (focusObject != hit.transform.gameObject)
