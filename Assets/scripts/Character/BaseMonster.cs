@@ -25,9 +25,9 @@ public class BaseMonster : Character {
 	}
 
 	void OnMouseDown(){
-    	Debug.Log(transform.name);
+    	// Debug.Log(transform.name);
 		this.getHP();
-		Debug.Log("HP " + getHP());
+		// Debug.Log("HP " + getHP());
 		this.getAttackStat();
 		this.getDefenceStat();
 		this.getEvasionStat();
