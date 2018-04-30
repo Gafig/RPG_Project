@@ -52,7 +52,7 @@ public class LevelSelecter : MonoBehaviour {
     public void goTo(int level)
     {
         lc.currentFloor = level;
-        GameMasterController.instance.setLastDoorID("DunEnt"+(level+1));
+        GameMasterController.instance.setLastDoorID("DunEnt"+(level));
         lc.toNextLevel();
         cancel();
     }
