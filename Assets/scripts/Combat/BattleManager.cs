@@ -386,6 +386,7 @@ public class BattleManager : MonoBehaviour
 
         //destroy player that die
 
+Debug.Log("current " + characterList[currentSelection].PName);
         if (currentSelection < characterList.Count && characterList[currentSelection].getHP() <= 0)
         {
             if (characterList[currentSelection].getPName() == "william")
@@ -398,7 +399,8 @@ public class BattleManager : MonoBehaviour
             {
                 characterList[currentSelection].gameObject.SetActive(false);
                 characterList.Remove(characterList[currentSelection]);
-                updateCharacterSelect();
+                // currentSelection--;
+                // updateCharacterSelect();
 
             }
             // Debug.Log("coutnt after dead " + characterList.Count);
@@ -408,7 +410,7 @@ public class BattleManager : MonoBehaviour
         {
 
             // characterList[currentSelection].GetComponent<SpriteRenderer>().enabled = false;
-            Debug.Log("current " + characterList[currentSelection].PName);
+            
             currentSelection++;
             updateCharacterSelect();
             if (currentSelection > characterList.Count - 1)
