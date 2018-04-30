@@ -19,6 +19,7 @@ public class Character : MonoBehaviour
     public int Mana;
     public Rarity rarity;
 
+
     public ChatacterStatBlueprint statBlueprint;
     private ChatacterStatBlueprint previousStatBlueprint;
 
@@ -120,6 +121,12 @@ public class Character : MonoBehaviour
     public int getMaxStamina(){
         return this.maxStamina;
     }
+
+    public bool isAlive(){
+        return Hp > 0;
+    }
+
+
 
 
 

@@ -8,18 +8,19 @@ public class Party : MonoBehaviour {
 	public Character head;
 	public List<Character> partyList = new List<Character>();
 
-	private static Party instance;
+	public static Party instance;
 
 	public Party() {}
 
-	public static Party getInstance(){
-    	if (instance == null){
-            instance = new Party();
-        }
+	private void Awake()
+    {
         
-		return instance;
-      
-	}
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
+    }
 
 	
 	// Use this for initialization
