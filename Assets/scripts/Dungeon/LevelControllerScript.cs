@@ -32,6 +32,7 @@ public class LevelControllerScript : MonoBehaviour
 
     void Start()
     {
+        GameMasterController.instance.startEvent();
         currentFloor = 0;
         /***/
         floorGenerator = GameObject.Find("FloorGenerator").GetComponent(typeof(FloorGenerator)) as FloorGenerator;
@@ -103,9 +104,10 @@ public class LevelControllerScript : MonoBehaviour
 
     IEnumerator FadeIn()
     {
+        
         Fade.instance.fadeIn();
         yield return new WaitUntil(() => !Fade.instance.isFading);
-        GameMasterController.instance.IsInputEnabled = true;
+        GameMasterController.instance.endEvent();
     }
 
     void randomEncounter()

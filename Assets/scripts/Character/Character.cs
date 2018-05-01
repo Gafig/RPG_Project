@@ -126,9 +126,15 @@ public class Character : MonoBehaviour
         return Hp > 0;
     }
 
+    public void fullHeal()
+    {
+        this.Hp = this.maxHP;
+    }
 
-
-
+    public void heal(int amount)
+    {
+        this.Hp = Mathf.Min( this.Hp + amount, this.maxHP);
+    }
 
 }
 

@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class William : Character {
 
+    private void Awake()
+    {
+        UpdateAfterBlueprint();
+    }
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
