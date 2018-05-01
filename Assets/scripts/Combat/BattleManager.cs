@@ -530,6 +530,8 @@ public class BattleManager : MonoBehaviour
     public void runFunction()
     {
 
+        /*
+
         for (int i = 0; i < characterList.Count; i++)
         {
             sumHp += characterList[i].getHP();
@@ -549,19 +551,19 @@ public class BattleManager : MonoBehaviour
         if (flee <= 0)
         {
             flee = 25;
-        }
+        }*/
        
-        if (flee > fleeP)
+        //if (flee > fleeP)
         {
             endCombat();
             msg.text = "Escape";
         }
-        else
+        /*else
         {
             Debug.Log("Can't fleeee");
             msg.text = "Can't escape";
         }
-        sumHp = 0;
+        sumHp = 0;*/
     }
 
 
