@@ -32,6 +32,7 @@ public class GameBattleManager : MonoBehaviour
     public GameObject philip;
     public GameObject jane;
     public GameObject rose;
+    public Character isWilliamAlive;
 
     public Sprite sprite;
 
@@ -85,6 +86,7 @@ public class GameBattleManager : MonoBehaviour
         if (william.GetComponent<Character>().isAlive())
         {
             charList.Add(william);
+
         }
 		if (philip.GetComponent<Character>().isAlive())
         {
@@ -103,6 +105,9 @@ public class GameBattleManager : MonoBehaviour
         {
             party = Party.instance;
             party.addMember(GameBattleManager.instance.charList[i].GetComponent<Character>());
+            if(GameBattleManager.instance.charList[i].GetComponent<Character>().getPName() == "william"){
+                isWilliamAlive = GameBattleManager.instance.charList[i].GetComponent<Character>();
+            }
 
             // Debug.Log(GameBattleManager.instance.charList[i].GetComponent<Character>());
         }
