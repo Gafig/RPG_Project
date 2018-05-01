@@ -10,11 +10,8 @@ public class Flight : Event {
 	public override void trigger()
     {
         
-        // Debug.Log("Start combat event");
 		followingCamera.SetActive(false);
         battleCamera.SetActive(true);
-        //GameMasterController.instance.startEvent();
-		// Debug.Log("Start combat event and change camera to battle");
         
     }
 	 private IEnumerator fadeOut()
