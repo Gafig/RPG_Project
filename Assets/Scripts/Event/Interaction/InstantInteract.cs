@@ -18,7 +18,7 @@ public class InstantInteract : MonoBehaviour, Interactable{
     }
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         interaction = gameObject.GetComponent<EventHandler>();
         if (interaction == null)
         {
