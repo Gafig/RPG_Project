@@ -119,19 +119,23 @@ public class LevelControllerScript : MonoBehaviour
             //changeScence
             //getMon
 
+            if (BattleManager.instance.isWilliamAlive)
+            {
+                react();
+                BattleManager.instance.flight = flight;
+                for (int i = 0; i < 3; i++)
+                {
+                    float p = Random.Range(0.0f, 100.0f);
+                    RandomMonster(p, i);
+                }
+                if (gm.william == null)
+                {
+                    gm.PlayerBattle();
+                }
 
-            react();
-            BattleManager.instance.flight = flight;
-            for(int i = 0 ; i < 3 ;i++){
-                float p = Random.Range(0.0f, 100.0f);
-                RandomMonster(p,i);
-            }
-            if(gm.william == null){
-                gm.PlayerBattle();
-            }
-            
 
-            checkInteract();
+                checkInteract();
+            }
         }
 
         // Debug.Log (totalStep + "count " + counttemp);
@@ -139,14 +143,14 @@ public class LevelControllerScript : MonoBehaviour
 
     public void RandomMonster(float p, int pos)
     {
-        if (p > 0 && p <= 30)
+        if (p > 0 && p <= 20)
         {
             if (gm != null)
             {
                 gm.EnterBattle(Rarity.VeryRare, pos);
             }
         }
-        if (p > 30 && p <= 70)
+        if (p > 20 && p <= 55)
         {
             if (gm != null)
             {
@@ -154,7 +158,7 @@ public class LevelControllerScript : MonoBehaviour
             }
         }
 
-        if (p > 70 && p <= 100)
+        if (p > 55 && p <= 100)
         {
             if (gm != null)
             {
