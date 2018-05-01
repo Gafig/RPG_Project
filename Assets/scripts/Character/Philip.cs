@@ -12,6 +12,5 @@ public class Philip : Character {
 	// Update is called once per frame
 	void Update () {
 		UpdateAfterBlueprint();
-		
 	}
 }

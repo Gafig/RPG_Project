@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Party : MonoBehaviour {
 
+	public GameObject william;
+	public GameObject phillip;
+	public GameObject jane;
+	public GameObject rose;
+
 
 	public Character head;
 	public List<Character> partyList = new List<Character>();
