@@ -312,6 +312,7 @@ public class BattleManager : MonoBehaviour
             if (!isBattleEnd)
             {
                 attackStat = characterList[currentSelection].getSpAttackStat();
+                monsterSelected.attacked(attackStat);
             }
 
             attackHelp();

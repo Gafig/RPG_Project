@@ -8,10 +8,22 @@ public class MainMenuController : MonoBehaviour {
 	void Start () {
         GameMasterController.instance.setShowTime(false);
         GameMasterController.instance.setPermanantUI(false);
+        
 	}
+
+    private void Update()
+    {
+        
+        DateTimeController.instance.stopTime();
+    }
 
     public void onPressExit()
     {
         Application.Quit();
+    }
+
+    public void OnPressStart()
+    {
+      
     }
 }
